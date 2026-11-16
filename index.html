@@ -6,257 +6,330 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Tycoon">
-<meta name="theme-color" content="#F4ECE1" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1A1511" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B0C" media="(prefers-color-scheme: dark)">
 <title>Business Tycoon</title>
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="icon" href="icons/icon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <script>try { const m = localStorage.getItem('tycoon-theme'); if (m === 'light' || m === 'dark') document.documentElement.dataset.theme = m; } catch (e) {}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* ---------- Type: Selawik (open-source Segoe-compatible), self-hosted ---------- */
+  @font-face { font-family: 'Selawik'; src: url('fonts/selawkl.woff2') format('woff2'); font-weight: 300; font-display: swap; }
+  @font-face { font-family: 'Selawik'; src: url('fonts/selawksl.woff2') format('woff2'); font-weight: 350; font-display: swap; }
+  @font-face { font-family: 'Selawik'; src: url('fonts/selawk.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+  @font-face { font-family: 'Selawik'; src: url('fonts/selawksb.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+
+  /* Selawik has no tabular figures; in number columns the digits alone come from a system face that has them. */
+  @font-face { font-family: 'Tnum'; src: local('Segoe UI Light'), local('SegoeUI-Light'), local('HelveticaNeue-Light'), local('Helvetica Neue Light'); font-weight: 300; unicode-range: U+0030-0039; }
+  @font-face { font-family: 'Tnum'; src: local('Segoe UI'), local('SegoeUI'), local('HelveticaNeue'), local('Helvetica Neue'); font-weight: 350 400; unicode-range: U+0030-0039; }
+  @font-face { font-family: 'Tnum'; src: local('Segoe UI Semibold'), local('SegoeUI-Semibold'), local('HelveticaNeue-Medium'), local('Helvetica Neue Medium'); font-weight: 600; unicode-range: U+0030-0039; }
+
+  /* ---------- Tokens. --biz is the business colour (set per theme from engine data). ---------- */
   :root {
-    --bg: #F4ECE1; --card: #FFFCF7; --ink: #2B1D14; --muted: #7A6656; --line: #E6D8C6;
-    --accent: #B8692E; --accent-ink: #fff; --accent-soft: #F3E0CC;
-    --good: #2E7A4C; --good-soft: #E1F0E6; --bad: #B2432F; --bad-soft: #F7E1DB;
-    --radius: 16px; --on-ink: #fff; --bar-bg: rgba(255,252,247,.94); color-scheme: light;
+    --biz: #C2410C;                      /* flooded tiles: white text on it */
+    --bg: #FFFFFF; --card: #F1F1F1; --ink: #0B0B0C; --muted: #5E5E5E; --line: #DADADA;
+    --accent: var(--biz); --accent-ink: #FFFFFF; --accent-soft: #F1F1F1;
+    --good: #1E7A34; --good-fill: #1E7A34; --good-soft: #F1F1F1;
+    --bad: #B3261E; --bad-fill: #B3261E; --bad-soft: #F1F1F1;
+    --src-walk: #8A8A8A; --src-wom: #2E9E4F; --src-social: #2F7FD1; --src-mixed: #B5B5B5;
+    --on-ink: #FFFFFF; --bar-bg: #FFFFFF; --veil: rgba(255,255,255,.72); color-scheme: light;
+    --ease: cubic-bezier(.16, 1, .3, 1);
   }
-  /* Dark mode: follows the iPad setting, or forced with the 🌙 button */
   :root[data-theme="dark"] {
-    --bg: #1A1511; --card: #241D17; --ink: #F2E8DC; --muted: #A99686; --line: #3A2F26;
-    --accent: #D98A4B; --accent-ink: #1A1511; --accent-soft: #3B2A1C;
-    --good: #5FBF87; --good-soft: #1D3226; --bad: #EC7A63; --bad-soft: #3E231D;
-    --on-ink: #1A1511; --bar-bg: rgba(36,29,23,.94); color-scheme: dark;
+    --src-walk: #8A8A8A; --src-wom: #3FB862; --src-social: #4C9BEA; --src-mixed: #5A5A5D;
+    --bg: #0B0B0C; --card: #1B1B1D; --ink: #FFFFFF; --muted: #9A9A9A; --line: #2C2C2F;
+    --accent: color-mix(in srgb, var(--biz) 62%, #fff); --accent-ink: #FFFFFF; --accent-soft: #1B1B1D;
+    --good: #5BD27A; --good-soft: #1B1B1D; --bad: #FF7468; --bad-soft: #1B1B1D;
+    --on-ink: #0B0B0C; --bar-bg: #0B0B0C; --veil: rgba(0,0,0,.72); color-scheme: dark;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #1A1511; --card: #241D17; --ink: #F2E8DC; --muted: #A99686; --line: #3A2F26;
-      --accent: #D98A4B; --accent-ink: #1A1511; --accent-soft: #3B2A1C;
-      --good: #5FBF87; --good-soft: #1D3226; --bad: #EC7A63; --bad-soft: #3E231D;
-      --on-ink: #1A1511; --bar-bg: rgba(36,29,23,.94); color-scheme: dark;
+      --src-walk: #8A8A8A; --src-wom: #3FB862; --src-social: #4C9BEA; --src-mixed: #5A5A5D;
+      --bg: #0B0B0C; --card: #1B1B1D; --ink: #FFFFFF; --muted: #9A9A9A; --line: #2C2C2F;
+      --accent: color-mix(in srgb, var(--biz) 62%, #fff); --accent-ink: #FFFFFF; --accent-soft: #1B1B1D;
+      --good: #5BD27A; --good-soft: #1B1B1D; --bad: #FF7468; --bad-soft: #1B1B1D;
+      --on-ink: #0B0B0C; --bar-bg: #0B0B0C; --veil: rgba(0,0,0,.72); color-scheme: dark;
     }
   }
+
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, system-ui, sans-serif; font-size: 16px;
-    touch-action: manipulation; -webkit-user-select: none; user-select: none; }
-  input { -webkit-user-select: text; user-select: text; }
-  h1, h2, h3 { font-family: Fraunces, Georgia, serif; margin: 0; letter-spacing: -0.01em; }
-  button { font: inherit; color: inherit; border: 0; cursor: pointer; touch-action: manipulation; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: Selawik, 'Segoe UI', system-ui, sans-serif;
+    font-size: 16px; line-height: 1.4; touch-action: manipulation; -webkit-user-select: none; user-select: none;
+    -webkit-font-smoothing: antialiased; scrollbar-color: var(--line) var(--bg); }
+  ::selection { background: var(--biz); color: #fff; }
+  input { -webkit-user-select: text; user-select: text; caret-color: var(--biz); }
+  h1, h2, h3 { font-weight: 300; margin: 0; letter-spacing: -0.02em; text-transform: lowercase; }
+  b, strong { font-weight: 600; }
+  button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; touch-action: manipulation; padding: 0; }
+  :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
   .hidden { display: none !important; }
   .num { font-variant-numeric: tabular-nums; }
+  .report, .ytable, .src .ct, .src .pc, .mini span, .ev .wk { font-family: Tnum, Selawik, 'Segoe UI', system-ui, sans-serif; }
+  .pos { color: var(--good); } .neg { color: var(--bad); }
+  svg.ico { width: 1em; height: 1em; vertical-align: -0.12em; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: square; pointer-events: none; }
+
+  /* ---------- Buttons: flat rectangles, no radius. Only .primary is flooded with the business colour. ---------- */
+  .btn { display: inline-flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 48px; padding: 10px 16px;
+    border: 2px solid var(--ink); color: var(--ink); font-size: 17px; font-weight: 350; text-transform: lowercase; text-align: left;
+    transition: transform .14s var(--ease), background-color .14s; }
+  .btn:active:not([disabled]) { transform: scale(.97); }
+  .btn.primary { background: var(--biz); border-color: var(--biz); color: #fff; }
+  .btn.secondary { background: var(--card); border-color: var(--card); }
+  .btn.block { width: 100%; }
+  .btn[disabled] { opacity: .35; cursor: default; }
+  @media (hover: hover) { .btn:hover:not([disabled]):not(.primary) { background: var(--ink); color: var(--bg); } }
+  .icon-btn { min-height: 40px; min-width: 40px; padding: 8px 10px; font-size: 15px; color: var(--muted); text-transform: lowercase; }
+  @media (hover: hover) { .icon-btn:hover { color: var(--ink); } }
 
   /* ---------- Start screen ---------- */
-  #start { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
-  .start-card { width: min(560px, 100%); text-align: center; }
-  .logo { font-size: 64px; line-height: 1; }
-  .start-card h1 { font-size: 44px; font-weight: 800; margin: 12px 0 6px; }
-  .start-card p.lead { color: var(--muted); margin: 0 0 28px; font-size: 17px; line-height: 1.5; }
-  .themes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-  .theme { background: var(--card); border: 2px solid var(--line); border-radius: var(--radius); padding: 14px 8px; }
-  .theme .ic { font-size: 30px; }
-  .theme .nm { font-weight: 600; margin-top: 4px; font-size: 14px; }
-  .theme .soon { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .theme.active { border-color: var(--accent); background: var(--accent-soft); }
-  .theme.locked { opacity: .5; }
-  .field { display: flex; flex-direction: column; gap: 6px; text-align: left; margin-bottom: 16px; }
-  .field label { font-weight: 600; font-size: 14px; color: var(--muted); }
-  .field input { font: inherit; font-size: 18px; padding: 14px 16px; border-radius: 12px; border: 2px solid var(--line); background: var(--card); color: var(--ink); outline: none; }
-  .field input:focus { border-color: var(--accent); }
-  .btn { background: var(--accent); color: var(--accent-ink); font-weight: 700; padding: 14px 20px; border-radius: 12px; font-size: 17px; min-height: 48px; }
-  .btn:active { transform: scale(.98); }
-  .btn.secondary { background: var(--card); color: var(--ink); border: 2px solid var(--line); }
-  .btn.block { width: 100%; }
-  .btn[disabled] { opacity: .4; cursor: default; }
-  .goal-note { margin-top: 18px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+  #start { min-height: 100vh; display: grid; align-content: center; padding: 48px max(24px, calc(50vw - 520px)); overflow: hidden; }
+  .start-card { width: 100%; max-width: 1040px; }
+  .start-card h1 { font-size: clamp(64px, 11vw, 148px); line-height: .92; margin: 0 0 24px -0.04em; white-space: nowrap; }
+  .start-card p.lead { color: var(--muted); margin: 0 0 40px; font-size: 22px; font-weight: 350; line-height: 1.4; max-width: 34ch; }
+  .start-card p.lead b { color: var(--ink); font-weight: 400; }
+  .themes { display: grid; grid-template-columns: repeat(3, minmax(0, 200px)); gap: 8px; margin-bottom: 32px; }
+  .theme { aspect-ratio: 1; background: var(--card); padding: 14px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .theme .nm { font-size: 22px; font-weight: 300; text-transform: lowercase; line-height: 1.1; }
+  .theme .soon { font-size: 13px; color: var(--muted); margin-top: 4px; text-transform: lowercase; }
+  .theme.active { background: var(--ink); color: var(--bg); }
+  .theme.active .soon { color: inherit; opacity: .7; }
+  .theme.locked .nm { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--muted); }
+  .field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; max-width: 616px; }
+  .field label { font-size: 15px; color: var(--muted); text-transform: lowercase; }
+  .field input { font: inherit; font-size: 24px; font-weight: 300; padding: 12px 14px; border-radius: 0; border: 2px solid var(--line); background: transparent; color: var(--ink); outline: none; }
+  .field input::placeholder { color: var(--muted); }
+  .field input:focus { border-color: var(--ink); }
+  #startBtn, #continueBtn { max-width: 616px; min-height: 60px; font-size: 22px; font-weight: 300; }
+  .goal-note { margin-top: 24px; color: var(--muted); font-size: 15px; line-height: 1.5; max-width: 60ch; }
 
-  /* ---------- Game ---------- */
-  #game { padding: 16px 16px 110px; max-width: 1240px; margin: 0 auto; }
-  .topbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
-  .topbar h1 { font-size: 26px; font-weight: 800; }
-  .topbar .when { color: var(--muted); font-weight: 500; }
-  .topbar .spacer { flex: 1; }
-  .icon-btn { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: 14px; font-weight: 600; color: var(--muted); }
+  /* ---------- Game header: name left, company value right, goal bar under both ---------- */
+  #game { padding: 16px 32px 140px; max-width: 1360px; margin: 0 auto; }
+  .topbar { display: grid; grid-template-columns: 1fr auto; column-gap: 24px; align-items: end; }
+  .topbar .tools { grid-column: 1 / -1; grid-row: 1; display: flex; justify-content: flex-end; gap: 4px; margin-right: -10px; }
+  .topbar h1 { grid-column: 1; grid-row: 2; font-size: clamp(56px, 7.4vw, 104px); line-height: .9; margin-left: -0.05em; white-space: nowrap; overflow: hidden; text-overflow: clip; }
+  .topbar .when { grid-column: 1; grid-row: 3; color: var(--muted); font-size: 20px; font-weight: 300; text-transform: lowercase; margin-top: 6px; }
+  .topbar .value { grid-column: 2; grid-row: 2 / 4; text-align: right; align-self: end; }
+  .topbar .value b { display: block; font-size: clamp(40px, 4.6vw, 64px); font-weight: 300; line-height: 1; letter-spacing: -0.02em; }
+  .topbar .value span { display: block; color: var(--muted); font-size: 14px; margin-top: 6px; text-transform: lowercase; white-space: nowrap; }
+  .topbar .value span span { display: inline; margin: 0; }
+  @media (max-width: 640px) { .topbar { grid-template-columns: 1fr; } .topbar .value { grid-column: 1; grid-row: 4; text-align: left; margin-top: 16px; } }
+  @media (max-width: 899px) { .topbar .when { font-size: 18px; } .topbar .when .loc { display: block; } .topbar .when .sep { display: none; } }
+  .bar { height: 6px; background: var(--line); overflow: hidden; margin: 14px 0 28px; }
+  @media (max-width: 1200px) and (min-width: 900px) { .bar { margin-bottom: 20px; } .tile { min-height: 100px; } .tile .val { font-size: 42px; } .topbar h1 { font-size: 80px; } .card h2 { font-size: 36px; margin-bottom: 14px; } }
+  .bar > i { display: block; height: 100%; width: 100%; background: var(--biz); transform-origin: left; transform: scaleX(0); transition: transform .6s var(--ease); }
+  .bar.good > i { background: var(--good-fill); }
 
-  .goal { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 14px; }
-  .goal-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 14px; color: var(--muted); }
-  .goal-row b { color: var(--ink); font-size: 18px; }
-  .bar { height: 10px; background: var(--line); border-radius: 99px; overflow: hidden; margin-top: 8px; }
-  .bar > i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .4s; }
-  .bar.good > i { background: var(--good); }
-
-  .cols { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  /* ---------- Layout: two panes on desktop, one column below 900px ---------- */
+  .cols { display: grid; grid-template-columns: 1fr; gap: 48px; }
   @media (min-width: 900px) { .cols { grid-template-columns: 1.05fr 1fr; align-items: start; } }
   @media (max-width: 899px) {
-    .cols { display: flex; flex-direction: column; }
+    #game { padding: 16px 20px 140px; }
+    .cols { display: flex; flex-direction: column; gap: 48px; }
     .cols > div { display: contents; }
-    .cols .card + .card { margin-top: 0; }
     .o1 { order: 1; } .o2 { order: 2; } .o3 { order: 3; } .o4 { order: 4; } .o5 { order: 5; } .o6 { order: 6; } .o7 { order: 7; } .o8 { order: 8; } .o9 { order: 9; } .o10 { order: 10; }
   }
 
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
-  .card + .card { margin-top: 14px; }
-  .card h2 { font-size: 19px; font-weight: 600; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: baseline; }
-  .card h2 small { font-family: Inter, sans-serif; font-size: 13px; color: var(--muted); font-weight: 500; }
+  /* Sections: no boxes; the giant lowercase heading is the container. */
+  .card { scroll-margin-top: 16px; }
+  .card + .card { margin-top: 44px; }
+  @media (max-width: 899px) { .card + .card { margin-top: 0; } }
+  .card h2 { font-size: 40px; line-height: 1; margin-bottom: 18px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 16px; }
+  .card h2 small { font-size: 14px; font-weight: 400; color: var(--muted); letter-spacing: 0; text-transform: lowercase; }
+  .flash h2 { animation: flash .9s var(--ease); }
+  @keyframes flash { 0% { color: var(--accent); } 100% { color: var(--ink); } }
 
-  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .tile { background: var(--bg); border-radius: 12px; padding: 10px 12px; }
-  .tile .lbl { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
-  .tile .val { font-size: 22px; font-weight: 700; margin-top: 2px; }
-  .tile .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
-  .pos { color: var(--good); } .neg { color: var(--bad); }
-  .meter { height: 6px; background: var(--line); border-radius: 99px; margin-top: 6px; overflow: hidden; }
-  .meter > i { display: block; height: 100%; background: var(--accent); }
+  /* ---------- Live tiles ---------- */
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; perspective: 900px; }
+  @media (max-width: 520px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+  .tile { background: var(--card); min-height: 116px; padding: 12px 14px 10px; display: flex; flex-direction: column; justify-content: flex-end; position: relative; transform-origin: 50% 50%; }
+  .tile .val { order: 1; font-size: 48px; font-weight: 300; line-height: 1; letter-spacing: -0.02em; }
+  .tile .meter { order: 2; }
+  .tile .lbl { order: 3; font-size: 15px; text-transform: lowercase; color: var(--ink); margin-top: 8px; }
+  .tile .sub { order: 4; font-size: 13px; color: var(--muted); text-transform: lowercase; min-height: 1.3em; }
+  .tile.fill-good, .tile.fill-bad { color: #fff; }
+  .tile.fill-good { background: var(--good-fill); } .tile.fill-bad { background: var(--bad-fill); }
+  .tile.fill-good .lbl, .tile.fill-bad .lbl { color: #fff; }
+  .tile.fill-good .sub, .tile.fill-bad .sub { color: rgba(255,255,255,.86); }
+  .tile.fill-good .val, .tile.fill-bad .val, .tile.fill-bad .neg, .tile.fill-good .pos, .tile.fill-bad .sub .neg { color: #fff; }
+  .meter { height: 4px; background: var(--line); margin-top: 10px; }
+  .meter > i { display: block; height: 100%; background: var(--ink); }
+  .tile.flip { animation: flip .62s var(--ease) both; }
+  @keyframes flip { 0% { transform: rotateX(0); } 45% { transform: rotateX(90deg); } 55% { transform: rotateX(-90deg); } 100% { transform: rotateX(0); } }
 
-  .report { width: 100%; border-collapse: collapse; font-size: 15px; }
-  .report td { padding: 6px 0; border-bottom: 1px dashed var(--line); }
+  /* ---------- Report ---------- */
+  .report { width: 100%; border-collapse: collapse; font-size: 16px; }
+  .report td { padding: 8px 0; border-bottom: 1px solid var(--line); }
   .report td:last-child { text-align: right; }
-  .report tr.total td { border-bottom: 0; font-weight: 700; padding-top: 10px; font-size: 17px; }
-  .report tr.sec td { color: var(--muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; padding-top: 12px; border-bottom: 0; }
+  .report tr.total td { border-bottom: 0; padding-top: 14px; font-size: 32px; font-weight: 300; letter-spacing: -0.02em; }
+  .report tr.sec td { padding: 10px 0 0; border-bottom: 2px solid var(--ink); }
 
-  .events { display: flex; flex-direction: column; gap: 8px; }
-  .ev { padding: 10px 12px; border-radius: 10px; font-size: 14px; line-height: 1.4; background: var(--bg); }
-  .ev.good { background: var(--good-soft); } .ev.bad { background: var(--bad-soft); }
-  .ev .wk { font-size: 11px; font-weight: 700; color: var(--muted); margin-right: 6px; }
-  .tips .ev { background: var(--accent-soft); }
+  .events { display: flex; flex-direction: column; gap: 4px; }
+  .ev { padding: 12px 14px; font-size: 15px; line-height: 1.45; background: var(--card); }
+  .ev .wk { font-size: 13px; color: var(--muted); margin-right: 8px; font-variant-numeric: tabular-nums; }
+  .ev.good .wk { color: var(--good); } .ev.bad .wk { color: var(--bad); }
+  .ev.good .wk::before { content: '+ '; } .ev.bad .wk::before { content: '− '; }
+  .tips .ev { background: transparent; padding: 0 0 12px; border-bottom: 1px solid var(--line); font-size: 17px; font-weight: 350; }
+  .tips .ev:last-child { border-bottom: 0; padding-bottom: 0; }
 
-  .chart svg { width: 100%; height: 120px; display: block; }
-
-  /* Decisions */
-  .ctl { padding: 12px 0; border-bottom: 1px solid var(--line); }
-  .ctl:first-of-type { padding-top: 0; }
-  .ctl:last-child { border-bottom: 0; padding-bottom: 0; }
-  .ctl-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
-  .ctl-head .t { font-weight: 600; }
-  .ctl-head .h { font-size: 13px; color: var(--muted); }
-  .stepper { display: flex; align-items: center; gap: 10px; }
-  .stepper button { width: 52px; height: 48px; border-radius: 12px; background: var(--bg); border: 1px solid var(--line); font-size: 24px; font-weight: 600; }
-  .stepper button:active { background: var(--accent-soft); }
-  .stepper .v { flex: 1; text-align: center; font-size: 24px; font-weight: 700; }
-  .stepper .v small { display: block; font-size: 12px; font-weight: 500; color: var(--muted); }
+  /* ---------- Decisions ---------- */
+  .ctl { padding: 18px 0; border-top: 1px solid var(--line); }
+  .ctl:first-of-type { border-top: 0; padding-top: 0; }
+  .ctl:last-child { padding-bottom: 0; }
+  .ctl-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 10px; }
+  .ctl-head .t { font-size: 22px; font-weight: 300; text-transform: lowercase; }
+  .ctl-head .h { font-size: 13px; color: var(--muted); text-transform: lowercase; }
+  .stepper { display: flex; align-items: stretch; gap: 8px; }
+  .stepper button { width: 56px; min-height: 56px; background: var(--card); font-size: 24px; display: grid; place-items: center; transition: transform .14s var(--ease); }
+  .stepper .v { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 4px; font-size: 32px; font-weight: 300; line-height: 1; }
+  .stepper .v small { font-size: 13px; color: var(--muted); margin-top: 4px; text-transform: lowercase; }
   .seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .seg button { background: var(--bg); border: 2px solid var(--line); border-radius: 12px; padding: 10px 6px; text-align: center; min-height: 64px; }
-  .seg button b { display: block; font-size: 14px; }
-  .seg button span { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; }
-  .seg button.on { border-color: var(--accent); background: var(--accent-soft); }
-  .pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
-  .pill.good { background: var(--good-soft); color: var(--good); }
-  .pill.bad { background: var(--bad-soft); color: var(--bad); }
-  .pill.mid { background: var(--accent-soft); color: var(--accent); }
+  .seg button { background: var(--card); padding: 12px; text-align: left; min-height: 92px; display: flex; flex-direction: column; justify-content: flex-end; transition: transform .14s var(--ease); }
+  .seg button b { font-size: 19px; font-weight: 300; text-transform: lowercase; }
+  .seg button span { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .seg button.on { background: var(--ink); color: var(--bg); }
+  .seg button.on span { color: inherit; opacity: .72; }
+  .seg button:active, .stepper button:active, .mini button:active { transform: scale(.94); }
+  .pill { display: inline-block; font-size: 12px; font-weight: 400; padding: 2px 6px; text-transform: lowercase; vertical-align: 2px; letter-spacing: .01em; }
+  .pill.good { background: var(--good-fill); color: #fff; }
+  .pill.bad { background: var(--bad-fill); color: #fff; }
+  .pill.mid { background: var(--card); color: var(--ink); }
 
-  .upg { display: flex; align-items: center; gap: 12px; padding: 10px 0; }
-  .upg + .upg { border-top: 1px dashed var(--line); }
-  .upg .info { flex: 1; }
-  .upg .now { font-weight: 600; }
-  .upg .next { font-size: 13px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
-  .upg .btn { padding: 10px 14px; font-size: 15px; min-height: 44px; white-space: nowrap; }
+  .upg { display: flex; align-items: center; gap: 16px; padding: 14px 0; }
+  .upg + .upg { border-top: 1px solid var(--line); }
+  .upg .info { flex: 1; min-width: 0; }
+  .upg .now { font-size: 20px; font-weight: 300; text-transform: lowercase; }
+  .upg .next { font-size: 14px; color: var(--muted); margin-top: 2px; line-height: 1.45; }
+  .upg .next b { color: var(--ink); font-weight: 400; }
+  .upg .btn { white-space: nowrap; flex: none; }
+  .upg.is-locked .now { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--muted); }
 
   .mods { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 
   /* Forecast + sources */
-  .forecast { border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-size: 15px; line-height: 1.4; display: flex; gap: 10px; align-items: flex-start; }
-  .forecast.good { background: var(--good-soft); } .forecast.bad { background: var(--bad-soft); } .forecast.none { background: var(--bg); color: var(--muted); }
-  .forecast b { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-bottom: 2px; }
-  .stack { display: flex; height: 22px; border-radius: 8px; overflow: hidden; background: var(--line); margin-bottom: 12px; }
+  .forecast { padding: 14px 16px; margin-bottom: 20px; font-size: 17px; font-weight: 350; line-height: 1.4; background: var(--card); }
+  .forecast b { font-weight: 400; text-transform: lowercase; color: var(--muted); }
+  .forecast.good b { color: var(--good); } .forecast.bad b { color: var(--bad); }
+  .forecast.none { color: var(--muted); }
+  .stack { display: flex; height: 12px; background: var(--line); margin-bottom: 14px; gap: 2px; }
   .stack i { display: block; height: 100%; }
-  .src { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 15px; }
-  .src .dot { width: 12px; height: 12px; border-radius: 4px; flex: none; }
-  .src .nm { flex: 1; } .src .nm small { display: block; color: var(--muted); font-size: 12px; }
-  .src .ct { font-weight: 600; } .src .pc { width: 44px; text-align: right; color: var(--muted); font-size: 13px; }
-  .locked { color: var(--muted); font-size: 15px; line-height: 1.5; margin: 0; }
-  .roi { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: var(--bg); font-size: 14px; line-height: 1.45; }
+  .src { display: flex; align-items: center; gap: 12px; padding: 8px 0; font-size: 16px; border-bottom: 1px solid var(--line); }
+  .src:last-of-type { border-bottom: 0; }
+  .src .dot { width: 12px; height: 12px; flex: none; }
+  .src .nm { flex: 1; } .src .nm small { display: block; color: var(--muted); font-size: 13px; }
+  .src .ct { font-size: 20px; font-weight: 300; } .src .pc { width: 48px; text-align: right; color: var(--muted); font-size: 14px; }
+  .locked { color: var(--muted); font-size: 16px; line-height: 1.5; margin: 0; }
+  .locked b { color: var(--ink); font-weight: 400; }
+  .roi { margin-top: 14px; padding: 14px 16px; background: var(--card); font-size: 15px; line-height: 1.5; }
 
-  /* Bottom bar */
-  .bottombar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bar-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    border-top: 1px solid var(--line); padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); z-index: 10; }
-  .bottombar .inner { max-width: 1240px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
-  .bottombar .cash { font-size: 13px; color: var(--muted); font-weight: 600; }
-  .bottombar .cash b { display: block; font-size: 24px; color: var(--ink); }
-  .bottombar .btn { flex: 1; max-width: 420px; margin-left: auto; font-size: 18px; min-height: 56px; }
+  /* ---------- Bottom bar: cash + the one flooded tile ---------- */
+  .bottombar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bar-bg); border-top: 1px solid var(--line);
+    padding: 12px 32px calc(12px + env(safe-area-inset-bottom)); z-index: 10; }
+  .bottombar .inner { max-width: 1296px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
+  .bottombar .cash { font-size: 14px; color: var(--muted); text-transform: lowercase; }
+  .bottombar .cash b { display: block; font-size: 34px; font-weight: 300; line-height: 1; color: var(--ink); letter-spacing: -0.02em; margin-bottom: 2px; }
+  #nextBtn { margin-left: auto; width: min(400px, 60vw); min-height: 64px; font-size: 24px; font-weight: 300; padding: 8px 18px; }
+  #nextBtn .go { display: inline-flex; align-items: center; gap: 12px; }
+  #nextBtn svg.ico { width: 22px; height: 22px; stroke-width: 1.4; }
+  #nextBtn > span:first-child { white-space: nowrap; }
+  @media (max-width: 560px) { .bottombar { padding-left: 16px; padding-right: 16px; } .bottombar .inner { gap: 12px; } .bottombar .cash b { font-size: 26px; } #nextBtn { font-size: 19px; width: auto; flex: 1; min-height: 56px; } #nextBtn kbd { display: none !important; } }
 
-  /* Modal + toast */
-  .overlay { position: fixed; inset: 0; background: rgba(43,29,20,.45); display: grid; place-items: center; padding: 20px; z-index: 50; }
-  .modal { background: var(--card); border-radius: 20px; padding: 24px; width: min(460px, 100%); text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
-  .modal .big { font-size: 56px; }
-  .modal h2 { font-size: 28px; margin: 8px 0; }
-  .modal p { color: var(--muted); line-height: 1.5; }
-  .modal .row { display: flex; gap: 10px; margin-top: 18px; }
-  .modal .row .btn { flex: 1; }
-  .toast { position: fixed; left: 50%; bottom: 100px; transform: translateX(-50%); background: var(--ink); color: var(--on-ink); padding: 12px 18px; border-radius: 12px; font-size: 15px; z-index: 60; max-width: 90vw; text-align: center; transition: opacity .3s; }
-  /* Keyboard shortcuts: hints only show on devices with a mouse/trackpad (hidden on iPad touch) */
+  /* ---------- Pop-ups: a full-width band, Metro style ---------- */
+  .overlay { position: fixed; inset: 0; background: var(--veil); display: grid; align-items: center; z-index: 50; }
+  .modal { width: 100%; background: var(--card); padding: 36px max(24px, calc(50vw - 340px)) 32px; box-shadow: 0 24px 64px rgba(0,0,0,.35); animation: band .36s var(--ease); }
+  @keyframes band { from { transform: translateY(16px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .modal h2 { font-size: 44px; line-height: 1.05; margin: 0 0 12px; }
+  .modal p { color: var(--muted); line-height: 1.5; font-size: 17px; margin: 0; max-width: 60ch; }
+  .modal p b { color: var(--ink); font-weight: 400; }
+  .modal .row { display: flex; gap: 8px; margin-top: 28px; }
+  .modal .row .btn { flex: 1; max-width: 240px; min-height: 52px; }
+  .modal .row .btn.secondary { border-color: var(--ink); background: transparent; }
+  .toast { position: fixed; left: 0; right: 0; bottom: 96px; margin: 0 auto; width: fit-content; max-width: min(720px, calc(100vw - 32px));
+    background: var(--ink); color: var(--on-ink); padding: 14px 20px; font-size: 16px; z-index: 60; transition: opacity .3s; }
+
+  /* ---------- Keyboard hints (hidden on touch devices) ---------- */
   .kbd-only { display: none !important; }
   @media (hover: hover) and (pointer: fine) { .kbd-only { display: revert !important; } }
-  kbd { font: 600 12px/1 Inter, system-ui, sans-serif; padding: 3px 6px; border-radius: 6px; border: 1px solid var(--line);
-    background: var(--bg); color: var(--muted); }
-  .btn kbd { margin-left: 10px; vertical-align: 2px; background: transparent; color: inherit; border-color: currentColor; opacity: .7; }
-  .modal .btn:focus-visible, .icon-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-  .card { scroll-margin-top: 16px; }
-  .keys { width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; }
-  .keys td { padding: 7px 4px; border-top: 1px solid var(--line); color: var(--ink); }
-  .keys td:first-child { width: 90px; }
-  .flash { animation: flash .6s; }
-  @keyframes flash { 0% { background: var(--accent-soft); } 100% { background: var(--card); } }
+  kbd { font: 400 12px/1 Selawik, 'Segoe UI', system-ui, sans-serif; padding: 3px 6px; border: 1px solid currentColor; color: var(--muted); text-transform: lowercase; }
+  .btn kbd { color: inherit; opacity: .75; margin-left: 4px; }
+  .keys { width: 100%; border-collapse: collapse; margin-top: 8px; text-align: left; max-width: 520px; }
+  .keys td { padding: 9px 4px; border-top: 1px solid var(--line); color: var(--ink); font-size: 16px; }
+  .keys td:first-child { width: 96px; }
 
-  /* Menu */
-  .mi { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+  /* ---------- Menu ---------- */
+  .mi { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
   .mi:last-child { border-bottom: 0; }
   .mi .info { flex: 1; min-width: 0; }
-  .mi .info b { display: block; font-size: 15px; }
-  .mi .info small { display: block; font-size: 12px; color: var(--muted); margin-top: 1px; }
+  .mi .info b { display: block; font-size: 20px; font-weight: 300; text-transform: lowercase; }
+  .mi .info small { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
   .mi.off .info b { color: var(--muted); }
-  .mi.locked { opacity: .55; }
-  .mi.locked .ic { width: 36px; text-align: center; font-size: 18px; }
-  .tog { width: 36px; height: 36px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); font-weight: 800; color: var(--on-ink); flex: none; font-size: 16px; }
-  .tog.on { background: var(--good); border-color: var(--good); }
-  .mini { display: flex; align-items: center; gap: 6px; }
-  .mini button { width: 40px; height: 40px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); font-size: 20px; font-weight: 600; }
-  .mini button:active { background: var(--accent-soft); }
-  .mini span { min-width: 66px; text-align: center; font-weight: 700; font-size: 16px; position: relative; }
-  .mini span i { position: absolute; right: -2px; top: -4px; width: 8px; height: 8px; border-radius: 50%; }
-  .dot-good { background: var(--good); } .dot-bad { background: var(--bad); } .dot-mid { background: var(--accent); }
-  .note { font-size: 13px; color: var(--muted); line-height: 1.45; margin: 8px 0 0; }
+  .mi.locked .info b { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 1px; }
+  .mi.locked { padding-left: 52px; }
+  .tog { width: 40px; height: 40px; border: 2px solid var(--line); flex: none; display: grid; place-items: center; color: #fff; }
+  .tog svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; }
+  .tog.on { background: var(--good-fill); border-color: var(--good-fill); }
+  .mini { display: flex; align-items: center; gap: 4px; }
+  .mini button { width: 44px; height: 44px; background: var(--card); font-size: 20px; display: grid; place-items: center; transition: transform .14s var(--ease); }
+  .mini span { min-width: 76px; text-align: center; font-size: 20px; font-weight: 300; position: relative; }
+  .mini span i { position: absolute; right: 2px; top: -2px; width: 8px; height: 8px; }
+  .dot-good { background: var(--good); } .dot-bad { background: var(--bad); } .dot-mid { background: var(--muted); }
+  .key { display: inline-block; width: 9px; height: 9px; margin: 0 3px 0 6px; vertical-align: 0; }
+  .note { font-size: 14px; color: var(--muted); line-height: 1.5; margin: 12px 0 0; }
 
-  /* Team */
-  .role { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+  /* ---------- Team ---------- */
+  .role { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
   .role:last-of-type { border-bottom: 0; }
-  .role .info { flex: 1; } .role .info b { display: block; font-size: 15px; } .role .info small { display: block; font-size: 12px; color: var(--muted); margin-top: 1px; }
-  .role .mini span { min-width: 36px; font-size: 20px; }
+  .role .info { flex: 1; } .role .info b { display: block; font-size: 20px; font-weight: 300; text-transform: lowercase; }
+  .role .info small { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .role .mini span { min-width: 44px; font-size: 28px; }
 
-  /* Progress */
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-  .chips button { padding: 8px 12px; border-radius: 99px; background: var(--bg); border: 1px solid var(--line); font-size: 13px; font-weight: 600; color: var(--muted); }
-  .chips button.on { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
+  /* ---------- Progress: pivot-style metric headers ---------- */
+  .chips { display: flex; flex-wrap: wrap; gap: 0 18px; margin-bottom: 8px; }
+  .chips button { min-height: 40px; font-size: 20px; font-weight: 300; color: var(--muted); text-transform: lowercase; }
+  .chips button.on { color: var(--accent); }
+  @media (hover: hover) { .chips button:hover { color: var(--ink); } }
   .pchart { position: relative; touch-action: none; }
-  .pchart svg { width: 100%; height: 210px; display: block; }
-  .ptip { position: absolute; top: 0; padding: 4px 8px; background: var(--ink); color: var(--on-ink); font-size: 12px; font-weight: 600; border-radius: 6px; pointer-events: none; white-space: nowrap; transform: translateX(-50%); }
-  .ytable { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
-  .ytable th { text-align: right; color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; padding: 6px 4px; border-bottom: 1px solid var(--line); }
-  .ytable td { text-align: right; padding: 7px 4px; border-bottom: 1px dashed var(--line); }
+  .pchart svg { width: 100%; height: 220px; display: block; font-family: Selawik, 'Segoe UI', system-ui, sans-serif; }
+  .ptip { position: absolute; top: 0; padding: 5px 8px; background: var(--ink); color: var(--on-ink); font-size: 13px; pointer-events: none; white-space: nowrap; transform: translateX(-50%); }
+  .ytable { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 16px; }
+  .ytable th { text-align: right; color: var(--muted); font-weight: 400; font-size: 13px; text-transform: lowercase; padding: 6px 4px; border-bottom: 1px solid var(--line); }
+  .ytable td { text-align: right; padding: 8px 4px; border-bottom: 1px solid var(--line); }
   .ytable th:first-child, .ytable td:first-child { text-align: left; }
   .ytable tr:last-child td { border-bottom: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
 </style>
 </head>
 <body>
+<!--
+THESIS: Live Tiles. The business is flat colour tiles and giant lowercase type; numbers are tiles that flip when a week opens. Refuses the cream-card-serif dashboard.
+OWN-WORLD: black (or white) ground, Selawik light lowercase, flat borderless tiles, no radius, no shadows except the pop-up band; one tile per screen flooded in the business colour (open next week); profit floods green/red as state; locked = struck through.
+STORY: the player reads last week at a glance in the tiles and report, adjusts menu/team/invest, opens the next week and watches the tiles flip.
+FIRST VIEWPORT: giant lowercase business name top-left, week/season below; company value huge with a thin goal bar; six stat tiles; report left, menu right; bottom bar with cash and the flooded "open next week" tile.
+FORM: challenger digital-design-canon-metro-typographic-tiles (bolder round lead), seed 307de100.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+-->
 
 <!-- ============ START SCREEN ============ -->
 <section id="start">
   <button class="icon-btn theme-btn" id="themeBtnStart" style="position:fixed;top:16px;right:16px;z-index:5"></button>
   <div class="start-card">
-    <div class="logo">☕</div>
     <h1>Business Tycoon</h1>
-    <p class="lead">Start with a tiny coffee cart and €5,000. Build your menu, hire a team, pick your beans and grow it into a company worth <b>€1 million</b>, within 5 years.</p>
+    <p class="lead">Start with one small business and €5,000. Grow it into a company worth <b>€1 million</b> within 5 years.</p>
     <div class="themes">
-      <div class="theme active"><div class="ic">☕</div><div class="nm">Coffee shop</div><div class="soon">Available</div></div>
-      <div class="theme locked"><div class="ic">🚲</div><div class="nm">Bike shop</div><div class="soon">Coming soon</div></div>
-      <div class="theme locked"><div class="ic">✈️</div><div class="nm">Travel agency</div><div class="soon">Coming soon</div></div>
+      <div class="theme active"><div class="nm">Coffee shop</div><div class="soon">Available</div></div>
+      <div class="theme locked"><div class="nm">Bike shop</div><div class="soon">Coming soon</div></div>
+      <div class="theme locked"><div class="nm">Travel agency</div><div class="soon">Coming soon</div></div>
     </div>
     <div class="field">
       <label for="shopName">Name your coffee shop</label>
       <input id="shopName" maxlength="28" placeholder="e.g. Bean There" autocomplete="off">
     </div>
-    <button class="btn block" id="startBtn">Open for business</button>
-    <button class="btn secondary block hidden" id="continueBtn" style="margin-top:10px">Continue saved game</button>
+    <button class="btn primary block" id="startBtn"><span>Open for business</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
+    <button class="btn block hidden" id="continueBtn" style="margin-top:8px">Continue saved game</button>
     <p class="goal-note">Each turn is one week. Make your decisions, then tap <b>Open next week</b> to see how it went. Run out of cash and it's game over.</p>
   </div>
 </section>
@@ -264,31 +337,29 @@
 <!-- ============ GAME ============ -->
 <section id="game" class="hidden">
   <div class="topbar">
-    <h1 id="shopTitle">☕</h1>
-    <span class="when" id="when"></span>
-    <span class="spacer"></span>
-    <button class="icon-btn kbd-only" id="keysBtn" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">?</button>
-    <button class="icon-btn theme-btn" id="themeBtn"></button>
-    <button class="icon-btn" id="newGameBtn">New game</button>
+    <h1 id="shopTitle"></h1>
+    <span class="when"><span id="when"></span><span class="loc"><span class="sep"> · </span><span id="locName"></span></span></span>
+    <div class="value"><b class="num" id="valNow">€0</b><span>company value · goal €1,000,000 · <span id="weeksLeft"></span></span></div>
+    <div class="tools">
+      <button class="icon-btn kbd-only" id="keysBtn" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">shortcuts</button>
+      <button class="icon-btn theme-btn" id="themeBtn"></button>
+      <button class="icon-btn" id="newGameBtn">New game</button>
+    </div>
   </div>
 
-  <div class="goal">
-    <div class="goal-row"><span>Company value <b class="num" id="valNow">€0</b></span><span>Goal €1,000,000 · <span id="weeksLeft"></span></span></div>
-    <div class="bar" id="goalBar"><i style="width:0%"></i></div>
-  </div>
+  <div class="bar" id="goalBar"><i></i></div>
 
   <div class="cols">
     <!-- LEFT: status -->
     <div>
       <div class="card o1">
-        <h2>Your business <small id="locName"></small></h2>
         <div class="tiles">
           <div class="tile"><div class="lbl">Cash</div><div class="val num" id="tCash"></div><div class="sub" id="tLoan"></div></div>
-          <div class="tile"><div class="lbl">Last week</div><div class="val num" id="tProfit"></div><div class="sub" id="tTicket">profit</div></div>
+          <div class="tile" id="tileProfit"><div class="lbl">Last week</div><div class="val num" id="tProfit"></div><div class="sub" id="tTicket">profit</div></div>
           <div class="tile"><div class="lbl">Customers</div><div class="val num" id="tServed"></div><div class="sub" id="tLost"></div></div>
           <div class="tile"><div class="lbl">Reputation</div><div class="val num" id="tRep"></div><div class="meter"><i id="mRep"></i></div></div>
           <div class="tile"><div class="lbl">Awareness</div><div class="val num" id="tAw"></div><div class="meter"><i id="mAw"></i></div></div>
-          <div class="tile"><div class="lbl">Cleanliness</div><div class="val num" id="tClean"></div><div class="meter"><i id="mClean"></i></div></div>
+          <div class="tile" id="tileClean"><div class="lbl">Cleanliness</div><div class="val num" id="tClean"></div><div class="meter"><i id="mClean"></i></div></div>
         </div>
         <div class="mods" id="mods"></div>
       </div>
@@ -333,7 +404,7 @@
         <div class="ctl">
           <div class="ctl-head"><span class="t">What you sell</span><span class="h" id="menuHint"></span></div>
           <div id="menu"></div>
-          <p class="note">More choice brings in more customers, but every drink beyond 3 slows the bar down by 4%. The dot shows your price: <span style="color:var(--good)">●</span> bargain <span style="color:var(--accent)">●</span> fair <span style="color:var(--bad)">●</span> pricey.</p>
+          <p class="note">More choice brings in more customers, but every drink beyond 3 slows the bar down by 4%. The square shows your price:<span class="key dot-good"></span>bargain<span class="key dot-mid"></span>fair<span class="key dot-bad"></span>pricey.</p>
         </div>
       </div>
 
@@ -344,9 +415,9 @@
         <div class="ctl" style="border-top:1px solid var(--line);margin-top:12px;padding-top:12px">
           <div class="ctl-head"><span class="t">Marketing per week</span><span class="h">flyers, socials, ads</span></div>
           <div class="stepper">
-            <button data-act="mkt" data-d="-50" aria-label="Less marketing">−</button>
+            <button data-act="mkt" data-d="-50" aria-label="Less marketing"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg></button>
             <div class="v num" id="mkt"></div>
-            <button data-act="mkt" data-d="50" aria-label="More marketing">+</button>
+            <button data-act="mkt" data-d="50" aria-label="More marketing"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12M12 6v12"/></svg></button>
           </div>
         </div>
       </div>
@@ -369,8 +440,8 @@
         <h2>Bank <small>0.5% interest per week</small></h2>
         <div class="upg">
           <div class="info"><div class="now num" id="loanNow"></div><div class="next" id="loanNext"></div></div>
-          <button class="btn secondary" data-act="repay">Repay €5k</button>
-          <button class="btn secondary" data-act="borrow">Borrow €5k</button>
+          <button class="btn" data-act="repay">Repay €5k</button>
+          <button class="btn" data-act="borrow">Borrow €5k</button>
         </div>
       </div>
     </div>
@@ -379,8 +450,8 @@
 
 <div class="bottombar hidden" id="bottombar">
   <div class="inner">
-    <div class="cash">Cash<b class="num" id="bbCash"></b></div>
-    <button class="btn" id="nextBtn">Open next week ▶<kbd class="kbd-only">Space</kbd></button>
+    <div class="cash"><b class="num" id="bbCash"></b>cash</div>
+    <button class="btn primary" id="nextBtn"><span>Open next week</span><span class="go"><kbd class="kbd-only">Space</kbd><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span></button>
   </div>
 </div>
 
@@ -393,6 +464,7 @@
   const E = window.TycoonEngine;
   const SAVE_KEY = 'business-tycoon-save-v1';
   const $ = (id) => document.getElementById(id);
+  const ICON = { minus: '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg>', plus: '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12M12 6v12"/></svg>' };
   const eur = (v, dec = 0) => (v < 0 ? '−€' : '€') + Math.abs(v).toLocaleString('en', { minimumFractionDigits: dec, maximumFractionDigits: dec });
   const short = (v) => {
     const a = Math.abs(v), sign = v < 0 ? '−' : '';
@@ -406,7 +478,7 @@
   let metric = 'value';
 
   // ---------- theme: auto → light → dark ----------
-  const THEME_LABEL = { auto: '🌗 Auto', light: '☀️ Light', dark: '🌙 Dark' };
+  const THEME_LABEL = { auto: 'theme: auto', light: 'theme: light', dark: 'theme: dark' };
   function getMode() { try { return localStorage.getItem('tycoon-theme') || 'auto'; } catch (e) { return 'auto'; } }
   function setMode(m) {
     try { localStorage.setItem('tycoon-theme', m); } catch (e) {}
@@ -426,12 +498,15 @@
 
   // ---------- UI helpers ----------
   let toastTimer;
+  // Event texts from the engine may start with an emoji; the tile look uses words only.
+  const plain = (txt) => String(txt).replace(/^[\p{Extended_Pictographic}\uFE0F\s]+/u, '');
   function toast(msg) {
+    msg = plain(msg);
     const t = $('toast'); t.textContent = msg; t.classList.remove('hidden'); t.style.opacity = 1;
     clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.style.opacity = 0; setTimeout(() => t.classList.add('hidden'), 300); }, 2600);
   }
   function modal(html, buttons) {
-    $('modal').innerHTML = html + '<div class="row">' + buttons.map((b, i) => `<button class="btn ${b.secondary ? 'secondary' : ''}" data-i="${i}">${b.label}</button>`).join('') + '</div>';
+    $('modal').innerHTML = html + '<div class="row">' + buttons.map((b, i) => `<button class="btn ${b.secondary ? 'secondary' : 'primary'}" data-i="${i}">${b.label}</button>`).join('') + '</div>';
     $('overlay').classList.remove('hidden');
     $('modal').querySelectorAll('[data-i]').forEach((el) => el.onclick = () => { $('overlay').classList.add('hidden'); el.blur(); buttons[+el.dataset.i].onClick && buttons[+el.dataset.i].onClick(); });
     // Start on the first (safe) button, e.g. "Cancel" / "Not yet", so Enter never confirms by accident.
@@ -501,7 +576,7 @@
   });
   // Releasing Space on a focused button would click it; we handled Space on keydown already.
   document.addEventListener('keyup', (ev) => { if (ev.key === ' ' && !isTyping(ev.target) && (inGame() || modalOpen())) ev.preventDefault(); });
-  $('newGameBtn').onclick = () => modal('<div class="big">🔄</div><h2>Start over?</h2><p>Your current game will be lost.</p>',
+  $('newGameBtn').onclick = () => modal('<h2>Start over?</h2><p>Your current game will be lost.</p>',
     [{ label: 'Cancel', secondary: true }, { label: 'New game', onClick: () => { clearSave(); state = null; $('shopName').value = ''; showStart(); } }]);
 
   // ---------- controls ----------
@@ -519,7 +594,7 @@
       case 'fire': apply(E.Actions.fire(state, b.id, el.dataset.role)); break;
       case 'upLoc': {
         const t = E.getTheme(b), next = t.locations[b.locationLvl + 1]; if (!next) return;
-        modal(`<div class="big">🏪</div><h2>Move to a ${next.name}?</h2><p>Costs ${eur(next.cost)} now. Rent becomes ${eur(next.rent)}/week, but about ${(next.traffic / t.locations[b.locationLvl].traffic).toFixed(1)}× more people walk past, and there's room for ${next.maxStaff} staff.</p>`,
+        modal(`<h2>Move to a ${next.name}?</h2><p>Costs ${eur(next.cost)} now. Rent becomes ${eur(next.rent)}/week, but about ${(next.traffic / t.locations[b.locationLvl].traffic).toFixed(1)}× more people walk past, and there's room for ${next.maxStaff} staff.</p>`,
           [{ label: 'Not yet', secondary: true }, { label: `Move · ${short(next.cost)}`, onClick: () => apply(E.Actions.upgradeLocation(state, b.id)) }]);
         break;
       }
@@ -534,9 +609,9 @@
   $('nextBtn').onclick = () => {
     if (state.status !== 'playing') return;
     state = E.tick(state); save(); render();
-    document.querySelectorAll('#game .o1, #game .o2').forEach((c) => { c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash'); });
+    document.querySelectorAll('#game .tile').forEach((c, i) => { c.classList.remove('flip'); void c.offsetWidth; c.style.animationDelay = (i * 45) + 'ms'; c.classList.add('flip'); });
     const b = state.businesses[0], rep = b.lastReport;
-    if (state.status === 'playing' && b.forecast) toast('📅 ' + b.forecast.text);
+    if (state.status === 'playing' && b.forecast) toast('Next week: ' + b.forecast.text);
     else if (state.status === 'playing' && rep && rep.events.length) toast(rep.events[0].text);
     if (state.status !== 'playing') setTimeout(endScreen, 400);
   };
@@ -545,9 +620,9 @@
     const v = E.valuation(state), y = Math.floor((state.week - 1) / 52) + 1;
     const restart = () => { clearSave(); state = null; showStart(); };
     const look = { label: 'Look around', secondary: true };
-    if (state.status === 'won') modal(`<div class="big">🏆</div><h2>You built a €1M company!</h2><p><b>${state.businesses[0].name}</b> hit a valuation of ${eur(v)} in week ${state.week} (year ${y}). Next up: run several businesses at once.</p>`, [look, { label: 'Play again', onClick: restart }]);
-    else if (state.status === 'bankrupt') modal(`<div class="big">📉</div><h2>Bankrupt</h2><p>You ran out of cash in week ${state.week}. Rent and wages are due whether customers show up or not, so keep a buffer before big moves.</p>`, [look, { label: 'Try again', onClick: restart }]);
-    else modal(`<div class="big">⏰</div><h2>Time's up</h2><p>Five years have passed. ${state.businesses[0].name} is worth ${eur(v)}, which is ${Math.round(v / state.goal * 100)}% of the goal.</p>`, [look, { label: 'Play again', onClick: restart }]);
+    if (state.status === 'won') modal(`<h2>You built a €1M company!</h2><p><b>${state.businesses[0].name}</b> hit a valuation of ${eur(v)} in week ${state.week} (year ${y}). Next up: run several businesses at once.</p>`, [look, { label: 'Play again', onClick: restart }]);
+    else if (state.status === 'bankrupt') modal(`<h2>Bankrupt</h2><p>You ran out of cash in week ${state.week}. Rent and wages are due whether customers show up or not, so keep a buffer before big moves.</p>`, [look, { label: 'Try again', onClick: restart }]);
+    else modal(`<h2>Time's up</h2><p>Five years have passed. ${state.businesses[0].name} is worth ${eur(v)}, which is ${Math.round(v / state.goal * 100)}% of the goal.</p>`, [look, { label: 'Play again', onClick: restart }]);
   }
 
   // ---------- render ----------
@@ -557,13 +632,14 @@
     const loc = t.locations[b.locationLvl], mac = t.machines[b.machineLvl];
     const year = Math.floor(state.week / 52) + 1, wk = (state.week % 52) + 1;
 
-    $('shopTitle').textContent = '☕ ' + b.name;
+    $('shopTitle').textContent = b.name;
+    document.documentElement.style.setProperty('--biz', t.color || '#C2410C');
     $('when').textContent = `Year ${year} · Week ${wk} · ${E.seasonName(state.week + 1)}`;
     const v = E.valuation(state);
     $('valNow').textContent = eur(v);
     $('weeksLeft').textContent = `${state.maxWeeks - state.week} weeks left`;
     const pct = Math.max(0, Math.min(100, v / state.goal * 100));
-    $('goalBar').firstElementChild.style.width = pct + '%';
+    $('goalBar').firstElementChild.style.transform = `scaleX(${pct / 100})`;
     $('goalBar').classList.toggle('good', pct >= 100);
 
     // tiles
@@ -572,14 +648,18 @@
     $('tCash').className = 'val num ' + (state.player.cash < 1000 ? 'neg' : '');
     $('tLoan').textContent = state.player.loan ? `loan ${short(state.player.loan)}` : 'no debt';
     $('tProfit').textContent = r ? short(r.profit - (state.lastInterest || 0)) : '—';
-    $('tProfit').className = 'val num ' + (r ? (r.profit >= 0 ? 'pos' : 'neg') : '');
+    $('tProfit').className = 'val num';
+    const netProfit = r ? r.profit - (state.lastInterest || 0) : 0;
+    $('tileProfit').className = 'tile' + (r ? (netProfit >= 0 ? ' fill-good' : ' fill-bad') : '');
+    $('tProfit').textContent = r ? (netProfit < 0 ? '−' : '+') + short(Math.abs(netProfit)) : '—';
     $('tTicket').textContent = r && r.served ? `profit · ${eur(r.avgTicket, 2)} per customer` : 'profit';
     $('tServed').textContent = r ? n0(r.served) : '—';
     $('tLost').innerHTML = r ? (r.lost > 0 ? `<span class="neg">${n0(r.lost)} walked away</span>` : 'no queue') : 'served';
     $('tRep').textContent = Math.round(b.reputation); $('mRep').style.width = b.reputation + '%';
     $('tAw').textContent = Math.round(b.awareness); $('mAw').style.width = b.awareness + '%';
     $('tClean').textContent = Math.round(b.cleanliness * 100) + '%';
-    $('tClean').className = 'val num ' + (b.cleanliness < 0.7 ? 'neg' : '');
+    $('tClean').className = 'val num';
+    $('tileClean').className = 'tile' + (b.cleanliness < 0.7 ? ' fill-bad' : '');
     $('mClean').style.width = b.cleanliness * 100 + '%';
     $('mods').innerHTML = b.modifiers.map((m) => `<span class="pill bad">${m.label} · ${m.weeks}w</span>`).join('');
 
@@ -590,16 +670,16 @@
     // advisor
     const tips = advisor(b, t, r);
     $('tipsCard').classList.toggle('hidden', !tips.length);
-    $('tips').innerHTML = tips.map((x) => `<div class="ev">💡 ${x}</div>`).join('');
+    $('tips').innerHTML = tips.map((x) => `<div class="ev">${x}</div>`).join('');
 
     // log
-    $('log').innerHTML = state.log.slice(0, 8).map((l) => `<div class="ev ${l.tone}"><span class="wk">W${l.week}</span>${l.text}</div>`).join('') || '<p style="color:var(--muted);margin:0">Quiet so far.</p>';
+    $('log').innerHTML = state.log.slice(0, 8).map((l) => `<div class="ev ${l.tone}"><span class="wk">W${l.week}</span>${plain(l.text)}</div>`).join('') || '<p style="color:var(--muted);margin:0">Quiet so far.</p>';
 
     // forecast
     const fc = b.forecast;
     $('forecast').innerHTML = fc
-      ? `<div class="forecast ${fc.tone}"><span>📅</span><div><b>Next week</b>${fc.text}</div></div>`
-      : (r ? `<div class="forecast none"><span>📅</span><div><b>Next week</b>Nothing special on the horizon.</div></div>` : '');
+      ? `<div class="forecast ${fc.tone}"><b>next week:</b> ${fc.text}</div>`
+      : (r ? `<div class="forecast none"><b>next week:</b> nothing special on the horizon.</div>` : '');
 
     renderMenu(b, t, r);
     renderTeam(b, t, r);
@@ -627,8 +707,8 @@
       <tr><td>Served</td><td>${n0(r.served)}</td></tr>
       ${lostRow}
       <tr><td style="color:var(--muted)">Bar capacity · register capacity</td><td style="color:var(--muted)">${n0(r.barCap)} · ${n0(r.registerCap)}</td></tr>
-      <tr class="sec"><td colspan="2">Money</td></tr>
-      ${r.sales.filter((s) => s.qty > 0).map((s) => `<tr><td>${s.icon} ${s.name} (${n0(s.qty)} × ${eur(s.price, 2)})</td><td class="pos">${eur(s.revenue)}</td></tr>`).join('')}
+      <tr class="sec"><td colspan="2"></td></tr>
+      ${r.sales.filter((s) => s.qty > 0).map((s) => `<tr><td>${s.name} (${n0(s.qty)} × ${eur(s.price, 2)})</td><td class="pos">${eur(s.revenue)}</td></tr>`).join('')}
       <tr><td>Ingredients, cups & bags</td><td>${eur(-c.supplies)}</td></tr>
       <tr><td>Wages</td><td>${eur(-c.wages)}</td></tr>
       <tr><td>Rent</td><td>${eur(-c.rent)}</td></tr>
@@ -636,7 +716,7 @@
       ${c.systems ? `<tr><td>Systems (subscriptions)</td><td>${eur(-c.systems)}</td></tr>` : ''}
       ${c.other ? `<tr><td>Other (repairs, fines)</td><td>${eur(-c.other)}</td></tr>` : ''}
       ${state.lastInterest ? `<tr><td>Loan interest</td><td>${eur(-state.lastInterest)}</td></tr>` : ''}
-      <tr class="total"><td>Profit</td><td class="${net >= 0 ? 'pos' : 'neg'}">${eur(net)}</td></tr>
+      <tr class="total"><td>profit</td><td class="${net >= 0 ? 'pos' : 'neg'}">${eur(net)}</td></tr>
     </table>`;
   }
 
@@ -648,7 +728,7 @@
     const onCount = E.THEMES[b.themeId].products.filter((p) => E.isUnlocked(b, p) && b.menu[p.id].on).length;
     $('menuHint').textContent = `${onCount} item${onCount === 1 ? '' : 's'} on the menu`;
     $('menu').innerHTML = t.products.map((p) => {
-      if (!E.isUnlocked(b, p)) return `<div class="mi locked"><span class="ic">${p.icon}</span><div class="info"><b>${p.name}</b><small>🔒 ${p.lockText}</small></div></div>`;
+      if (!E.isUnlocked(b, p)) return `<div class="mi locked"><div class="info"><b>${p.name}</b><small>${p.lockText}</small></div></div>`;
       const m = b.menu[p.id], fair = E.fairPriceOf(b, p);
       const unitCost = p.cost + p.beans * supply.costPerUnit;
       const sold = r ? (r.sales.find((s) => s.id === p.id) || { qty: 0 }).qty : null;
@@ -657,9 +737,9 @@
         ? `${sold != null ? n0(sold) + ' sold · ' : ''}fair ${eur(fair, 2)} · costs you ${eur(unitCost, 2)}`
         : `Not on the menu · ${what} · fair ${eur(fair, 2)}`;
       return `<div class="mi ${m.on ? '' : 'off'}">
-        <button class="tog ${m.on ? 'on' : ''}" data-act="toggle" data-id="${p.id}" aria-label="Toggle ${p.name}">${m.on ? '✓' : ''}</button>
-        <div class="info"><b>${p.icon} ${p.name}${p.summer ? ' <span class="pill mid">summer hit</span>' : ''}</b><small>${info}</small></div>
-        ${m.on ? `<div class="mini"><button data-act="iprice" data-id="${p.id}" data-d="-0.1" aria-label="Lower price">−</button><span class="num">${eur(m.price, 2)}<i class="${priceDot(m.price / fair)}"></i></span><button data-act="iprice" data-id="${p.id}" data-d="0.1" aria-label="Raise price">+</button></div>` : ''}
+        <button class="tog ${m.on ? 'on' : ''}" data-act="toggle" data-id="${p.id}" aria-label="Toggle ${p.name}">${m.on ? '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg>' : ''}</button>
+        <div class="info"><b>${p.name}${p.summer ? ' <span class="pill mid">summer hit</span>' : ''}</b><small>${info}</small></div>
+        ${m.on ? `<div class="mini"><button data-act="iprice" data-id="${p.id}" data-d="-0.1" aria-label="Lower price">${ICON.minus}</button><span class="num">${eur(m.price, 2)}<i class="${priceDot(m.price / fair)}"></i></span><button data-act="iprice" data-id="${p.id}" data-d="0.1" aria-label="Raise price">${ICON.plus}</button></div>` : ''}
       </div>`;
     }).join('');
   }
@@ -676,8 +756,8 @@
       cleaner: `Keeps it clean for ~${n0(clean)} customers/wk`,
     };
     $('team').innerHTML = t.roles.map((role) => `<div class="role">
-      <div class="info"><b>${role.icon} ${role.plural}</b><small>${eur(role.wage)}/wk each · ${hint[role.id]}</small></div>
-      <div class="mini"><button data-act="fire" data-role="${role.id}" aria-label="Let one go">−</button><span class="num">${b.staff[role.id]}</span><button data-act="hire" data-role="${role.id}" aria-label="Hire one">+</button></div>
+      <div class="info"><b>${role.plural}</b><small>${eur(role.wage)}/wk each · ${hint[role.id]}</small></div>
+      <div class="mini"><button data-act="fire" data-role="${role.id}" aria-label="Let one go">${ICON.minus}</button><span class="num">${b.staff[role.id]}</span><button data-act="hire" data-role="${role.id}" aria-label="Hire one">${ICON.plus}</button></div>
     </div>`).join('');
     const bn = r && r.bottleneck ? `Last week the <b>${r.bottleneck === 'bar' ? 'bar' : 'register'}</b> was your bottleneck.` : r ? 'Last week nobody had to walk away.' : '';
     $('teamNote').innerHTML = `You help out yourself: you count as one barista and one cashier, and you do a bit of cleaning. ${bn}`;
@@ -686,21 +766,21 @@
   function renderInvest(b, t) {
     const loc = t.locations[b.locationLvl], mac = t.machines[b.machineLvl];
     const nl = t.locations[b.locationLvl + 1];
-    $('locNow').textContent = '🏪 ' + loc.name;
+    $('locNow').textContent = loc.name;
     $('locNext').innerHTML = nl ? `Next: <b>${nl.name}</b>, ${n0(nl.traffic)} passers-by/wk, rent ${eur(nl.rent)}/wk, room for ${nl.maxStaff} staff` : 'Best location in town.';
     $('upLocBtn').textContent = nl ? 'Move · ' + short(nl.cost) : 'Maxed';
     $('upLocBtn').disabled = !nl || state.player.cash < nl.cost;
 
     const nm = t.machines[b.machineLvl + 1];
     const unlocks = (lvl) => t.products.filter((p) => p.requires && p.requires.machineLvl === lvl).map((p) => p.name);
-    $('macNow').textContent = '⚙️ ' + mac.name;
+    $('macNow').textContent = mac.name;
     $('macNext').innerHTML = nm ? `Next: <b>${nm.name}</b>, each barista ${Math.round((nm.perStaff / mac.perStaff - 1) * 100)}% faster${unlocks(b.machineLvl + 1).length ? '. Unlocks ' + unlocks(b.machineLvl + 1).join(', ') : ''}` : 'Top of the line.';
     $('upMacBtn').textContent = nm ? 'Buy · ' + short(nm.cost) : 'Maxed';
     $('upMacBtn').disabled = !nm || state.player.cash < nm.cost;
 
-    const row = (x, owned, locked, act) => `<div class="upg">
-      <div class="info"><div class="now">${x.icon} ${x.name}${owned ? ' <span class="pill good">Installed</span>' : ''}</div>
-      <div class="next">${locked ? '🔒 ' + x.lockText + '. ' : ''}${x.desc}${x.weekly ? ` ${eur(x.weekly)}/wk subscription.` : ''}</div></div>
+    const row = (x, owned, locked, act) => `<div class="upg${locked ? ' is-locked' : ''}">
+      <div class="info"><div class="now">${x.name}${owned ? ' <span class="pill good">Installed</span>' : ''}</div>
+      <div class="next">${locked ? x.lockText + '. ' : ''}${x.desc}${x.weekly ? ` ${eur(x.weekly)}/wk subscription.` : ''}</div></div>
       ${owned ? '' : `<button class="btn" data-act="${act}" data-id="${x.id}" ${locked || state.player.cash < x.cost ? 'disabled' : ''}>Buy · ${short(x.cost)}</button>`}
     </div>`;
     $('equipList').innerHTML = t.equipment.map((e) => row(e, b.equipment[e.id], !E.meets(b, e.requires), 'equip')).join('');
@@ -762,8 +842,7 @@
     const path = (arr) => arr.map((p, i) => (i ? 'L' : 'M') + x(p.w).toFixed(1) + ',' + y(p.v).toFixed(1)).join('');
     const avg = m.smooth ? pts.map((p, i) => { const s = pts.slice(Math.max(0, i - 3), i + 1); return { w: p.w, v: s.reduce((a, q) => a + q.v, 0) / s.length }; }) : pts;
     const main = path(avg);
-    const area = main + `L${x(w1).toFixed(1)},${y(Math.max(lo, 0)).toFixed(1)}L${x(w0).toFixed(1)},${y(Math.max(lo, 0)).toFixed(1)}Z`;
-    let grid = '';
+        let grid = '';
     [lo, (lo + hi) / 2, hi].forEach((v) => {
       grid += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/>
         <text x="${L - 6}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="var(--muted)">${m.fmt(v)}</text>`;
@@ -772,19 +851,19 @@
     for (let yr = 1; yr * 52 <= w1; yr++) {
       const wx = yr * 52 + 0.5; if (wx < w0) continue;
       grid += `<line x1="${x(wx)}" x2="${x(wx)}" y1="${T}" y2="${H - B}" stroke="var(--line)" stroke-width="1"/>
-        <text x="${x(wx) + 4}" y="${H - 6}" font-size="11" fill="var(--muted)">Year ${yr + 1}</text>`;
+        <text x="${x(wx) + 4}" y="${H - 6}" font-size="11" fill="var(--muted)">year ${yr + 1}</text>`;
     }
-    grid += `<text x="${L}" y="${H - 6}" font-size="11" fill="var(--muted)">Year ${Math.floor((w0 - 1) / 52) + 1}</text>`;
+    grid += `<text x="${L}" y="${H - 6}" font-size="11" fill="var(--muted)">year ${Math.floor((w0 - 1) / 52) + 1}</text>`;
     const goalLine = metric === 'value' && hi >= state.goal * 0.5
-      ? `<line x1="${L}" x2="${W - R}" y1="${y(state.goal)}" y2="${y(state.goal)}" stroke="var(--good)" stroke-dasharray="5 4" stroke-width="1.5"/><text x="${W - R}" y="${y(state.goal) - 5}" text-anchor="end" font-size="11" fill="var(--good)">goal</text>` : '';
+      ? `<line x1="${L}" x2="${W - R}" y1="${y(state.goal)}" y2="${y(state.goal)}" stroke="var(--good)" stroke-dasharray="5 4" stroke-width="1.5"/><text x="${W - R}" y="${y(state.goal) - 5}" text-anchor="end" font-size="12" fill="var(--good)">goal</text>` : '';
     $('pchart').innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
         ${grid}
-        <path d="${area}" fill="var(--accent-soft)" opacity=".6"/>
-        ${m.smooth ? `<path d="${path(pts)}" fill="none" stroke="var(--accent)" stroke-opacity=".3" stroke-width="1"/>` : ''}
+        
+        ${m.smooth ? `<path d="${path(pts)}" fill="none" stroke="var(--accent)" stroke-opacity=".35" stroke-width="1"/>` : ''}
         <path d="${main}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>
         ${goalLine}
         <line id="pcur" x1="0" x2="0" y1="${T}" y2="${H - B}" stroke="var(--ink)" stroke-width="1" visibility="hidden"/>
-        <circle id="pdot" r="4.5" fill="var(--ink)" visibility="hidden"/>
+        <rect id="pdot" width="8" height="8" fill="var(--ink)" visibility="hidden"/>
       </svg><div class="ptip hidden" id="ptip"></div>`;
 
     // touch / hover: show the value at a week
@@ -797,9 +876,9 @@
       const cx = x(p.w), cy = y(p.v);
       svg.querySelector('#pcur').setAttribute('x1', cx); svg.querySelector('#pcur').setAttribute('x2', cx);
       svg.querySelector('#pcur').setAttribute('visibility', 'visible');
-      const dot = svg.querySelector('#pdot'); dot.setAttribute('cx', cx); dot.setAttribute('cy', cy); dot.setAttribute('visibility', 'visible');
+      const dot = svg.querySelector('#pdot'); dot.setAttribute('x', cx - 4); dot.setAttribute('y', cy - 4); dot.setAttribute('visibility', 'visible');
       const tip = $('ptip'); tip.classList.remove('hidden');
-      tip.textContent = `Y${Math.floor((p.w - 1) / 52) + 1} W${((p.w - 1) % 52) + 1} · ${m.fmt(p.v)}`;
+      tip.textContent = `year ${Math.floor((p.w - 1) / 52) + 1} · week ${((p.w - 1) % 52) + 1} · ${m.fmt(p.v)}`;
       tip.style.left = Math.max(50, Math.min(rect.width - 50, (cx / W) * rect.width)) + 'px';
     };
     const hide = () => { const svg = box.querySelector('svg'); if (!svg) return; svg.querySelector('#pcur').setAttribute('visibility', 'hidden'); svg.querySelector('#pdot').setAttribute('visibility', 'hidden'); $('ptip').classList.add('hidden'); };
@@ -817,25 +896,25 @@
       Y.rev += h.revenue; Y.profit += h.profit; Y.cust += h.served; Y.rep += h.rep || 0; Y.n++;
     }
     for (const v of state.valuationHistory) { const yr = Math.floor((v.week - 1) / 52) + 1; if (years[yr]) years[yr].value = v.value; }
-    const rows = Object.entries(years).map(([yr, Y]) => `<tr><td>Year ${yr}${Y.n < 52 ? ` <span style="color:var(--muted)">(${Y.n} wk)</span>` : ''}</td>
+    const rows = Object.entries(years).map(([yr, Y]) => `<tr><td>year ${yr}${Y.n < 52 ? ` <span style="color:var(--muted)">(${Y.n} wk)</span>` : ''}</td>
       <td>${short(Y.rev)}</td><td class="${Y.profit >= 0 ? 'pos' : 'neg'}">${short(Y.profit)}</td><td>${n0(Y.cust)}</td><td>${Math.round(Y.rep / Y.n)}</td><td>${short(Y.value || 0)}</td></tr>`).join('');
     $('years').innerHTML = `<table class="ytable num"><tr><th>Year</th><th>Revenue</th><th>Profit</th><th>Customers</th><th>Avg rep.</th><th>Value at end</th></tr>${rows}</table>`;
   }
 
   // ---------- Customer sources ----------
   const SRC = {
-    passersby: { name: 'Passers-by', sub: 'saw your shop and walked in', color: '#C9A27E' },
-    wordOfMouth: { name: 'Word of mouth', sub: 'regulars and friends of customers', color: '#2E7A4C' },
-    marketing: { name: 'Marketing', sub: 'flyers, ads, promotions', color: '#B8692E' },
-    social: { name: 'Social media', sub: 'read about you online', color: '#5B6CB8' },
-    walkins: { name: 'Walk-ins & regulars', sub: 'buy a POS system to split these', color: '#CFC3B5' },
-    promo: { name: 'Marketing & social media', sub: 'buy marketing analytics to split these', color: '#CFC3B5' },
+    passersby: { name: 'Passers-by', sub: 'saw your shop and walked in', color: 'var(--src-walk)' },
+    wordOfMouth: { name: 'Word of mouth', sub: 'regulars and friends of customers', color: 'var(--src-wom)' },
+    marketing: { name: 'Marketing', sub: 'flyers, ads, promotions', color: 'var(--biz)' },
+    social: { name: 'Social media', sub: 'read about you online', color: 'var(--src-social)' },
+    walkins: { name: 'Walk-ins & regulars', sub: 'buy a POS system to split these', color: 'var(--src-mixed)' },
+    promo: { name: 'Marketing & social media', sub: 'buy marketing analytics to split these', color: 'var(--src-mixed)' },
   };
   function renderSources(b, t, r) {
     const pos = b.systems.pos, an = b.systems.analytics;
     $('srcWeek').textContent = r ? 'last week' : '';
     if (!pos && !an) {
-      $('sources').innerHTML = `<p class="locked">🔒 You can see how many customers you get, but not why they came. Install a <b>POS cashier system</b> or <b>marketing analytics</b> (under Invest) to find out.</p>`;
+      $('sources').innerHTML = `<p class="locked">You can see how many customers you get, but not why they came. Install a <b>POS cashier system</b> or <b>marketing analytics</b> (under Invest) to find out.</p>`;
       return;
     }
     if (!r) { $('sources').innerHTML = '<p class="locked">Data appears after your next week of sales.</p>'; return; }
@@ -851,8 +930,8 @@
     if (an) {
       const m = r.costs.marketing;
       html += m > 0
-        ? `<div class="roi">📊 Marketing brought <b>${sc.marketing}</b> customers last week for ${eur(m)} spent. After ingredient costs that's <b class="${r.marketingReturn >= 0 ? 'pos' : 'neg'}">${eur(r.marketingReturn)}</b> net. Marketing builds up over weeks, and it's wasted while customers are walking away from a full shop.</div>`
-        : `<div class="roi">📊 You spent nothing on marketing last week. ${sc.marketing > 0 ? `Earlier campaigns still brought ${sc.marketing} customers.` : ''}</div>`;
+        ? `<div class="roi">Marketing brought <b>${sc.marketing}</b> customers last week for ${eur(m)} spent. After ingredient costs that's <b class="${r.marketingReturn >= 0 ? 'pos' : 'neg'}">${eur(r.marketingReturn)}</b> net. Marketing builds up over weeks, and it's wasted while customers are walking away from a full shop.</div>`
+        : `<div class="roi">You spent nothing on marketing last week. ${sc.marketing > 0 ? `Earlier campaigns still brought ${sc.marketing} customers.` : ''}</div>`;
     }
     $('sources').innerHTML = html;
   }

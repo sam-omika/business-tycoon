@@ -39,7 +39,9 @@ and cashing out. See `docs/ROADMAP.md`.
 
 - Vanilla JS, 2-space indent, single quotes, no build tools. Keep `index.html` + `engine.js` loadable as static files.
 - Money is euros, shown like `€1,250` (`toLocaleString('en')`).
-- Colors only through CSS variables (`--bg`, `--card`, `--ink`, `--muted`, `--line`, `--accent`, `--good`, `--bad`, …), defined for light **and** dark.
+- Colors only through CSS variables (`--bg`, `--card`, `--ink`, `--muted`, `--line`, `--accent`, `--good`, `--bad`, `--biz`, …), defined for light **and** dark.
+- Look = "Live Tiles" (`DESIGN.md`, `PRODUCT.md`): flat tiles, lowercase Selawik (self-hosted in `fonts/`), no radius, no emoji as icons.
+  Only the main action is filled with the business colour `--biz` (from `THEMES.<id>.color`). For UI design work use the `/impeccable` skill.
 - Touch targets ≥ 40px (the iPad must keep working). Hover tooltips and keyboard shortcuts are welcome as extras,
   but nothing important may be hover-only or keyboard-only. No `alert/confirm/prompt`; use the in-page `modal()` and `toast()`.
 - Layout: two columns ≥ 900px wide, single column below (card order via `.o1`…`.o10` classes).

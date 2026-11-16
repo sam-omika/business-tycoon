@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-16T00:00:00Z",
+  "title": "Design System: Business Tycoon",
+  "extensions": {
+    "colorMeta": {
+      "business": { "role": "primary", "displayName": "Roasted Ember (business colour, runtime --biz)", "canonical": "oklch(55.3% 0.174 38.4)", "tonalRamp": ["#2D0000", "#5F0000", "#860000", "#AD2C00", "#D55325", "#FD784C", "#FF9D70", "#FFD2B3"] },
+      "ground-light": { "role": "neutral", "displayName": "Paper White", "canonical": "oklch(100% 0 0)", "tonalRamp": ["#0B0B0B", "#252525", "#424242", "#616161", "#828282", "#A5A5A5", "#C9C9C9", "#EEEEEE"] },
+      "tile-light": { "role": "neutral", "displayName": "Tile Grey", "canonical": "oklch(95.8% 0 0)", "tonalRamp": ["#0B0B0B", "#252525", "#424242", "#616161", "#828282", "#A5A5A5", "#C9C9C9", "#EEEEEE"] },
+      "ink-light": { "role": "neutral", "displayName": "Ink", "canonical": "oklch(15% 0.002 286.1)", "tonalRamp": ["#0B0B0C", "#252526", "#424243", "#616162", "#828283", "#A5A5A6", "#C9C9CA", "#EEEEF0"] },
+      "muted-light": { "role": "neutral", "displayName": "Muted Grey", "canonical": "oklch(48.2% 0 0)", "tonalRamp": ["#0B0B0B", "#252525", "#424242", "#616161", "#828282", "#A5A5A5", "#C9C9C9", "#EEEEEE"] },
+      "line-light": { "role": "neutral", "displayName": "Hairline", "canonical": "oklch(88.8% 0 0)", "tonalRamp": ["#0B0B0B", "#252525", "#424242", "#616161", "#828282", "#A5A5A5", "#C9C9C9", "#EEEEEE"] },
+      "ground-dark": { "role": "neutral", "displayName": "Night Black", "canonical": "oklch(15% 0.002 286.1)", "tonalRamp": ["#0B0B0C", "#252526", "#424243", "#616162", "#828283", "#A5A5A6", "#C9C9CA", "#EEEEF0"] },
+      "tile-dark": { "role": "neutral", "displayName": "Night Tile", "canonical": "oklch(22.3% 0.004 286.1)", "tonalRamp": ["#0B0B0D", "#252527", "#424244", "#616163", "#828284", "#A5A5A7", "#C9C9CB", "#EEEEF1"] },
+      "ink-dark": { "role": "neutral", "displayName": "Night Ink", "canonical": "oklch(100% 0 0)", "tonalRamp": ["#0B0B0B", "#252525", "#424242", "#616161", "#828282", "#A5A5A5", "#C9C9C9", "#EEEEEE"] },
+      "muted-dark": { "role": "neutral", "displayName": "Night Muted", "canonical": "oklch(68.6% 0 0)", "tonalRamp": ["#0B0B0B", "#252525", "#424242", "#616161", "#828282", "#A5A5A5", "#C9C9C9", "#EEEEEE"] },
+      "line-dark": { "role": "neutral", "displayName": "Night Hairline", "canonical": "oklch(29.4% 0.005 286.1)", "tonalRamp": ["#0B0B0D", "#252528", "#424245", "#616164", "#828285", "#A4A4A8", "#C9C9CC", "#EEEEF2"] },
+      "profit-fill": { "role": "secondary", "displayName": "Profit Green (state flood)", "canonical": "oklch(51.1% 0.135 147.3)", "tonalRamp": ["#001500", "#003400", "#00530A", "#16752F", "#419850", "#65BC72", "#8AE195", "#B7FFC0"] },
+      "loss-fill": { "role": "secondary", "displayName": "Loss Red (state flood)", "canonical": "oklch(50.1% 0.178 28.7)", "tonalRamp": ["#2D0000", "#610000", "#880000", "#B0221B", "#D84C3F", "#FF7161", "#FF9784", "#FFD0C0"] },
+      "good-text-light": { "role": "secondary", "displayName": "Good Figure", "canonical": "oklch(51.1% 0.135 147.3)", "tonalRamp": ["#001500", "#003400", "#00530A", "#16752F", "#419850", "#65BC72", "#8AE195", "#B7FFC0"] },
+      "bad-text-light": { "role": "secondary", "displayName": "Bad Figure", "canonical": "oklch(50.1% 0.178 28.7)", "tonalRamp": ["#2D0000", "#610000", "#880000", "#B0221B", "#D84C3F", "#FF7161", "#FF9784", "#FFD0C0"] },
+      "good-text-dark": { "role": "secondary", "displayName": "Night Good Figure", "canonical": "oklch(77.4% 0.165 149.5)", "tonalRamp": ["#001500", "#003600", "#005700", "#007924", "#119C47", "#48C16A", "#70E68D", "#B4FFC3"] },
+      "bad-text-dark": { "role": "secondary", "displayName": "Night Bad Figure", "canonical": "oklch(72.3% 0.172 27.1)", "tonalRamp": ["#2D0000", "#600000", "#860000", "#AE2724", "#D64F46", "#FE7468", "#FF998A", "#FFCFC3"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Game title on the start screen, one line." },
+      "headline": { "displayName": "Headline", "purpose": "Business name, top-left of the game screen." },
+      "figure-hero": { "displayName": "Figure Hero", "purpose": "Company value right-aligned on the name row; cash in the bottom bar at 34px." },
+      "section": { "displayName": "Section", "purpose": "Section headings that act as the container; pop-up headings at 44px." },
+      "figure-tile": { "displayName": "Figure Tile", "purpose": "The number inside a stat tile." },
+      "title": { "displayName": "Title", "purpose": "Item names in menu, team and invest rows; control headings." },
+      "body": { "displayName": "Body", "purpose": "Report rows, sources, toasts." },
+      "body-lead": { "displayName": "Lead", "purpose": "Advisor tips, forecast and pop-up text; sentence case, max 60ch." },
+      "label": { "displayName": "Label", "purpose": "Tile labels and field labels, under their values, lowercase." },
+      "caption": { "displayName": "Caption", "purpose": "Muted subs, hints, item details, table headers." }
+    },
+    "shadows": [
+      { "name": "band-lift", "value": "0 24px 64px rgba(0,0,0,.35)", "purpose": "Only on the full-width pop-up band, over the 72% veil. No other surface has a shadow." }
+    ],
+    "motion": [
+      { "name": "ease-house", "value": "cubic-bezier(.16, 1, .3, 1)", "purpose": "The single easing used for every transition and animation." },
+      { "name": "press", "value": "transform .14s", "purpose": "Buttons press to scale(.97); tile-like controls to scale(.94)." },
+      { "name": "tile-flip", "value": "rotateX 0 -> 90deg -> -90deg -> 0, .62s, 45ms stagger per tile, 900px perspective", "purpose": "Stat tiles flip when a new week opens." },
+      { "name": "heading-flash", "value": "color accent -> ink, .9s", "purpose": "A section heading flashes when its content updates." },
+      { "name": "goal-fill", "value": "transform scaleX .6s", "purpose": "Goal bar fill." },
+      { "name": "band-enter", "value": "translateY(16px) + opacity 0 -> none, .36s", "purpose": "Pop-up band entrance." },
+      { "name": "reduced-motion", "value": "animation: none; transition: none", "purpose": "All motion disabled under prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "two-tile-grid", "value": "520px" },
+      { "name": "compact-bottombar", "value": "560px" },
+      { "name": "stacked-header", "value": "640px" },
+      { "name": "two-panes", "value": "900px" },
+      { "name": "tight-desktop", "value": "1200px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button (business flood)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one action per screen that advances the game; flooded in the business colour.",
+      "html": "<button class=\"ds-btn ds-btn-primary\"><span>open next week</span><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12h15M13 6l6 6-6 6\"/></svg></button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 48px; min-width: 260px; padding: 10px 16px; border: 2px solid var(--ink, #0B0B0C); border-radius: 0; background: transparent; color: var(--ink, #0B0B0C); font: 350 17px/1.4 Selawik, 'Segoe UI', system-ui, sans-serif; text-transform: lowercase; text-align: left; cursor: pointer; transition: transform .14s cubic-bezier(.16,1,.3,1), background-color .14s; } .ds-btn svg { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: square; } .ds-btn-primary { background: var(--biz, #C2410C); border-color: var(--biz, #C2410C); color: #fff; } .ds-btn:active { transform: scale(.97); } .ds-btn:focus-visible { outline: 2px solid var(--ink, #0B0B0C); outline-offset: 2px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Default action: 2px ink outline that inverts to an ink flood on hover.",
+      "html": "<button class=\"ds-btn-outline\">upgrade · €2,500</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; min-height: 48px; padding: 10px 16px; border: 2px solid var(--ink, #0B0B0C); border-radius: 0; background: transparent; color: var(--ink, #0B0B0C); font: 350 17px/1.4 Selawik, 'Segoe UI', system-ui, sans-serif; text-transform: lowercase; cursor: pointer; transition: transform .14s cubic-bezier(.16,1,.3,1), background-color .14s; } .ds-btn-outline:hover { background: var(--ink, #0B0B0C); color: var(--bg, #FFFFFF); } .ds-btn-outline:active { transform: scale(.97); } .ds-btn-outline:focus-visible { outline: 2px solid var(--ink, #0B0B0C); outline-offset: 2px; }"
+    },
+    {
+      "name": "Live Tile",
+      "kind": "card",
+      "refersTo": "tile",
+      "description": "Stat tile: big light figure, optional meter, label under, muted sub. Floods green or red only as state.",
+      "html": "<div class=\"ds-tiles\"><div class=\"ds-tile\"><div class=\"ds-val\">€4,820</div><div class=\"ds-lbl\">cash</div><div class=\"ds-sub\">no loan</div></div><div class=\"ds-tile ds-tile-good\"><div class=\"ds-val\">€612</div><div class=\"ds-lbl\">last week</div><div class=\"ds-sub\">profit</div></div><div class=\"ds-tile\"><div class=\"ds-val\">72</div><div class=\"ds-meter\"><i style=\"width:72%\"></i></div><div class=\"ds-lbl\">reputation</div></div></div>",
+      "css": ".ds-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-family: Selawik, 'Segoe UI', system-ui, sans-serif; } .ds-tile { background: var(--card, #F1F1F1); color: var(--ink, #0B0B0C); min-height: 116px; padding: 12px 14px 10px; display: flex; flex-direction: column; justify-content: flex-end; border-radius: 0; } .ds-val { font-size: 48px; font-weight: 300; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; } .ds-lbl { font-size: 15px; margin-top: 8px; text-transform: lowercase; } .ds-sub { font-size: 13px; color: var(--muted, #5E5E5E); text-transform: lowercase; min-height: 1.3em; } .ds-meter { height: 4px; background: var(--line, #DADADA); margin-top: 10px; } .ds-meter i { display: block; height: 100%; background: var(--ink, #0B0B0C); } .ds-tile-good { background: #1E7A34; color: #fff; } .ds-tile-good .ds-sub { color: rgba(255,255,255,.86); }"
+    },
+    {
+      "name": "Segment Options",
+      "kind": "chip",
+      "refersTo": "segment-option",
+      "description": "Three-way choice as small tiles; the selected one floods in ink.",
+      "html": "<div class=\"ds-seg\"><button><b>basic</b><span>€0.20 a shot</span></button><button class=\"on\"><b>good</b><span>€0.35 a shot</span></button><button><b>specialty</b><span>€0.60 a shot</span></button></div>",
+      "css": ".ds-seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-family: Selawik, 'Segoe UI', system-ui, sans-serif; } .ds-seg button { background: var(--card, #F1F1F1); color: var(--ink, #0B0B0C); border: 0; border-radius: 0; padding: 12px; min-height: 92px; display: flex; flex-direction: column; justify-content: flex-end; text-align: left; cursor: pointer; font: inherit; transition: transform .14s cubic-bezier(.16,1,.3,1); } .ds-seg b { font-size: 19px; font-weight: 300; text-transform: lowercase; } .ds-seg span { font-size: 13px; color: var(--muted, #5E5E5E); margin-top: 4px; } .ds-seg button.on { background: var(--ink, #0B0B0C); color: var(--bg, #FFFFFF); } .ds-seg button.on span { color: inherit; opacity: .72; } .ds-seg button:active { transform: scale(.94); } .ds-seg button:focus-visible { outline: 2px solid var(--ink, #0B0B0C); outline-offset: 2px; }"
+    },
+    {
+      "name": "Stepper",
+      "kind": "custom",
+      "refersTo": "stepper-button",
+      "description": "56px square minus/plus tiles with thin SVG strokes around a light figure with its caption under it.",
+      "html": "<div class=\"ds-stepper\"><button aria-label=\"Less\"><svg viewBox=\"0 0 24 24\"><path d=\"M6 12h12\"/></svg></button><div class=\"ds-v\">€150<small>per week</small></div><button aria-label=\"More\"><svg viewBox=\"0 0 24 24\"><path d=\"M6 12h12M12 6v12\"/></svg></button></div>",
+      "css": ".ds-stepper { display: flex; gap: 8px; font-family: Selawik, 'Segoe UI', system-ui, sans-serif; color: var(--ink, #0B0B0C); } .ds-stepper button { width: 56px; min-height: 56px; background: var(--card, #F1F1F1); color: inherit; border: 0; border-radius: 0; display: grid; place-items: center; font-size: 24px; cursor: pointer; transition: transform .14s cubic-bezier(.16,1,.3,1); } .ds-stepper svg { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: square; } .ds-stepper button:active { transform: scale(.94); } .ds-stepper button:focus-visible { outline: 2px solid var(--ink, #0B0B0C); outline-offset: 2px; } .ds-v { flex: 1; display: flex; flex-direction: column; justify-content: center; font-size: 32px; font-weight: 300; line-height: 1; } .ds-v small { font-size: 13px; color: var(--muted, #5E5E5E); margin-top: 4px; text-transform: lowercase; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Square transparent field, 2px line border turning ink on focus, label lowercase muted.",
+      "html": "<label class=\"ds-field\"><span>name your coffee shop</span><input placeholder=\"e.g. Bean There\"></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 8px; max-width: 616px; font-family: Selawik, 'Segoe UI', system-ui, sans-serif; } .ds-field span { font-size: 15px; color: var(--muted, #5E5E5E); text-transform: lowercase; } .ds-field input { font: 300 24px/1.4 inherit; font-family: inherit; padding: 12px 14px; border: 2px solid var(--line, #DADADA); border-radius: 0; background: transparent; color: var(--ink, #0B0B0C); outline: none; caret-color: var(--biz, #C2410C); } .ds-field input::placeholder { color: var(--muted, #5E5E5E); } .ds-field input:focus { border-color: var(--ink, #0B0B0C); }"
+    },
+    {
+      "name": "Metric Pivot",
+      "kind": "nav",
+      "description": "Pivot-style row of light lowercase metric words; the active one in accent.",
+      "html": "<nav class=\"ds-pivot\"><button class=\"on\">company value</button><button>cash</button><button>profit</button><button>customers</button></nav>",
+      "css": ".ds-pivot { display: flex; flex-wrap: wrap; gap: 0 18px; font-family: Selawik, 'Segoe UI', system-ui, sans-serif; } .ds-pivot button { min-height: 40px; background: none; border: 0; padding: 0; font: inherit; font-size: 20px; font-weight: 300; color: var(--muted, #5E5E5E); text-transform: lowercase; cursor: pointer; } .ds-pivot button:hover { color: var(--ink, #0B0B0C); } .ds-pivot button.on { color: var(--accent, #C2410C); } .ds-pivot button:focus-visible { outline: 2px solid var(--ink, #0B0B0C); outline-offset: 2px; }"
+    },
+    {
+      "name": "Pop-up Band",
+      "kind": "custom",
+      "description": "Full-width tile-grey band, the only surface with a shadow.",
+      "html": "<div class=\"ds-band\"><h2>out of cash</h2><p>Your coffee shop ran out of money in week 38.</p><div class=\"ds-row\"><button class=\"ds-b ds-b-primary\">new game</button><button class=\"ds-b\">close</button></div></div>",
+      "css": ".ds-band { width: 100%; background: var(--card, #F1F1F1); color: var(--ink, #0B0B0C); padding: 36px 24px 32px; box-shadow: 0 24px 64px rgba(0,0,0,.35); font-family: Selawik, 'Segoe UI', system-ui, sans-serif; animation: ds-band .36s cubic-bezier(.16,1,.3,1); } @keyframes ds-band { from { transform: translateY(16px); opacity: 0; } to { transform: none; opacity: 1; } } .ds-band h2 { font-size: 44px; font-weight: 300; line-height: 1.05; letter-spacing: -0.02em; text-transform: lowercase; margin: 0 0 12px; } .ds-band p { color: var(--muted, #5E5E5E); font-size: 17px; line-height: 1.5; margin: 0; max-width: 60ch; } .ds-row { display: flex; gap: 8px; margin-top: 28px; } .ds-b { flex: 1; max-width: 240px; min-height: 52px; padding: 10px 16px; border: 2px solid var(--ink, #0B0B0C); border-radius: 0; background: transparent; color: inherit; font: 350 17px/1.4 inherit; font-family: inherit; text-transform: lowercase; text-align: left; cursor: pointer; } .ds-b-primary { background: var(--biz, #C2410C); border-color: var(--biz, #C2410C); color: #fff; } .ds-b:focus-visible { outline: 2px solid var(--ink, #0B0B0C); outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Live Tiles",
+    "overview": "The business is drawn as flat colour tiles and giant lowercase type on a plain black or white ground. Numbers live in tiles; when the player opens the next week, the six stat tiles flip over in a staggered wave and come back with the new values. Headings are not boxes around content: a 40px light lowercase word is the container. Everything is square, borderless and unshadowed, so state is carried entirely by fills: the business colour floods exactly one thing (the \"open next week\" tile), and profit or loss floods its tile green or red.\n\nThe world refuses the cream-card-serif dashboard: no soft cards, no rounded corners, no serif display, no drop-shadowed panels. Density comes from typographic scale contrast (148px name against 13px captions), not from chrome. Personality lives in the motion (the flip, the heading flash, the band pop-up) and in the lowercase voice, while the numbers stay clear and trustworthy.\n\nThe visual identity is game-wide. A business type contributes only its colour (`--biz`, set at runtime from theme data) and nothing else; every rule here must hold for any business colour that keeps white text readable.",
+    "keyCharacteristics": [
+      "Black or white ground, light-grey or near-black tiles, no radius anywhere.",
+      "Selawik Light, lowercase for every display and label string; body copy stays sentence case.",
+      "One flooded business-colour tile per screen; green/red floods mean state, never decoration.",
+      "Labels sit under their values.",
+      "Thin square-capped SVG strokes for every icon.",
+      "Depth only on the pop-up band.",
+      "Light and dark are equal citizens (auto / light / dark toggle)."
+    ],
+    "rules": [
+      { "name": "The One Flood Rule", "body": "The business colour floods exactly one tile per screen: the action that advances time. Everything else that is selected floods in ink, not in the business colour.", "section": "colors" },
+      { "name": "The Floods Are State Rule", "body": "Green and red fills appear only when a value says so (profit, loss, a failing metric). They are never used to decorate or to group.", "section": "colors" },
+      { "name": "The Derived Accent Rule", "body": "`--accent` is computed from `--biz`, never set by a theme. The \"fair\" price state is neutral (`--muted`), not a third accent hue.", "section": "colors" },
+      { "name": "The Variables Only Rule", "body": "Every colour comes from a CSS custom property defined for light and dark.", "section": "colors" },
+      { "name": "The Lowercase Rule", "body": "Every display and label string is lowercase (headings, tile labels, buttons, pills, captions, table headers), applied with `text-transform` so source strings stay sentence case. Body copy (tips, pop-up text, notes) stays sentence case.", "section": "typography" },
+      { "name": "The Label Under Rule", "body": "A label sits under its value, never above it. Tiles order value, meter, label, sub; the company value and cash put their caption beneath the figure. No eyebrows or kickers.", "section": "typography" },
+      { "name": "The Light Figure Rule", "body": "Large numbers are weight 300 with -0.02em tracking; never bold a figure to make it important, make it bigger.", "section": "typography" },
+      { "name": "The Only The Band Rule", "body": "No shadows anywhere except the pop-up band. If something needs to stand out, flood it or make it bigger.", "section": "elevation" },
+      { "name": "The Struck Through Rule", "body": "Locked content (themes not yet available, menu items and upgrades not yet unlocked) is shown by a 1px line-through in muted colour, not a padlock or a dimmed card.", "section": "shapes" }
+    ],
+    "dos": [
+      "**Do** keep every display and label string lowercase via `text-transform`, and leave body copy in sentence case.",
+      "**Do** put labels and captions under their values.",
+      "**Do** flood the business colour on exactly one tile per screen, the action that advances time; flood selections in ink.",
+      "**Do** use profit-green and loss-red fills only to report state.",
+      "**Do** draw minus, plus, arrows and checks as thin square-capped SVG strokes in `currentColor`.",
+      "**Do** derive `--accent` from `--biz` (light: `var(--biz)`; dark: `color-mix(in srgb, var(--biz) 62%, #fff)`), and define every new colour variable for both light and dark.",
+      "**Do** keep touch targets at least 40px (buttons 48px, steppers 56px), and never put anything important behind hover; keyboard hints are hidden on touch devices.",
+      "**Do** mark locked things with a 1px muted line-through."
+    ],
+    "donts": [
+      "**Don't** round any corner (0px everywhere).",
+      "**Don't** add shadows outside the pop-up band.",
+      "**Don't** put eyebrows or kickers above headings or values.",
+      "**Don't** use text glyphs or emoji as icons.",
+      "**Don't** let a theme add design beyond its business colour and icons.",
+      "**Don't** give the \"fair\" price state a colour; it is neutral muted.",
+      "**Don't** bold figures for emphasis; scale them in light weight.",
+      "**Don't** drift back to the cream-card-serif dashboard: no soft cards, no serif display, no rounded panels."
+    ]
+  }
+}

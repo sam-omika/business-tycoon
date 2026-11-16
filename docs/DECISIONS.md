@@ -25,3 +25,8 @@ Short log of design and technical decisions. Newest at the bottom. Format: what 
 17. **Keyboard: Space only for "next week", letters to jump, pop-ups start on the safe button** (Nov 2026): Enter is too
     easy to hit by accident and already presses buttons in pop-ups. Holding Space advances one week, not many; Space does
     nothing while a pop-up is open, so you can't skip past a win/bankrupt screen or confirm "Start over?" by accident.
+18. **Visual identity: "Live Tiles"** (Nov 2026): Sam wanted to move away from the generic AI look (cream cards, serif,
+    terracotta). Picked through a design direction round: flat colour tiles, giant lowercase light type (Selawik, the
+    open-source Segoe-compatible font, self-hosted), black or white ground, no rounded corners. Only one tile per screen is
+    filled with the business colour ("open next week"); profit fills green/red as state; locked things are struck through.
+    The business colour comes from theme data (`THEMES.<id>.color`), so new business types only add a colour.

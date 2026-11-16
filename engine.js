@@ -26,6 +26,7 @@
       id: 'coffee',
       name: 'Coffee shop',
       icon: '☕',
+      color: '#C2410C',            // business colour in the UI (white text on it must stay readable)
       startCash: 5000,
       hireFee: 200,                // one-off recruiting cost
       qualityPriceBonus: 1.35,      // fair price += quality/100 × this (drinks only)
