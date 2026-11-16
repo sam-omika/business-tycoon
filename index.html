@@ -21,10 +21,11 @@
   @font-face { font-family: 'Selawik'; src: url('fonts/selawk.woff2') format('woff2'); font-weight: 400; font-display: swap; }
   @font-face { font-family: 'Selawik'; src: url('fonts/selawksb.woff2') format('woff2'); font-weight: 600; font-display: swap; }
 
-  /* Selawik has no tabular figures; in number columns the digits alone come from a system face that has them. */
-  @font-face { font-family: 'Tnum'; src: local('Segoe UI Light'), local('SegoeUI-Light'), local('HelveticaNeue-Light'), local('Helvetica Neue Light'); font-weight: 300; unicode-range: U+0030-0039; }
-  @font-face { font-family: 'Tnum'; src: local('Segoe UI'), local('SegoeUI'), local('HelveticaNeue'), local('Helvetica Neue'); font-weight: 350 400; unicode-range: U+0030-0039; }
-  @font-face { font-family: 'Tnum'; src: local('Segoe UI Semibold'), local('SegoeUI-Semibold'), local('HelveticaNeue-Medium'), local('Helvetica Neue Medium'); font-weight: 600; unicode-range: U+0030-0039; }
+  /* Tycoon Figures: Selawik's digits made equal-width (tools/make-figures.py). Only 0-9 come from it. */
+  @font-face { font-family: 'Tycoon Figures'; src: url('fonts/tycoon-figures-light.woff2') format('woff2'); font-weight: 300; font-display: swap; unicode-range: U+0030-0039; }
+  @font-face { font-family: 'Tycoon Figures'; src: url('fonts/tycoon-figures-semilight.woff2') format('woff2'); font-weight: 350; font-display: swap; unicode-range: U+0030-0039; }
+  @font-face { font-family: 'Tycoon Figures'; src: url('fonts/tycoon-figures-regular.woff2') format('woff2'); font-weight: 400; font-display: swap; unicode-range: U+0030-0039; }
+  @font-face { font-family: 'Tycoon Figures'; src: url('fonts/tycoon-figures-semibold.woff2') format('woff2'); font-weight: 600; font-display: swap; unicode-range: U+0030-0039; }
 
   /* ---------- Tokens. --biz is the business colour (set per theme from engine data). ---------- */
   :root {
@@ -55,7 +56,7 @@
   }
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: Selawik, 'Segoe UI', system-ui, sans-serif;
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Tycoon Figures', Selawik, 'Segoe UI', system-ui, sans-serif;
     font-size: 16px; line-height: 1.4; touch-action: manipulation; -webkit-user-select: none; user-select: none;
     -webkit-font-smoothing: antialiased; scrollbar-color: var(--line) var(--bg); }
   ::selection { background: var(--biz); color: #fff; }
@@ -66,7 +67,6 @@
   :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
   .hidden { display: none !important; }
   .num { font-variant-numeric: tabular-nums; }
-  .report, .ytable, .src .ct, .src .pc, .mini span, .ev .wk { font-family: Tnum, Selawik, 'Segoe UI', system-ui, sans-serif; }
   .pos { color: var(--good); } .neg { color: var(--bad); }
   svg.ico { width: 1em; height: 1em; vertical-align: -0.12em; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: square; pointer-events: none; }
 
@@ -251,7 +251,7 @@
   /* ---------- Keyboard hints (hidden on touch devices) ---------- */
   .kbd-only { display: none !important; }
   @media (hover: hover) and (pointer: fine) { .kbd-only { display: revert !important; } }
-  kbd { font: 400 12px/1 Selawik, 'Segoe UI', system-ui, sans-serif; padding: 3px 6px; border: 1px solid currentColor; color: var(--muted); text-transform: lowercase; }
+  kbd { font: 400 12px/1 'Tycoon Figures', Selawik, 'Segoe UI', system-ui, sans-serif; padding: 3px 6px; border: 1px solid currentColor; color: var(--muted); text-transform: lowercase; }
   .btn kbd { color: inherit; opacity: .75; margin-left: 4px; }
   .keys { width: 100%; border-collapse: collapse; margin-top: 8px; text-align: left; max-width: 520px; }
   .keys td { padding: 9px 4px; border-top: 1px solid var(--line); color: var(--ink); font-size: 16px; }
@@ -290,7 +290,7 @@
   .chips button.on { color: var(--accent); }
   @media (hover: hover) { .chips button:hover { color: var(--ink); } }
   .pchart { position: relative; touch-action: none; }
-  .pchart svg { width: 100%; height: 220px; display: block; font-family: Selawik, 'Segoe UI', system-ui, sans-serif; }
+  .pchart svg { width: 100%; height: 220px; display: block; font-family: 'Tycoon Figures', Selawik, 'Segoe UI', system-ui, sans-serif; }
   .ptip { position: absolute; top: 0; padding: 5px 8px; background: var(--ink); color: var(--on-ink); font-size: 13px; pointer-events: none; white-space: nowrap; transform: translateX(-50%); }
   .ytable { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 16px; }
   .ytable th { text-align: right; color: var(--muted); font-weight: 400; font-size: 13px; text-transform: lowercase; padding: 6px 4px; border-bottom: 1px solid var(--line); }

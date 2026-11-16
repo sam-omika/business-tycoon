@@ -18,6 +18,7 @@
 - Switched target to desktop first, iPad still supported
 - Keyboard shortcuts: Space = next week, M/T/I/B/P jump to cards, ? = list, Esc closes pop-ups
 - New look "Live Tiles": flat tiles, giant lowercase type, tiles flip each week, business colour per theme
+- Equal-width digits ("Tycoon Figures", built from Selawik) so numbers line up
 
 ## Next
 
@@ -45,4 +46,3 @@
 - Offline play (service worker); less important now that desktop is the main target
 - Real desktop app (.app/.exe wrapper around the same code); only if a browser tab stops being enough
 - Line-icon set in the tile style for products, staff and upgrades (emoji were removed in the redesign)
-- Tabular (equal-width) digits: Selawik's "1" is narrower, so number columns can wobble slightly

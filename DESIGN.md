@@ -33,7 +33,7 @@ typography:
     lineHeight: 0.9
     letterSpacing: "-0.02em"
   figure-hero:
-    fontFamily: "Tnum, Selawik, 'Segoe UI', system-ui, sans-serif"
+    fontFamily: "'Tycoon Figures', Selawik, 'Segoe UI', system-ui, sans-serif"
     fontSize: "clamp(40px, 4.6vw, 64px)"
     fontWeight: 300
     lineHeight: 1
@@ -219,7 +219,7 @@ A strict monochrome scaffold (ground, tile, ink, muted, line) with one runtime b
 
 **Display Font:** Selawik (self-hosted, SIL OFL, weights 300 / 350 / 400 / 600), with Segoe UI and system-ui fallback
 **Body Font:** Selawik
-**Figure Font:** `Tnum`, a digits-only `unicode-range` face pulled from local Segoe UI or Helvetica Neue, falling back to Selawik (see the open item below)
+**Figure Font:** Tycoon Figures, Selawik's digits made equal-width (see Tabular figures below)
 
 **Character:** One humanist sans at light weight doing everything, Metro-style: size and case carry hierarchy, weight barely moves. Weight 300 for all display and figures, 350 for lead copy and buttons, 400 for body, 600 only inside `<b>`.
 
@@ -242,8 +242,8 @@ A strict monochrome scaffold (ground, tile, ink, muted, line) with one runtime b
 
 **The Light Figure Rule.** Large numbers are weight 300 with -0.02em tracking; never bold a figure to make it important, make it bigger.
 
-### Open Item: tabular figures
-Selawik has no tabular figures. Number columns (report, year table, source counts, menu prices, event weeks) currently take their digits only from a local system face via the `Tnum` unicode-range @font-face (Segoe UI / Helvetica Neue), falling back to proportional Selawik digits where neither exists. This is provisional: the owner has not decided between keeping it, building a tabular-digit derivative of Selawik (allowed by the OFL under a new name), or accepting proportional digits. Do not extend the `Tnum` mechanism to new surfaces until this is decided.
+### Tabular figures (Tycoon Figures)
+Selawik has no tabular figures, so the game ships **Tycoon Figures**: Selawik's ten digits, all set to the width of the widest digit with each outline centred, renamed because the OFL reserves the name "Selawik". Built by `tools/make-figures.py` into `fonts/tycoon-figures-*.woff2` (light, semilight, regular, semibold). It is loaded with `unicode-range: U+0030-0039` and placed first in every font stack, so all digits everywhere are equal-width and everything else stays Selawik: one typeface, numbers that line up and do not change width when tiles flip.
 
 ## Layout
 

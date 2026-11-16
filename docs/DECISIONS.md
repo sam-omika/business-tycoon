@@ -30,3 +30,6 @@ Short log of design and technical decisions. Newest at the bottom. Format: what 
     open-source Segoe-compatible font, self-hosted), black or white ground, no rounded corners. Only one tile per screen is
     filled with the business colour ("open next week"); profit fills green/red as state; locked things are struck through.
     The business colour comes from theme data (`THEMES.<id>.color`), so new business types only add a colour.
+19. **Own digit font "Tycoon Figures"** (Nov 2026): Selawik's digits differ in width, so number columns wobbled. Instead of
+    borrowing digits from a system font (mixes two typefaces inside one number), we made equal-width copies of Selawik's own
+    digits (`tools/make-figures.py`, allowed by the font licence under a new name). Sam chose polish over the quick fix.
