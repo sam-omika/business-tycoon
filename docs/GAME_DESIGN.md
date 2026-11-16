@@ -3,7 +3,7 @@
 ## Concept
 
 Build a business from nothing into a company worth €1M within 5 years. Turn-based: one turn = one week.
-Make decisions, tap **Open next week**, read the report, adjust. Designed for iPad touch play.
+Make decisions, click **Open next week**, read the report, adjust. Desktop first (mouse + keyboard); also playable on an iPad with touch.
 
 The game should teach real small-business instincts: margins, bottlenecks, cash buffers,
 when marketing pays off, and that information (knowing where customers come from) has value.

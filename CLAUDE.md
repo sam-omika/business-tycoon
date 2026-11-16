@@ -1,6 +1,7 @@
 # Business Tycoon
 
-A turn-based business-building game, played in the browser and mainly on an **iPad (Safari, touch)**.
+A turn-based business-building game, played in the browser. **Desktop first** (laptop/monitor, mouse + keyboard),
+and it must **keep working on an iPad** (Safari, touch).
 The player picks a theme (only **coffee shop** exists so far), starts with a cart and €5,000, and must
 grow a company worth **€1,000,000 within 5 years (260 weekly turns)**. Running out of cash = game over.
 
@@ -12,7 +13,7 @@ and cashing out. See `docs/ROADMAP.md`.
 - I'm Sam, the owner of this project. I'm not a full-time game developer: explain trade-offs briefly and in plain words.
 - Prefer simple and practical over clever. Direct answers, no long preambles.
 - For anything bigger than a small fix: propose a short plan first, then build.
-- I test on my iPad. Every UI change must work with touch, in portrait and landscape, light and dark mode.
+- I mainly play on desktop. Every UI change must work at desktop sizes, still work with touch on an iPad, in light and dark mode.
 
 ## Run it
 
@@ -39,14 +40,16 @@ and cashing out. See `docs/ROADMAP.md`.
 - Vanilla JS, 2-space indent, single quotes, no build tools. Keep `index.html` + `engine.js` loadable as static files.
 - Money is euros, shown like `€1,250` (`toLocaleString('en')`).
 - Colors only through CSS variables (`--bg`, `--card`, `--ink`, `--muted`, `--line`, `--accent`, `--good`, `--bad`, …), defined for light **and** dark.
-- Touch targets ≥ 40px. No hover-only interactions. No `alert/confirm/prompt`; use the in-page `modal()` and `toast()`.
+- Touch targets ≥ 40px (the iPad must keep working). Hover tooltips and keyboard shortcuts are welcome as extras,
+  but nothing important may be hover-only or keyboard-only. No `alert/confirm/prompt`; use the in-page `modal()` and `toast()`.
 - Layout: two columns ≥ 900px wide, single column below (card order via `.o1`…`.o10` classes).
 
 ## Workflow rules
 
 - **After any change to the economy** (numbers, formulas, events): run `npm run sim` and compare with the targets in
   `docs/BALANCE.md`. Report the before/after table. Update `docs/BALANCE.md` with the new results.
-- After a feature: check it in the browser at iPad sizes (820×1180 portrait, 1180×820 landscape), light and dark.
+- After a feature: check it in the browser at desktop sizes (1440×900, 1920×1080) plus one iPad size
+  (1180×820 landscape), light and dark.
 - Record important design decisions in `docs/DECISIONS.md` (one short entry: what, why).
 - Keep `docs/ROADMAP.md` current: move items to "Done", add new ideas I mention to the backlog.
 - Commit in small steps with clear messages. Don't push or deploy unless I ask.

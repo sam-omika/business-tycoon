@@ -15,3 +15,6 @@ Short log of design and technical decisions. Newest at the bottom. Format: what 
 11. **Menu replaces the single price; staff split into roles**: more real decisions (bottleneck at bar vs. register, cleanliness).
 12. **Owner counts as 1 barista + 1 cashier + some cleaning**: a solo cart is playable without hiring.
 13. **Balance by simulation**: every economy change is checked with `npm run sim` against the targets in BALANCE.md.
+14. **Desktop first, iPad still works** (Nov 2026): Sam mainly plays on a laptop now. Optimise for mouse/keyboard and big
+    screens (shortcuts, tooltips, wider layout), but keep touch targets and no hover-only features so the iPad keeps working.
+    Still a website, not a native desktop app: no extra tooling needed.
