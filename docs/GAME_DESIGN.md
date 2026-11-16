@@ -20,29 +20,35 @@ when marketing pays off, and that information (knowing where customers come from
 
 ## Core loop (each week, per business) — see `simulateBusiness()` in engine.js
 
-1. **Events**: events announced last week happen now (forecasts). Then a 15% chance of a surprise event.
+1. **Weather, economy and events**: this week's weather (forecast last week, may differ); once a year price rises and a
+   rent review; then the **event director** (see Events below).
 2. **Menu mix**: each drink gets an attractiveness = popularity × price factor (× season for cold brew).
    Share of sales is proportional. Menu **appeal** = (Σ attractiveness / 2.2)^0.45, capped at 1.6.
    Food (croissant) is an add-on: attach rate = 30% × price factor (max 60%).
-3. **Demand** = foot traffic × competitor modifier × awareness factor (0.6 + awareness × 0.9%) × season (±12%)
-   × conversion × event multiplier × noise (±10%).
-   Conversion = 0.35 × (0.5 + reputation%) × menu appeal × (0.75 + 0.25 × cleanliness).
-4. **Capacity**: served = min(demand, bar capacity, register capacity).
+3. **Demand** = foot traffic × traffic effects × awareness factor (0.6 + awareness × 0.9%) × season (±12%)
+   × conversion × weather × event and demand effects × difficulty market (hard 0.82) × noise (±10%).
+   Conversion = 0.35 × (0.5 + reputation%) × menu appeal × (0.6 + 0.4 × cleanliness).
+4. **Capacity**: served = min(demand, bar capacity, register capacity). Contracts and catering orders use bar time first.
    - Bar = (baristas + 1 owner) × machine prep units × menu efficiency ÷ average prep per customer.
      Each drink beyond 3 on the menu costs 4% efficiency.
    - Register = (cashiers + 1 owner) × 900 × (1 + 20% with POS).
-5. **Money**: revenue per item; costs = ingredients (item cost + beans × bean price), wages, rent, marketing,
-   system subscriptions, repairs/fines. Loan interest 0.5%/week is charged at player level.
+5. **Money**: revenue per item (+ contract income); costs = ingredients (item cost + beans × bean price, × supplier
+   price index), wages (× wage index × raises given), rent (× rent index), marketing, system subscriptions,
+   repairs/fines. Loan interest 0.5%/week is charged at player level.
 6. **Reputation** drifts 15% per week toward a target:
    45% bean quality + 20% service (served/demand) + 15% value for money + 20% cleanliness.
 7. **Awareness** = three stocks that each decay 6%/week, total capped at 100:
    marketing (1.5 × √(spend/100)), word of mouth (reputation/55), social media (reputation above 60, plus events).
 8. **Cleanliness** = (cleaners × 1500 + owner 400) ÷ customers served, capped at 100%.
-9. **Forecast**: 20% chance an announceable event is scheduled for next week and shown to the player.
+9. **Paper**: next week's weather forecast (with a % chance) and everything announced is stored for The Courier.
+
+An **open decision** must be answered before the next week starts (`Actions.decide`); if not, its default is taken.
 
 ### Price
 Fair price per item = base + bean quality bonus (drinks: quality% × 1.35) + reputation% × 0.8.
-Price factor = below fair: 1 + (1 − ratio) × 0.8; above fair: 1 − (ratio − 1) × 2.2 (min 0.03).
+Fair prices also rise once a year with the economy (× price index).
+Price factor = below fair: 1 + (1 − ratio) × 0.8; above fair: 1 − (ratio − 1) × 3.0 (min 0.03, `overpriceSlope`).
+Temporary discounts (roadworks, price war) lower the effective price, which raises demand through the same factor.
 
 ## Coffee shop theme (data in `THEMES.coffee`)
 
@@ -53,14 +59,51 @@ Price factor = below fair: 1 + (1 − ratio) × 0.8; above fair: 1 − (ratio �
 | Beans | Budget €0.25 q30 · Good €0.45 q60 · Specialty €1.05 q90 |
 | Menu | Espresso, Cappuccino (start on), Latte (start off), Flat white (Pro machine), Cold brew (kit €2.5k), Croissant (oven €6k, needs kiosk) |
 | Roles | Barista €650/wk · Cashier €550/wk (900 customers) · Cleaner €450/wk (1,500 customers). Hiring fee €200. Owner = 1 barista + 1 cashier + some cleaning |
-| Systems | POS €2.5k + €40/wk (+20% register, splits walk-ins vs. word of mouth) · Marketing analytics €1.5k + €60/wk (splits marketing vs. social, shows marketing return) |
+| Systems | POS €2.5k + €40/wk (+20% register, splits walk-ins vs. word of mouth) · Marketing analytics €1.5k + €60/wk (splits marketing vs. social, shows marketing return) · Maintenance contract €25/wk (breakdowns rare and free) |
 | Bank | Borrow/repay in €5k steps, max €30k, 0.5%/week |
 
-### Events
-- **Forecast (announced a week ahead)**: heatwave (−25%, cold brew boosted), cold & rainy (+20%), street festival (+50%),
-  bean price spike (+50% for 4 weeks), competitor opening (−20% traffic for 12 weeks).
-- **Surprise**: food blogger review (±8 rep, depends on bean quality), barista/staff quits, machine breakdown (repair),
-  influencer post (+social awareness), health inspection (fine + rep loss if cleanliness < 70%, small bonus otherwise).
+### Events (phase 2) — data cards in `COFFEE_EVENTS`, paced by a director
+
+**Event cards** have: category, kind (major / minor / decision), weight (can depend on your situation), conditions,
+cooldown, lead time (0 = surprise, 1–4 weeks = announced in the paper first), duration, and `bad` (counts towards a cap).
+
+**The director** (each week, per business):
+1. Announced events that are due happen (some are only "likely": e.g. a bean price rise happens 75% of the time).
+2. **Major event**: none in the first 2 weeks after the last one (breather); then chance = (8% + 4% per extra calm week)
+   × difficulty event rate, max 60%.
+3. **Minor event**: 30% × event rate.
+4. **Decision**: at most one open; offered after `decisionGap` weeks with 35% chance per week.
+5. Bad events are skipped while `maxActiveBad` bad effects are running or announced.
+
+**Cause and effect**: machine breakdowns rise with machine age (maintenance contract: ×0.3, free repair); staff quit
+more with more staff, long queues (overwork) and a refused raise; bad reviews and viral complaints come with cheap
+beans, a dirty shop and long queues; competitors come more often to bigger, profitable shops; inspections favour
+dirty shops.
+
+**Cards**: roadworks (decision: signs / discount / nothing), festival, market day, transport strike, power cut,
+break-in · bean price scare (decision: stock up / wait), milk shortage, supplier bust · competitor opening (decision:
+loyalty campaign / price match / ignore), price war (decision), rival closes · staff quits, flu, raise request
+(decision: +4% / one-off bonus / no) · machine breakdown · health inspection · review, viral complaint, influencer ·
+catering order, office contract, magazine advert, charity sponsorship (decisions).
+
+**Weather**: every week. Odds by season (summer: sunny/heatwave; winter: rain/snow). The paper gives next week's
+forecast with a % chance; it is right `forecastAcc` of the time. Effects: sunny +5%, rain +10%, heatwave −15% (cold
+brew ×2), snow −20%.
+
+**Economy**: every new year wages, supplier prices and fair prices rise; 4 weeks before, the landlord announces a rent
+review (decision: accept / negotiate 50-50 / sign a 3-year lease).
+
+**Difficulty** (`DIFFICULTY` in engine.js):
+
+| | easy | normal | hard |
+|---|---|---|---|
+| start cash | €8,000 | €5,000 | €3,000 |
+| event rate / severity | ×0.4 / ×0.6 | ×0.65 / ×0.85 | ×1.0 / ×1.2 |
+| max bad effects at once | 1 | 2 | 3 |
+| decision every ≥ | 6 weeks | 4 weeks | 3 weeks |
+| yearly wages / suppliers / prices / rent | +1 / +1 / +2 / +2% | +3 / +2 / +3 / +4% | +4 / +3 / +3 / +6% |
+| forecast reliability | 90% | 80% | 65% |
+| market size | 100% | 100% | 82% |
 
 ## UI overview (`index.html`)
 

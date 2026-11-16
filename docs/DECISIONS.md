@@ -42,3 +42,11 @@ Short log of design and technical decisions. Newest at the bottom. Format: what 
     replay** (5 minutes × 260 weeks would be ~20 hours of watching).
 22. **Goal is the player's choice; playing on is allowed** (Nov 2026): goals €250k–€5M (default €1M). After winning or
     when time is up, "keep playing" sets `state.endless`: no goal check, no time limit, bankruptcy still applies.
+23. **Events are data cards paced by a director** (Nov 2026): instead of flat 15%/20% chances, a director paces major
+    events by calm weeks (a breather after a big one), caps bad effects running at once, and offers one decision at a
+    time. Odds depend on the player's situation (old machine, overworked staff, dirty shop, success attracts rivals) so
+    events feel earned, not random. Every week has weather with an uncertain forecast.
+24. **The world gets more expensive as years pass** (Nov 2026): yearly wage, supplier and price rises and a rent review,
+    like a real business. Sam asked for real-world pressure as you grow.
+25. **Difficulty = event pressure + economy + market size** (Nov 2026): events alone could not make "hard" hard for
+    high-margin play, so hard also has a smaller market (82%). Targets per level are in BALANCE.md.

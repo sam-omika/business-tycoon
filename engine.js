@@ -27,7 +27,7 @@
               wageRise: 0.01, supplyRise: 0.01, priceRise: 0.02,  rentRise: 0.02, forecastAcc: 0.9 },
     normal: { label: 'Normal', startCash: 5000, eventRate: 0.65, severity: 0.85, maxActiveBad: 2, decisionGap: 4,
               wageRise: 0.03, supplyRise: 0.02, priceRise: 0.03,  rentRise: 0.04, forecastAcc: 0.8 },
-    hard:   { label: 'Hard',   startCash: 3000, eventRate: 1.0,  severity: 1.1,  maxActiveBad: 3, decisionGap: 3,
+    hard:   { label: 'Hard',   startCash: 3000, eventRate: 1.0,  severity: 1.2,  maxActiveBad: 3, decisionGap: 3, market: 0.82,
               wageRise: 0.04, supplyRise: 0.03, priceRise: 0.03,  rentRise: 0.06, forecastAcc: 0.65 },
   };
 
@@ -86,18 +86,18 @@
       id: 'roadworks', cat: 'city', kind: 'major', bad: true, weight: 3, cooldown: 30, lead: 2,
       when: (b) => !hasMod(b, 'traffic'),
       announce: (b, k) => ({ title: 'Roadworks on your street', tone: 'bad',
-        text: `The council digs up the street outside from week ${k.at} for 3 weeks. Expect about ${Math.round(30 * k.sev)}% fewer passers-by.` }),
+        text: `The council digs up the street outside from week ${k.at} for 4 weeks. Expect about ${Math.round(35 * k.sev)}% fewer passers-by.` }),
       apply(b, ctx) {
-        ctx.addMod('traffic', 1 - 0.3 * ctx.sev, 3, 'Roadworks', { bad: true });
-        return { title: 'Roadworks begin', text: 'Barriers and noise outside: fewer people walk past for 3 weeks.', tone: 'bad' };
+        ctx.addMod('traffic', 1 - 0.35 * ctx.sev, 4, 'Roadworks', { bad: true });
+        return { title: 'Roadworks begin', text: 'Barriers and noise outside: fewer people walk past for 4 weeks.', tone: 'bad' };
       },
       decision: {
         title: 'Roadworks are coming: what do you do?',
         options: [
-          { id: 'signs', label: 'Signs and detour flyers', desc: 'Halves the loss of passers-by during the works.', cost: (b) => 300 + 150 * b.locationLvl,
-            apply(b, ctx, d) { ctx.addMod('traffic', 1 / (1 - 0.15 * ctx.sev), 3, 'Detour signs', { from: d.at }); } },
+          { id: 'signs', label: 'Signs and detour flyers', desc: 'Win back most of the lost passers-by during the works.', cost: (b) => 300 + 150 * b.locationLvl,
+            apply(b, ctx, d) { ctx.addMod('traffic', (1 - 0.08 * ctx.sev) / (1 - 0.35 * ctx.sev), 4, 'Detour signs', { from: d.at }); } },
           { id: 'discount', label: 'Roadworks discount', desc: 'All prices 15% lower during the works; regulars keep coming.',
-            apply(b, ctx, d) { ctx.addMod('price', 0.85, 3, 'Roadworks discount', { from: d.at }); } },
+            apply(b, ctx, d) { ctx.addMod('price', 0.85, 4, 'Roadworks discount', { from: d.at }); ctx.addMod('demand', 1.12, 4, 'Loyal regulars', { from: d.at }); } },
           { id: 'nothing', label: 'Do nothing', desc: 'Save your money and ride it out.', default: true, apply() {} },
         ],
         bot: (b) => (b.locationLvl >= 1 ? 'signs' : 'nothing'),
@@ -160,15 +160,15 @@
       id: 'competitor', cat: 'competition', kind: 'major', bad: true, cooldown: 40, lead: 4,
       weight: (b) => 0.6 + 0.5 * b.locationLvl + (avgProfit(b) > 1500 ? 1 : 0),
       when: (b) => !hasMod(b, 'traffic') && b.locationLvl >= 1,
-      announce: (b, k) => ({ title: 'Coffee chain plans to open nearby', tone: 'bad', text: `A chain coffee bar opens down the street in week ${k.at}. Expect about ${Math.round(20 * k.sev)}% fewer passers-by for 12 weeks.` }),
-      apply(b, ctx) { ctx.addMod('traffic', 1 - 0.2 * ctx.sev, 12, 'Competitor nearby', { bad: true }); return { title: 'The chain has opened', text: 'A competitor opened down the street: fewer passers-by for 12 weeks.', tone: 'bad' }; },
+      announce: (b, k) => ({ title: 'Coffee chain plans to open nearby', tone: 'bad', text: `A chain coffee bar opens down the street in week ${k.at}. Expect about ${Math.round(25 * k.sev)}% fewer passers-by for 16 weeks.` }),
+      apply(b, ctx) { ctx.addMod('traffic', 1 - 0.25 * ctx.sev, 16, 'Competitor nearby', { bad: true }); return { title: 'The chain has opened', text: 'A competitor opened down the street: fewer passers-by for 16 weeks.', tone: 'bad' }; },
       decision: {
         title: 'A competitor is coming: how do you respond?',
         options: [
-          { id: 'loyalty', label: 'Loyalty campaign', desc: 'Stamp cards and a promo push: marketing awareness +12, regulars stay.', cost: (b) => 800 + 400 * b.locationLvl,
-            apply(b) { b.awMkt += 12; b.awWom += 4; } },
-          { id: 'match', label: 'Price match', desc: 'All prices 10% lower for the first 4 weeks after they open.',
-            apply(b, ctx, d) { ctx.addMod('price', 0.9, 4, 'Price match', { from: d.at }); } },
+          { id: 'loyalty', label: 'Loyalty campaign', desc: 'Stamp cards and a promo push: most regulars stay with you while the chain is new.', cost: (b) => 800 + 400 * b.locationLvl,
+            apply(b, ctx, d) { b.awMkt += 8; ctx.addMod('demand', 1.18, 16, 'Loyalty cards', { from: d.at }); } },
+          { id: 'match', label: 'Price match', desc: 'All prices 10% lower for the first 6 weeks after they open.',
+            apply(b, ctx, d) { ctx.addMod('price', 0.9, 6, 'Price match', { from: d.at }); ctx.addMod('demand', 1.1, 6, 'Price match', { from: d.at }); } },
           { id: 'ignore', label: 'Ignore them', desc: 'Trust your quality.', default: true, apply() {} },
         ],
         bot: (b, d, s) => (s.player.cash > 8000 ? 'loyalty' : 'ignore'),
@@ -183,8 +183,8 @@
       options: [
         { id: 'match', label: 'Match their prices', desc: 'Prices 15% lower for 4 weeks. You keep your customers but earn less per cup.',
           apply(b, ctx) { ctx.addMod('price', 0.85, 4, 'Price war'); } },
-        { id: 'hold', label: 'Hold your prices', desc: 'Lose about 15% of customers for 4 weeks.', default: true,
-          apply(b, ctx) { ctx.addMod('demand', 1 - 0.15 * ctx.sev, 4, 'Losing the price war', { bad: true }); } },
+        { id: 'hold', label: 'Hold your prices', desc: 'Lose about 25% of customers for 6 weeks.', default: true,
+          apply(b, ctx) { ctx.addMod('demand', 1 - 0.25 * ctx.sev, 6, 'Losing the price war', { bad: true }); } },
         { id: 'quality', label: 'Quality campaign', desc: 'Tastings and a campaign about your beans: reputation +5, lose only 5% of customers.', cost: (b) => 600 + 300 * b.locationLvl,
           apply(b, ctx) { b.reputation = clamp(b.reputation + 5, 0, 100); ctx.addMod('demand', 0.95, 4, 'Price war (holding)', { bad: true }); } },
       ],
@@ -217,7 +217,7 @@
     {
       id: 'raise', cat: 'staff', kind: 'decision', cooldown: 45,
       // Staff only ask when their pay is not already above the town average, and more often when overworked
-      when: (b) => totalStaff(b) >= 2 && b.wageBonus < 1.12,
+      when: (b) => totalStaff(b) >= 2 && b.wageBonus < 1.08,
       weight: (b) => (1 + totalStaff(b) * 0.2) * (1 + Math.min(2, b.overwork / 3)),
       title: 'Your team asks for a raise',
       text: 'Your staff say they work hard and ask for 4% more pay.',
@@ -226,10 +226,10 @@
           apply(b) { b.wageBonus = Math.round(b.wageBonus * 1.04 * 1000) / 1000; b.flags.raiseDeclinedUntil = 0; } },
         { id: 'bonus', label: 'One-off bonus', desc: 'A bonus of one week\'s wages now; they will ask again later.', cost: (b) => Math.round(weeklyWages(b)),
           apply(b, ctx) { b.flags.raiseDeclinedUntil = ctx.week + 6; } },
-        { id: 'no', label: 'Say no', desc: 'Keep wages as they are. For 12 weeks, staff are twice as likely to quit.', default: true,
-          apply(b, ctx) { b.flags.raiseDeclinedUntil = ctx.week + 12; } },
+        { id: 'no', label: 'Say no', desc: 'Keep wages as they are. For 12 weeks the unhappy team works 10% slower, is less friendly (reputation −4) and twice as likely to quit.', default: true,
+          apply(b, ctx) { b.flags.raiseDeclinedUntil = ctx.week + 12; ctx.addMod('barCap', 0.9, 12, 'Unhappy team', { bad: true }); b.reputation = clamp(b.reputation - 4 * ctx.sev, 0, 100); } },
       ],
-      bot: (b, d, s) => (s.player.cash > 6000 ? 'pay' : 'bonus'),
+      bot: (b, d, s) => (avgProfit(b) > 800 + weeklyWages(b) * 0.4 ? 'pay' : s.player.cash > weeklyWages(b) + 4000 ? 'bonus' : 'no'),
     },
     // ---------- equipment (old machines break more; a maintenance contract helps)
     {
@@ -282,7 +282,7 @@
       when: (b) => b.locationLvl >= 1,
       title: 'Catering request',
       text: 'An office down the road wants coffee for a big meeting next week.',
-      setup: (b) => { const n = 200 + 150 * b.locationLvl; return { cups: n, pay: Math.round(n * 2.3) }; },
+      setup: (b) => { const n = 200 + 150 * b.locationLvl; return { cups: n, pay: Math.round(n * 2.8) }; },
       describe: (b, d) => `An office wants ${d.cups} coffees delivered next week and pays €${d.pay.toLocaleString('en')}. Your bar will be busy making them.`,
       options: [
         { id: 'accept', label: 'Accept the order', desc: 'Extra income, but the bar has less time for walk-in customers next week.',
@@ -296,7 +296,7 @@
       when: (b) => b.locationLvl >= 2 && !hasMod(b, 'contract'),
       title: 'Office contract offered',
       text: 'A company nearby wants a standing coffee order for its staff.',
-      setup: (b) => { const n = 120 + 80 * b.locationLvl; return { cups: n, pay: Math.round(n * 2.0) }; },
+      setup: (b) => { const n = 120 + 80 * b.locationLvl; return { cups: n, pay: Math.round(n * 2.5) }; },
       describe: (b, d) => `${d.cups} coffees every week for 12 weeks at €${d.pay.toLocaleString('en')} a week. Steady money, but it takes bar time every week.`,
       options: [
         { id: 'sign', label: 'Sign for 12 weeks', desc: 'Guaranteed weekly income; less bar time for walk-ins.',
@@ -360,6 +360,8 @@
       hireFee: 200,                // one-off recruiting cost
       qualityPriceBonus: 1.35,      // fair price += quality/100 × this (drinks only)
       repPriceBonus: 0.8,          // fair price += reputation/100 × this
+      overpriceSlope: 3.0,         // demand drop per 100% above fair price (higher = customers punish markups harder)
+      cleanWeight: 0.4,            // how much a dirty shop lowers the share of people who buy (0.4 = up to −40%)
       baseConversion: 0.35,        // share of foot traffic that buys (fair prices, basic menu)
       seasonality: 0.12,           // +12% demand in deep winter, −12% in summer
       valuationMultiple: 3,        // business value = 3× annualised profit + assets
@@ -412,7 +414,7 @@
           desc: 'Faster checkout (+20% register capacity) and loyalty cards. Shows walk-ins vs. regulars who came back or were sent by friends.' },
         { id: 'analytics', name: 'Marketing analytics', icon: '📊', cost: 1500, weekly: 60, registerBonus: 0,
           desc: 'Discount codes and tracking links. Shows who came from your marketing vs. from social media, and what your marketing earns back.' },
-        { id: 'maint', name: 'Maintenance contract', icon: '🔧', cost: 0, weekly: 35, registerBonus: 0,
+        { id: 'maint', name: 'Maintenance contract', icon: '🔧', cost: 0, weekly: 25, registerBonus: 0,
           desc: 'A technician services your machine every month. Breakdowns become rare and are repaired for free.' },
       ],
       events: COFFEE_EVENTS,
@@ -450,8 +452,9 @@
     const q = t.supplies[b.supplyIdx].quality;
     return (p.fairBase + (p.kind === 'food' ? 0 : (q / 100) * t.qualityPriceBonus) + (b.reputation / 100) * t.repPriceBonus) * econ(b).fair;
   }
-  function priceFactor(ratio) {
-    return ratio <= 1 ? 1 + (1 - ratio) * 0.8 : Math.max(0.03, 1 - (ratio - 1) * 2.2);
+  // How much a price above/below fair changes how often an item is chosen. `slope` = sensitivity to overpricing.
+  function priceFactor(ratio, slope = 2.2) {
+    return ratio <= 1 ? 1 + (1 - ratio) * 0.8 : Math.max(0.03, 1 - (ratio - 1) * slope);
   }
   function activeItems(b) {
     return getTheme(b).products.filter((p) => isUnlocked(b, p) && b.menu[p.id] && b.menu[p.id].on);
@@ -463,14 +466,14 @@
     const items = activeItems(b);
     const priceMult = modMult(b, 'price', week);   // temporary discounts (roadworks, price war)
     const drinks = items.filter((p) => p.kind !== 'food').map((p) => {
-      const fair = fairPriceOf(b, p), price = b.menu[p.id].price * priceMult, pf = priceFactor(price / fair);
+      const fair = fairPriceOf(b, p), price = b.menu[p.id].price * priceMult, pf = priceFactor(price / fair, getTheme(b).overpriceSlope);
       const w = p.popularity * (p.summer ? (1 - 0.6 * sc) * coldBoost : 1);
       return { p, fair, price, pf, a: w * pf };
     });
     const totalA = sum(drinks, (r) => r.a);
     drinks.forEach((r) => (r.share = totalA > 0 ? r.a / totalA : 0));
     const food = items.filter((p) => p.kind === 'food').map((p) => {
-      const fair = fairPriceOf(b, p), price = b.menu[p.id].price * priceMult, pf = priceFactor(price / fair);
+      const fair = fairPriceOf(b, p), price = b.menu[p.id].price * priceMult, pf = priceFactor(price / fair, getTheme(b).overpriceSlope);
       return { p, fair, price, pf, attach: Math.min(0.6, p.attach * pf) };
     });
     const appeal = totalA > 0 ? Math.min(1.6, Math.pow(totalA / 2.2, 0.45)) : 0; // variety & price attract customers
@@ -797,10 +800,11 @@
     const barForWalkIns = Math.max(0, cap.bar - Math.round(contractCups * 1.2 / mix.load));
     const trafficMult = 0.6 + (b.awareness / 100) * 0.9;
     const season = 1 + t.seasonality * seasonCos(week);
-    const conversion = t.baseConversion * (0.5 + b.reputation / 100) * mix.appeal * (0.75 + 0.25 * b.cleanliness); // a dirty shop scares people off
+    const cw = t.cleanWeight;
+    const conversion = t.baseConversion * (0.5 + b.reputation / 100) * mix.appeal * (1 - cw + cw * b.cleanliness); // a dirty shop scares people off
     const noise = 0.9 + rand() * 0.2;
     const demand = Math.max(0, Math.round(
-      loc.traffic * mod('traffic') * trafficMult * season * conversion * ctx.demandMult * mod('demand') * noise
+      loc.traffic * mod('traffic') * trafficMult * season * conversion * ctx.demandMult * mod('demand') * (diffOf(state).market || 1) * noise
     ));
     const served = Math.min(demand, barForWalkIns, cap.register);
     const bottleneck = served < demand ? (barForWalkIns <= cap.register ? 'bar' : 'register') : null;
