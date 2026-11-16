@@ -11,20 +11,24 @@
 - Dark mode (auto / light / dark)
 - Balance simulation tool
 
+## Done (Claude Code)
+
+- Own hosting on GitHub Pages: https://sam-omika.github.io/business-tycoon/ (public repo, push to `main` = deploy)
+- App icon + web manifest: installable in Chrome/Edge, Safari "Add to Dock", iPad home screen
+- Switched target to desktop first, iPad still supported
+
 ## Next
 
-1. **Move into own hosting** so the link is ours (Netlify or GitHub Pages), with a favicon/app icon and a manifest
-   (installable as an app in Chrome/Edge, "Add to Dock" in Safari, home screen on iPad)
-2. **Play-test v2 difficulty**: is it too hard for a human? Adjust using `docs/BALANCE.md` targets
-3. **Desktop polish**: keyboard shortcuts (e.g. Space/Enter = open next week), hover tooltips that explain numbers,
+1. **Play-test v2 difficulty**: is it too hard for a human? Adjust using `docs/BALANCE.md` targets
+2. **Desktop polish**: keyboard shortcuts (e.g. Space/Enter = open next week), hover tooltips that explain numbers,
    a wider layout on big screens (e.g. three columns) so there's less scrolling
-4. **Multiple businesses** (the big one):
+3. **Multiple businesses** (the big one):
    - Open a second coffee shop from the shared cash pool
    - Business switcher in the UI; a portfolio overview (all businesses, total value)
    - Managers: a manager runs a shop on autopilot (at a cost), because micromanaging 3 shops isn't fun
    - Roastery as a second business type that supplies your cafés with cheaper beans (shared resources)
-5. **Acquisitions**: NPC businesses (e.g. the competitor chain) that you can buy
-6. **Cash out**: sell a business at its valuation
+4. **Acquisitions**: NPC businesses (e.g. the competitor chain) that you can buy
+5. **Cash out**: sell a business at its valuation
 
 ## Backlog / ideas
 
