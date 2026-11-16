@@ -36,7 +36,7 @@ Saves live in the browser (`localStorage`), per device and per web address.
 
 ## Keyboard shortcuts
 
-**Space** next week · **M / T / I / B** Menu, Team, Invest, Bank tab · **P / C / N** Progress, Customers, News tab · **?** list · **Esc** close pop-up
+**Space** next week · **M / T / I / B** Menu, Team, Invest, Bank tab · **P / S / C / N** Progress, Sales, Customers, News tab · **?** list · **Esc** close pop-up
 
 ## App icon
 

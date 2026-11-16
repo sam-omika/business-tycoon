@@ -36,3 +36,9 @@ Short log of design and technical decisions. Newest at the bottom. Format: what 
 20. **One-screen cockpit layout** (Nov 2026): Sam's feedback on the first Live Tiles version: titles far too big, too much
     scrolling, no overview. A game needs everything at a glance. Now: slim top bar, three panes (status / decisions /
     insight) with tabs, small section labels; the page never scrolls on desktop and iPad landscape. The tile look stays.
+21. **Fix the flat mid-game with decisions, not spectacle** (Nov 2026): order agreed with Sam: insights + endless play →
+    newspaper, decision events, difficulty levels → owner time → managers/CEO/second business. The turn timer will be
+    **optional** (a calm planning game shouldn't force stress on everyone), and "watch the week" a **short optional
+    replay** (5 minutes × 260 weeks would be ~20 hours of watching).
+22. **Goal is the player's choice; playing on is allowed** (Nov 2026): goals €250k–€5M (default €1M). After winning or
+    when time is up, "keep playing" sets `state.endless`: no goal check, no time limit, bankruptcy still applies.

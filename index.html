@@ -66,6 +66,7 @@
   button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; touch-action: manipulation; padding: 0; }
   :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
   .hidden { display: none !important; }
+  .nt { text-transform: none; }
   .num { font-variant-numeric: tabular-nums; }
   .pos { color: var(--good); } .neg { color: var(--bad); }
   svg.ico { width: 1em; height: 1em; vertical-align: -0.12em; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: square; pointer-events: none; }
@@ -90,7 +91,7 @@
   .start-card p.lead { color: var(--muted); margin: 0 0 40px; font-size: 24px; font-weight: 350; line-height: 1.4; max-width: 34ch; }
   .start-card p.lead b { color: var(--ink); font-weight: 400; }
   .themes { display: grid; grid-template-columns: repeat(3, minmax(0, 200px)); gap: 8px; margin-bottom: 32px; }
-  .theme { aspect-ratio: 1; background: var(--card); padding: 14px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .theme { min-height: 120px; background: var(--card); padding: 14px; display: flex; flex-direction: column; justify-content: flex-end; }
   .theme .nm { font-size: 24px; font-weight: 300; text-transform: lowercase; line-height: 1.1; }
   .theme .soon { font-size: 13px; color: var(--muted); margin-top: 4px; text-transform: lowercase; }
   .theme.active { background: var(--ink); color: var(--bg); }
@@ -315,6 +316,33 @@
   .ytable th:first-child, .ytable td:first-child { text-align: left; }
   .ytable tr:last-child td { border-bottom: 0; }
 
+  /* ---------- Sales insights ---------- */
+  .goals { grid-template-columns: repeat(5, 1fr); }
+  .goals button { min-height: 56px; }
+  .lines { margin: 0 0 12px; padding: 0; list-style: none; font-size: 15px; font-weight: 350; line-height: 1.45; }
+  .lines li { padding: 3px 0; }
+  .lines b { font-weight: 400; color: var(--ink); }
+  .ptable { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .ptable th { text-align: right; color: var(--muted); font-weight: 400; text-transform: lowercase; padding: 4px; border-bottom: 1px solid var(--line); }
+  .ptable td { text-align: right; padding: 6px 4px; border-bottom: 1px solid var(--line); vertical-align: top; white-space: nowrap; }
+  .ptable th:first-child, .ptable td:first-child { text-align: left; padding-left: 0; }
+  .ptable td:first-child b { font-size: 15px; font-weight: 400; text-transform: lowercase; }
+  .ptable small { display: block; color: var(--muted); font-size: 13px; }
+  .ptable tr.off td { color: var(--muted); }
+  .sbar { display: block; height: 3px; background: var(--line); margin-top: 4px; width: 100%; }
+  .sbar i { display: block; height: 100%; background: var(--accent); }
+  .money-h { font-size: 15px; color: var(--muted); margin: 18px 0 8px; display: flex; justify-content: space-between; gap: 12px; }
+  .money-h small { font-size: 13px; }
+  .mstack { display: flex; height: 14px; gap: 2px; margin-bottom: 8px; }
+  .mstack i { display: block; height: 100%; }
+  .mrow { display: flex; align-items: center; gap: 10px; padding: 4px 0; font-size: 15px; border-bottom: 1px solid var(--line); }
+  .mrow:last-child { border-bottom: 0; }
+  .mrow .sw { width: 10px; height: 10px; flex: none; }
+  .mrow .nm { flex: 1; } .mrow .pc { width: 48px; text-align: right; color: var(--muted); font-size: 13px; }
+  .c-cost1 { background: var(--ink); opacity: .85; } .c-cost2 { background: var(--ink); opacity: .62; } .c-cost3 { background: var(--ink); opacity: .45; }
+  .c-cost4 { background: var(--ink); opacity: .32; } .c-cost5 { background: var(--ink); opacity: .22; } .c-cost6 { background: var(--ink); opacity: .14; }
+  .c-cost7 { background: var(--bad-fill); opacity: .7; } .c-profit { background: var(--good-fill); }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
   }
@@ -335,11 +363,15 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
   <button class="icon-btn theme-btn" id="themeBtnStart" style="position:fixed;top:16px;right:16px;z-index:5"></button>
   <div class="start-card">
     <h1>Business Tycoon</h1>
-    <p class="lead">Start with one small business and €5,000. Grow it into a company worth <b>€1 million</b> within 5 years.</p>
+    <p class="lead">Start with one small business and €5,000. Grow it into a company worth <b>the goal you pick</b> within 5 years.</p>
     <div class="themes">
       <div class="theme active"><div class="nm">Coffee shop</div><div class="soon">Available</div></div>
       <div class="theme locked"><div class="nm">Bike shop</div><div class="soon">Coming soon</div></div>
       <div class="theme locked"><div class="nm">Travel agency</div><div class="soon">Coming soon</div></div>
+    </div>
+    <div class="field">
+      <label>Your goal: company value to reach within 5 years</label>
+      <div class="seg goals" id="goalPick"></div>
     </div>
     <div class="field">
       <label for="shopName">Name your coffee shop</label>
@@ -359,7 +391,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
       <span class="when"><span id="when"></span><span class="loc"><span class="sep"> · </span><span id="locName"></span></span></span>
     </div>
     <div class="value">
-      <div class="vrow"><b class="num" id="valNow">€0</b><span>company value · goal €1,000,000 · <span id="weeksLeft"></span></span></div>
+      <div class="vrow"><b class="num" id="valNow">€0</b><span>company value · <span id="goalText"></span></span></div>
       <div class="bar" id="goalBar"><i></i></div>
     </div>
     <div class="tools">
@@ -451,6 +483,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
       </div>
       <nav class="tabs" role="tablist" aria-label="Insight">
         <button role="tab" data-tab="cardProgress" title="Progress (P)">Progress</button>
+        <button role="tab" data-tab="cardSales" title="Sales (S)">Sales</button>
         <button role="tab" data-tab="cardSources" title="Customers (C)">Customers</button>
         <button role="tab" data-tab="cardNews" title="News (N)">News</button>
       </nav>
@@ -459,6 +492,9 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
         <p class="aside" id="progSub"></p>
         <div class="pchart" id="pchart"></div>
         <div id="years"></div>
+      </div>
+      <div class="panel card" id="cardSales" role="tabpanel">
+        <div id="sales"></div>
       </div>
       <div class="panel card" id="cardSources" role="tabpanel">
         <p class="aside">Where customers came from <span id="srcWeek"></span></p>
@@ -496,6 +532,8 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     return eur(v);
   };
   const n0 = (v) => Math.round(v).toLocaleString('en');
+  // Money keeps its capital M even inside lowercase labels
+  const goalFmt = (g) => `<span class="nt">${g >= 1e6 ? `€${+(g / 1e6).toFixed(1)}M` : `€${Math.round(g / 1e3)}k`}</span>`;
 
   let state = null;
   let metric = 'value';
@@ -542,7 +580,15 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
   }
 
   // ---------- screens ----------
+  // Goal picker on the start screen
+  const GOAL_LABEL = { 250000: 'relaxed', 500000: 'easy', 1000000: 'classic', 2000000: 'hard', 5000000: 'tycoon' };
+  let chosenGoal = 1000000;
+  function renderGoalPick() {
+    $('goalPick').innerHTML = E.GOALS.map((g) => `<button data-goal="${g}" class="${g === chosenGoal ? 'on' : ''}"><b>${goalFmt(g)}</b><span>${GOAL_LABEL[g] || ''}</span></button>`).join('');
+  }
+  $('goalPick').addEventListener('click', (ev) => { const g = ev.target.closest('[data-goal]'); if (g) { chosenGoal = +g.dataset.goal; renderGoalPick(); } });
   function showStart() {
+    renderGoalPick();
     $('start').classList.remove('hidden'); $('game').classList.add('hidden'); $('bottombar').classList.add('hidden');
     const saved = load();
     $('continueBtn').classList.toggle('hidden', !(saved && saved.status === 'playing'));
@@ -554,7 +600,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
   $('startBtn').onclick = () => {
     const name = $('shopName').value.trim() || 'Bean There';
-    state = E.newGame(name, 'coffee');
+    state = E.newGame(name, 'coffee', { goal: chosenGoal });
     state.log.unshift({ week: 0, text: `${name} opens its first coffee cart. Good luck!`, tone: 'good' });
     save(); showGame();
   };
@@ -563,7 +609,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
   // ---------- keyboard shortcuts (desktop extra; everything is also reachable by touch) ----------
   // Tabs: each pane shows one panel at a time. Letters switch tabs (and scroll there on narrow screens).
-  const JUMP = { m: 'cardMenu', t: 'cardTeam', i: 'cardInvest', b: 'cardBank', p: 'cardProgress', c: 'cardSources', n: 'cardNews' };
+  const JUMP = { m: 'cardMenu', t: 'cardTeam', i: 'cardInvest', b: 'cardBank', p: 'cardProgress', s: 'cardSales', c: 'cardSources', n: 'cardNews' };
   const cockpitMode = () => window.matchMedia('(min-width: 1100px) and (min-height: 640px)').matches;
   function showTab(id) {
     const panel = $(id), pane = panel.closest('.pane');
@@ -585,7 +631,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     const row = (k, what) => `<tr><td><kbd>${k}</kbd></td><td>${what}</td></tr>`;
     modal('<h2>Keyboard shortcuts</h2><table class="keys">' +
       row('Space', 'Open next week') + row('M / T / I / B', 'Menu, Team, Invest, Bank tab') +
-      row('P / C / N', 'Progress, Customers, News tab') + row('?', 'This list') + row('Esc', 'Close a pop-up') + '</table>', [{ label: 'Got it' }]);
+      row('P / S / C / N', 'Progress, Sales, Customers, News tab') + row('?', 'This list') + row('Esc', 'Close a pop-up') + '</table>', [{ label: 'Got it' }]);
   }
   $('keysBtn').onclick = showShortcuts;
   const inGame = () => state && !$('game').classList.contains('hidden');
@@ -657,9 +703,10 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     const v = E.valuation(state), y = Math.floor((state.week - 1) / 52) + 1;
     const restart = () => { clearSave(); state = null; showStart(); };
     const look = { label: 'Look around', secondary: true };
-    if (state.status === 'won') modal(`<h2>You built a €1M company!</h2><p><b>${state.businesses[0].name}</b> hit a valuation of ${eur(v)} in week ${state.week} (year ${y}). Next up: run several businesses at once.</p>`, [look, { label: 'Play again', onClick: restart }]);
+    const keep = { label: 'Keep playing', secondary: true, onClick: () => apply(E.Actions.keepPlaying(state)) };
+    if (state.status === 'won') modal(`<h2>You built a ${goalFmt(state.goal)} company!</h2><p><b>${state.businesses[0].name}</b> hit a valuation of ${eur(v)} in week ${state.week} (year ${y}). Keep playing to see how far you can take it, or start a new game.</p>`, [keep, { label: 'New game', onClick: restart }]);
     else if (state.status === 'bankrupt') modal(`<h2>Bankrupt</h2><p>You ran out of cash in week ${state.week}. Rent and wages are due whether customers show up or not, so keep a buffer before big moves.</p>`, [look, { label: 'Try again', onClick: restart }]);
-    else modal(`<h2>Time's up</h2><p>Five years have passed. ${state.businesses[0].name} is worth ${eur(v)}, which is ${Math.round(v / state.goal * 100)}% of the goal.</p>`, [look, { label: 'Play again', onClick: restart }]);
+    else modal(`<h2>Time's up</h2><p>Five years have passed. ${state.businesses[0].name} is worth ${eur(v)}, which is ${Math.round(v / state.goal * 100)}% of the goal. You can keep playing without a time limit.</p>`, [keep, { label: 'New game', onClick: restart }]);
   }
 
   // ---------- render ----------
@@ -674,7 +721,9 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     $('when').textContent = `Year ${year} · Week ${wk} · ${E.seasonName(state.week + 1)}`;
     const v = E.valuation(state);
     $('valNow').textContent = eur(v);
-    $('weeksLeft').textContent = `${state.maxWeeks - state.week} weeks left`;
+    $('goalText').innerHTML = state.endless
+      ? (state.goalReachedWeek ? `goal ${goalFmt(state.goal)} reached in week ${state.goalReachedWeek} · playing on` : 'playing on, no time limit')
+      : `goal ${goalFmt(state.goal)} · ${state.maxWeeks - state.week} weeks left`;
     const pct = Math.max(0, Math.min(100, v / state.goal * 100));
     $('goalBar').firstElementChild.style.transform = `scaleX(${pct / 100})`;
     $('goalBar').classList.toggle('good', pct >= 100);
@@ -703,6 +752,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     renderReport(b, t, r);
     renderProgress();
     renderSources(b, t, r);
+    renderSales(b, t, r);
 
     // advisor
     const tips = advisor(b, t, r);
@@ -936,6 +986,69 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     const rows = Object.entries(years).map(([yr, Y]) => `<tr><td>year ${yr}${Y.n < 52 ? ` <span style="color:var(--muted)">(${Y.n} wk)</span>` : ''}</td>
       <td>${short(Y.rev)}</td><td class="${Y.profit >= 0 ? 'pos' : 'neg'}">${short(Y.profit)}</td><td>${n0(Y.cust)}</td><td>${Math.round(Y.rep / Y.n)}</td><td>${short(Y.value || 0)}</td></tr>`).join('');
     $('years').innerHTML = `<table class="ytable num"><tr><th>Year</th><th>Revenue</th><th>Profit</th><th>Customers</th><th>Avg rep.</th><th>Value at end</th></tr>${rows}</table>`;
+  }
+
+  // ---------- Sales insights: products, margins, where the money goes ----------
+  function renderSales(b, t, r) {
+    if (!r) { $('sales').innerHTML = '<p class="locked">Sales insights appear after your first week.</p>'; return; }
+    const hist = b.history, last4 = hist.slice(-4), prev4 = hist.slice(-8, -4);
+    const avgQty = (rows, id) => rows.length ? rows.reduce((a, h) => a + ((h.items && h.items[id]) ? h.items[id][0] : 0), 0) / rows.length : 0;
+    const sold = r.sales.filter((x) => x.qty > 0);
+    const totalMargin = sold.reduce((a, x) => a + Math.max(0, x.margin), 0) || 1;
+    const drinks = sold.filter((x) => (t.products.find((p) => p.id === x.id) || {}).kind === 'drink');
+    const drinkQty = drinks.reduce((a, x) => a + x.qty, 0) || 1;
+    const by = (arr, f) => arr.slice().sort((a, c) => f(c) - f(a))[0];
+    const lines = [];
+    const best = by(drinks, (x) => x.qty);
+    if (best) lines.push(`Best seller: <b>${best.name}</b>, ${Math.round(best.qty / drinkQty * 100)}% of drinks sold.`);
+    const earner = by(sold, (x) => x.margin);
+    if (earner) lines.push(`Biggest earner: <b>${earner.name}</b>, ${Math.round(Math.max(0, earner.margin) / totalMargin * 100)}% of gross profit.`);
+    const perSale = by(sold, (x) => x.price - x.unitCost);
+    if (perSale && perSale !== earner) lines.push(`Earns most per sale: <b>${perSale.name}</b>, ${eur(perSale.price - perSale.unitCost, 2)} each.`);
+    const thin = sold.filter((x) => x.price > 0 && (x.price - x.unitCost) / x.price < 0.55);
+    if (thin.length) lines.push(`Thin margin: <b>${thin.map((x) => x.name).join(', ')}</b> (less than 55% of the price is profit).`);
+
+    const trend = (id) => {
+      const a = avgQty(last4, id), p = avgQty(prev4, id);
+      if (prev4.length < 2 || p < 1) return '';
+      const d = Math.round((a / p - 1) * 100);
+      if (Math.abs(d) <= 4) return '<small>steady</small>';
+      return `<small class="${d > 4 ? 'pos' : d < -4 ? 'neg' : ''}">${d > 0 ? '+' : d < 0 ? '−' : ''}${Math.abs(d)}% vs 4 wk before</small>`;
+    };
+    const rows = sold.map((x) => {
+      const m = x.price - x.unitCost, share = Math.max(0, x.margin) / totalMargin * 100;
+      return `<tr><td><b>${x.name}</b><span class="sbar"><i style="width:${share.toFixed(1)}%"></i></span></td>
+        <td>${n0(x.qty)}${trend(x.id)}</td>
+        <td>${eur(x.price, 2)}<small>cost ${eur(x.unitCost, 2)}</small></td>
+        <td class="${m < 0 ? 'neg' : ''}">${eur(m, 2)}<small>${x.price > 0 ? Math.round(m / x.price * 100) : 0}%</small></td>
+        <td>${eur(x.margin)}<small>${Math.round(share)}%</small></td></tr>`;
+    }).join('');
+
+    // Where the money goes: averages over the last 4 weeks (fewer early on)
+    const vh = state.valuationHistory.slice(-last4.length);
+    const avg = (f) => last4.reduce((a, h) => a + (f(h) || 0), 0) / last4.length;
+    const rev = avg((h) => h.revenue);
+    const cats = [
+      ['Ingredients, cups & bags', avg((h) => h.costs && h.costs.supplies), 'c-cost1'],
+      ['Wages', avg((h) => h.costs && h.costs.wages), 'c-cost2'],
+      ['Rent', avg((h) => h.costs && h.costs.rent), 'c-cost3'],
+      ['Marketing', avg((h) => h.costs && h.costs.marketing), 'c-cost4'],
+      ['Systems', avg((h) => h.costs && h.costs.systems), 'c-cost5'],
+      ['Repairs & fines', avg((h) => h.costs && h.costs.other), 'c-cost6'],
+      ['Loan interest', vh.length ? vh.reduce((a, v) => a + (v.interest || 0), 0) / vh.length : 0, 'c-cost7'],
+    ].filter((c) => c[1] >= 0.5);
+    const costSum = cats.reduce((a, c) => a + c[1], 0);
+    const profit = rev - costSum;
+    const base = Math.max(rev, costSum) || 1;
+    const parts = profit > 0 ? [...cats, ['Profit', profit, 'c-profit']] : cats;
+    const stack = parts.map((c) => `<i class="${c[2]}" style="width:${(c[1] / base * 100).toFixed(2)}%" title="${c[0]}"></i>`).join('');
+    const mrows = parts.map((c) => `<div class="mrow"><span class="sw ${c[2]}"></span><span class="nm">${c[0]}</span><span class="num">${eur(c[1])}</span><span class="pc num">${rev > 0 ? Math.round(c[1] / rev * 100) : 0}%</span></div>`).join('')
+      + (profit <= 0 ? `<div class="mrow"><span class="sw"></span><span class="nm">Loss</span><span class="num neg">${eur(profit)}</span><span class="pc num"></span></div>` : '');
+
+    $('sales').innerHTML = `<ul class="lines">${lines.map((l) => `<li>${l}</li>`).join('')}</ul>
+      <table class="ptable"><tr><th>last week</th><th>sold</th><th>price</th><th>margin</th><th>gross profit</th></tr>${rows}</table>
+      <div class="money-h"><span>where the money goes</span><small>avg per week, last ${last4.length} wk · revenue ${eur(rev)}</small></div>
+      <div class="mstack">${stack}</div>${mrows}`;
   }
 
   // ---------- Customer sources ----------

@@ -13,6 +13,8 @@ when marketing pays off, and that information (knowing where customers come from
 - **Win**: company value ≥ €1,000,000.
 - **Lose**: cash < 0 at the end of a week (bankrupt).
 - **Time's up**: 260 weeks pass without reaching the goal.
+- **Goal**: chosen on the start screen: €250k (relaxed), €500k, €1M (classic, default), €2M, €5M (tycoon).
+- **Keep playing**: after winning or when time is up you can play on with no goal and no time limit (`state.endless`).
 - **Company value** = cash − loan + Σ business value.
   Business value = 3 × annualised average profit of the last 12 weeks (if positive) + 50% of the cost of location, machine and equipment.
 
@@ -65,10 +67,11 @@ Price factor = below fair: 1 + (1 − ratio) × 0.8; above fair: 1 − (ratio �
 Start screen (theme pick, shop name, continue) → game screen, a one-screen cockpit:
 top bar (name, week, company value + goal bar) · **status** pane (stat tiles, week report) ·
 **decide** pane with tabs Menu | Team | Invest | Bank · **insight** pane (next-week forecast, advisor tips) with tabs
-Progress (charts + year table) | Customers (where they come from) | News.
+Progress (charts + year table) | Sales (per-product popularity, cost, margin, share of profit; where the money goes) |
+Customers (where they come from) | News.
 Sticky bottom bar with cash and **Open next week**. Light/dark/auto theme toggle.
 Look: "Live Tiles" (see `DESIGN.md` and decision 18). Stat tiles flip when a week opens.
 
 **Keyboard shortcuts** (desktop extra; hints hidden on touch devices): Space = open next week (one press = one week,
-ignored while a pop-up is open), M/T/I/B = Menu/Team/Invest/Bank tab, P/C/N = Progress/Customers/News tab, ? = shortcut list, Esc = close pop-up.
+ignored while a pop-up is open), M/T/I/B = Menu/Team/Invest/Bank tab, P/S/C/N = Progress/Sales/Customers/News tab, ? = shortcut list, Esc = close pop-up.
 Pop-ups start on the safe button (Cancel / Not yet), so Enter never confirms by accident.

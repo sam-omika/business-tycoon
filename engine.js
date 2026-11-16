@@ -270,14 +270,19 @@
       modifiers: [], upcoming: [], forecast: null, history: [], lastReport: null,
     };
   }
-  function newGame(shopName, themeId = 'coffee') {
+  // Goals the player can pick on the start screen (company value to reach within maxWeeks)
+  const GOALS = [250000, 500000, 1000000, 2000000, 5000000];
+
+  function newGame(shopName, themeId = 'coffee', opts = {}) {
     const t = THEMES[themeId];
     return {
-      version: 2,
+      version: 3,
       week: 0,
       maxWeeks: 260,          // 5 years
-      goal: 1000000,          // target valuation
+      goal: GOALS.includes(opts.goal) ? opts.goal : 1000000,   // target valuation
       status: 'playing',      // playing | won | bankrupt | timeup
+      endless: false,         // true after "keep playing": no goal check, no time limit
+      goalReachedWeek: null,  // week the goal was reached (stays set when playing on)
       player: { cash: t.startCash, loan: 0, maxLoan: 30000, interestRate: 0.005 },
       businesses: [newBusiness('b1', shopName || 'My Coffee', themeId)],
       log: [],
@@ -301,7 +306,9 @@
         delete b.price;
       }
     }
-    state.version = 2;
+    if (state.endless === undefined) state.endless = false;
+    if (state.goalReachedWeek === undefined) state.goalReachedWeek = null;
+    state.version = 3;
     return state;
   }
   function sumAwareness(b) {
@@ -417,9 +424,13 @@
       service: Math.round(service * 100), sources, marketingReturn,
     };
     b.lastReport = report;
+    const rc = (x) => Math.round(x);
     b.history.push({
-      week, revenue: Math.round(revenue), profit: Math.round(profit), served, demand,
-      rep: Math.round(b.reputation), aw: Math.round(b.awareness), clean: Math.round(b.cleanliness * 100),
+      week, revenue: rc(revenue), profit: rc(profit), served, demand,
+      rep: rc(b.reputation), aw: rc(b.awareness), clean: rc(b.cleanliness * 100),
+      // for the Sales insights: cost categories and per-product [qty, revenue, gross margin]
+      costs: { supplies: rc(supplies), wages: rc(wages), rent: rc(rent), marketing: rc(marketing), other: rc(other), systems: rc(systems) },
+      items: Object.fromEntries(sales.map((x) => [x.id, [x.qty, rc(x.revenue), rc(x.margin)]])),
     });
     if (b.history.length > 520) b.history.shift();
     return report;
@@ -443,13 +454,16 @@
     s.lastInterest = interest;
 
     const v = valuation(s);
-    s.valuationHistory.push({ week: s.week, value: v, cash: Math.round(s.player.cash) });
+    s.valuationHistory.push({ week: s.week, value: v, cash: Math.round(s.player.cash), interest: Math.round(interest) });
 
     if (s.player.cash < 0) {
       s.status = 'bankrupt';
       s.log.unshift({ week: s.week, text: 'You ran out of cash. The bank closed your accounts.', tone: 'bad' });
+    } else if (s.endless) {
+      // playing on: no goal check, no time limit
     } else if (v >= s.goal) {
       s.status = 'won';
+      s.goalReachedWeek = s.week;
       s.log.unshift({ week: s.week, text: `Your company is worth €${v.toLocaleString('en')}. Goal reached!`, tone: 'good' });
     } else if (s.week >= s.maxWeeks) {
       s.status = 'timeup';
@@ -544,10 +558,16 @@
       if (s.player.cash < pay) return 'Not enough cash to repay.';
       s.player.loan -= pay; s.player.cash -= pay;
     }),
+    // After winning (or when time is up): keep going with no goal check and no time limit
+    keepPlaying: (state) => act(state, null, (s) => {
+      if (s.status !== 'won' && s.status !== 'timeup') return 'You can only play on after reaching the goal or the time limit.';
+      s.status = 'playing'; s.endless = true;
+      s.log.unshift({ week: s.week, text: 'You decided to keep building. No goal, no time limit.', tone: 'good' });
+    }),
   };
 
   const api = {
-    THEMES, newGame, tick, migrate, Actions, getTheme,
+    THEMES, GOALS, newGame, tick, migrate, Actions, getTheme,
     fairPriceOf, isUnlocked, meets, capacities, cleaningCapacity, computeMix, totalStaff,
     valuation, businessValue, seasonName,
   };
