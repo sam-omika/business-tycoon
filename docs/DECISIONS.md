@@ -22,3 +22,6 @@ Short log of design and technical decisions. Newest at the bottom. Format: what 
     Public is fine for a test project. Installable via a web manifest; no service worker/offline yet (not needed on desktop).
 16. **Name and icon are "Business Tycoon", not coffee-specific** (Nov 2026): coffee is only the first theme. Icon is a
     generic shop (awning + rising chart). Coffee visuals stay inside the coffee theme only.
+17. **Keyboard: Space only for "next week", letters to jump, pop-ups start on the safe button** (Nov 2026): Enter is too
+    easy to hit by accident and already presses buttons in pop-ups. Holding Space advances one week, not many; Space does
+    nothing while a pop-up is open, so you can't skip past a win/bankrupt screen or confirm "Start over?" by accident.

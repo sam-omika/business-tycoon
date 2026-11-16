@@ -184,6 +184,17 @@
   .modal .row { display: flex; gap: 10px; margin-top: 18px; }
   .modal .row .btn { flex: 1; }
   .toast { position: fixed; left: 50%; bottom: 100px; transform: translateX(-50%); background: var(--ink); color: var(--on-ink); padding: 12px 18px; border-radius: 12px; font-size: 15px; z-index: 60; max-width: 90vw; text-align: center; transition: opacity .3s; }
+  /* Keyboard shortcuts: hints only show on devices with a mouse/trackpad (hidden on iPad touch) */
+  .kbd-only { display: none !important; }
+  @media (hover: hover) and (pointer: fine) { .kbd-only { display: revert !important; } }
+  kbd { font: 600 12px/1 Inter, system-ui, sans-serif; padding: 3px 6px; border-radius: 6px; border: 1px solid var(--line);
+    background: var(--bg); color: var(--muted); }
+  .btn kbd { margin-left: 10px; vertical-align: 2px; background: transparent; color: inherit; border-color: currentColor; opacity: .7; }
+  .modal .btn:focus-visible, .icon-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .card { scroll-margin-top: 16px; }
+  .keys { width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; }
+  .keys td { padding: 7px 4px; border-top: 1px solid var(--line); color: var(--ink); }
+  .keys td:first-child { width: 90px; }
   .flash { animation: flash .6s; }
   @keyframes flash { 0% { background: var(--accent-soft); } 100% { background: var(--card); } }
 
@@ -256,6 +267,7 @@
     <h1 id="shopTitle">☕</h1>
     <span class="when" id="when"></span>
     <span class="spacer"></span>
+    <button class="icon-btn kbd-only" id="keysBtn" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">?</button>
     <button class="icon-btn theme-btn" id="themeBtn"></button>
     <button class="icon-btn" id="newGameBtn">New game</button>
   </div>
@@ -291,7 +303,7 @@
         <div class="events" id="tips"></div>
       </div>
 
-      <div class="card o7">
+      <div class="card o7" id="cardProgress">
         <h2>Progress <small id="progSub"></small></h2>
         <div class="chips" id="chips"></div>
         <div class="pchart" id="pchart"></div>
@@ -311,7 +323,7 @@
 
     <!-- RIGHT: decisions -->
     <div>
-      <div class="card o4">
+      <div class="card o4" id="cardMenu">
         <h2>Menu <small>prices apply from next week</small></h2>
         <div id="forecast"></div>
         <div class="ctl">
@@ -325,7 +337,7 @@
         </div>
       </div>
 
-      <div class="card o5">
+      <div class="card o5" id="cardTeam">
         <h2>Team <small id="teamSub"></small></h2>
         <div id="team"></div>
         <p class="note" id="teamNote"></p>
@@ -339,7 +351,7 @@
         </div>
       </div>
 
-      <div class="card o6">
+      <div class="card o6" id="cardInvest">
         <h2>Invest</h2>
         <div class="upg">
           <div class="info"><div class="now" id="locNow"></div><div class="next" id="locNext"></div></div>
@@ -353,7 +365,7 @@
         <div id="systemsList"></div>
       </div>
 
-      <div class="card o9">
+      <div class="card o9" id="cardBank">
         <h2>Bank <small>0.5% interest per week</small></h2>
         <div class="upg">
           <div class="info"><div class="now num" id="loanNow"></div><div class="next" id="loanNext"></div></div>
@@ -368,7 +380,7 @@
 <div class="bottombar hidden" id="bottombar">
   <div class="inner">
     <div class="cash">Cash<b class="num" id="bbCash"></b></div>
-    <button class="btn" id="nextBtn">Open next week ▶</button>
+    <button class="btn" id="nextBtn">Open next week ▶<kbd class="kbd-only">Space</kbd></button>
   </div>
 </div>
 
@@ -421,8 +433,11 @@
   function modal(html, buttons) {
     $('modal').innerHTML = html + '<div class="row">' + buttons.map((b, i) => `<button class="btn ${b.secondary ? 'secondary' : ''}" data-i="${i}">${b.label}</button>`).join('') + '</div>';
     $('overlay').classList.remove('hidden');
-    $('modal').querySelectorAll('[data-i]').forEach((el) => el.onclick = () => { $('overlay').classList.add('hidden'); buttons[+el.dataset.i].onClick && buttons[+el.dataset.i].onClick(); });
+    $('modal').querySelectorAll('[data-i]').forEach((el) => el.onclick = () => { $('overlay').classList.add('hidden'); el.blur(); buttons[+el.dataset.i].onClick && buttons[+el.dataset.i].onClick(); });
+    // Start on the first (safe) button, e.g. "Cancel" / "Not yet", so Enter never confirms by accident.
+    $('modal').querySelector('[data-i="0"]').focus();
   }
+  const modalOpen = () => !$('overlay').classList.contains('hidden');
   function apply(result) {
     if (result.error) { toast(result.error); return; }
     state = result.state; save(); render();
@@ -446,6 +461,46 @@
     save(); showGame();
   };
   $('continueBtn').onclick = () => { state = load(); showGame(); };
+  $('shopName').addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); $('startBtn').click(); } });
+
+  // ---------- keyboard shortcuts (desktop extra; everything is also reachable by touch) ----------
+  const JUMP = { m: 'cardMenu', t: 'cardTeam', i: 'cardInvest', b: 'cardBank', p: 'cardProgress' };
+  function jumpTo(id) {
+    const c = $(id);
+    const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    c.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+    c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash');
+  }
+  function showShortcuts() {
+    const row = (k, what) => `<tr><td><kbd>${k}</kbd></td><td>${what}</td></tr>`;
+    modal('<h2>Keyboard shortcuts</h2><table class="keys">' +
+      row('Space', 'Open next week') + row('M', 'Menu') + row('T', 'Team') + row('I', 'Invest') + row('B', 'Bank') +
+      row('P', 'Progress') + row('?', 'This list') + row('Esc', 'Close a pop-up') + '</table>', [{ label: 'Got it' }]);
+  }
+  $('keysBtn').onclick = showShortcuts;
+  const inGame = () => state && !$('game').classList.contains('hidden');
+  const isTyping = (el) => el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || el.isContentEditable);
+  document.addEventListener('keydown', (ev) => {
+    if (ev.metaKey || ev.ctrlKey || ev.altKey) return; // leave browser shortcuts alone
+    if (modalOpen()) {
+      if (ev.key === 'Escape') { ev.preventDefault(); $('modal').querySelector('[data-i="0"]').click(); }
+      else if (ev.key === ' ') ev.preventDefault(); // Space never acts inside a pop-up (e.g. can't skip the end screen)
+      return;
+    }
+    if (isTyping(ev.target) || !inGame()) return;
+    if (ev.key === ' ') {
+      ev.preventDefault();
+      // Don't let Space also "press" the last clicked button (e.g. a + price button).
+      if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+      if (!ev.repeat) $('nextBtn').click(); // holding Space = one week, not fast-forward
+    } else if (ev.key === '?') {
+      ev.preventDefault(); showShortcuts();
+    } else if (!ev.shiftKey && JUMP[ev.key.toLowerCase()]) {
+      ev.preventDefault(); jumpTo(JUMP[ev.key.toLowerCase()]);
+    }
+  });
+  // Releasing Space on a focused button would click it; we handled Space on keydown already.
+  document.addEventListener('keyup', (ev) => { if (ev.key === ' ' && !isTyping(ev.target) && (inGame() || modalOpen())) ev.preventDefault(); });
   $('newGameBtn').onclick = () => modal('<div class="big">🔄</div><h2>Start over?</h2><p>Your current game will be lost.</p>',
     [{ label: 'Cancel', secondary: true }, { label: 'New game', onClick: () => { clearSave(); state = null; $('shopName').value = ''; showStart(); } }]);
 

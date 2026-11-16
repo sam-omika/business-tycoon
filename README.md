@@ -34,6 +34,10 @@ Install it as an app (own window and icon):
 
 Saves live in the browser (`localStorage`), per device and per web address.
 
+## Keyboard shortcuts
+
+**Space** next week · **M** Menu · **T** Team · **I** Invest · **B** Bank · **P** Progress · **?** list · **Esc** close pop-up
+
 ## App icon
 
 Edit `icons/icon.svg`, then run `node tools/make-icons.js` to regenerate the PNG sizes (needs Google Chrome).

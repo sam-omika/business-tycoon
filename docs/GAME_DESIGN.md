@@ -66,3 +66,7 @@ Start screen (theme pick, shop name, continue) → game screen:
 Your business (tiles) · Week report · Advisor tips · Progress (charts + year table) · Where customers come from ·
 News | Menu (forecast, beans, items) · Team (roles, marketing) · Invest (location, machine, equipment, systems) · Bank.
 Sticky bottom bar with cash and **Open next week**. Light/dark/auto theme toggle.
+
+**Keyboard shortcuts** (desktop extra; hints hidden on touch devices): Space = open next week (one press = one week,
+ignored while a pop-up is open), M/T/I/B/P = jump to Menu/Team/Invest/Bank/Progress, ? = shortcut list, Esc = close pop-up.
+Pop-ups start on the safe button (Cancel / Not yet), so Enter never confirms by accident.

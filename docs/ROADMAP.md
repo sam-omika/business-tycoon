@@ -16,11 +16,12 @@
 - Own hosting on GitHub Pages: https://sam-omika.github.io/business-tycoon/ (public repo, push to `main` = deploy)
 - App icon + web manifest: installable in Chrome/Edge, Safari "Add to Dock", iPad home screen
 - Switched target to desktop first, iPad still supported
+- Keyboard shortcuts: Space = next week, M/T/I/B/P jump to cards, ? = list, Esc closes pop-ups
 
 ## Next
 
 1. **Play-test v2 difficulty**: is it too hard for a human? Adjust using `docs/BALANCE.md` targets
-2. **Desktop polish**: keyboard shortcuts (e.g. Space/Enter = open next week), hover tooltips that explain numbers,
+2. **Desktop polish** (keyboard shortcuts done): hover tooltips that explain numbers,
    a wider layout on big screens (e.g. three columns) so there's less scrolling
 3. **Multiple businesses** (the big one):
    - Open a second coffee shop from the shared cash pool
