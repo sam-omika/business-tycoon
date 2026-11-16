@@ -67,7 +67,14 @@ await size(1440, 900);
 await cmd('Page.navigate', { url: URL }); await sleep(1200);
 await ev('localStorage.clear()'); await cmd('Page.reload'); await sleep(1200);
 
-// --- start screen
+// --- start screen: difficulty choice really starts that kind of game
+await ev(`document.querySelector('[data-diff="hard"]').click()`);
+await ev(`document.getElementById('shopName').value = 'Hard Test'`); await ev(`document.getElementById('startBtn').click()`); await sleep(300);
+let hs = await save();
+check('picking "hard" starts a hard game', hs.difficulty === 'hard' && hs.player.cash === 3000, `${hs.difficulty}, €${hs.player.cash}`);
+check('top bar shows the level', (await ev(`document.getElementById('goalText').textContent`)).includes('hard'));
+await ev('localStorage.clear()'); await cmd('Page.reload'); await sleep(1200);
+await shot('start-dark-1440.png');
 await ev(`document.getElementById('shopName').focus()`);
 await cmd('Input.insertText', { text: 'Bean There' });
 await press('Enter');

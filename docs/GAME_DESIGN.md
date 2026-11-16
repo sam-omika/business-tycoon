@@ -13,7 +13,8 @@ when marketing pays off, and that information (knowing where customers come from
 - **Win**: company value ≥ €1,000,000.
 - **Lose**: cash < 0 at the end of a week (bankrupt).
 - **Time's up**: 260 weeks pass without reaching the goal.
-- **Goal**: chosen on the start screen: €250k (relaxed), €500k, €1M (classic, default), €2M, €5M (tycoon).
+- **Goal**: chosen on the start screen: €250k, €500k, €1M (classic, default), €2M, €5M.
+- **Difficulty**: chosen on the start screen: easy, normal (default), hard (see the Difficulty table below).
 - **Keep playing**: after winning or when time is up you can play on with no goal and no time limit (`state.endless`).
 - **Company value** = cash − loan + Σ business value.
   Business value = 3 × annualised average profit of the last 12 weeks (if positive) + 50% of the cost of location, machine and equipment.

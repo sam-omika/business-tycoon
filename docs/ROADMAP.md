@@ -24,24 +24,24 @@
 - Phase 1: pick your goal (€250k to €5M) and keep playing after winning or when time is up
 - Phase 2A: event director with ~25 event cards, weather forecasts, yearly economy, decisions, difficulty table (balanced)
 - Phase 2B: The Courier (weekly paper) and decision cards that must be answered before the next week
+- Phase 2C: pick easy / normal / hard on the start screen
 
 ## Next
 
 Agreed plan (16 Nov 2026) to fix "the mid-game has too little challenge":
 
-1. **Phase 2C: pick the difficulty** (easy / normal / hard) on the start screen; the engine and balance are ready
-2. **Phase 3: your own time and opening hours**: limited owner hours per week (serving, cleaning, admin, buying), set
+1. **Phase 3: your own time and opening hours**: limited owner hours per week (serving, cleaning, admin, buying), set
    opening hours (more customers vs. wages and your time). Foundation for hiring people to free your time
-3. **Phase 4: managers, CEO, second business** (merges with "multiple businesses"):
+2. **Phase 4: managers, CEO, second business** (merges with "multiple businesses"):
    - Managers and a CEO who follows rules you set; monthly/quarterly review meetings
    - Once a business runs without you, start a second one; business switcher and portfolio overview
    - Roastery as a second business type that supplies your cafés (shared resources)
-4. **Phase 5 (optional, later)**: turn timer as an option (e.g. on in hard), with things you can earn that slow it down;
+3. **Phase 5 (optional, later)**: turn timer as an option (e.g. on in hard), with things you can earn that slow it down;
    "watch the week" as a short optional replay (20–60 s, skippable)
-5. **Play-test difficulty** along the way, using `docs/BALANCE.md` targets
-6. **Desktop polish**: hover tooltips that explain numbers
-7. **Acquisitions**: NPC businesses (e.g. the competitor chain) that you can buy
-8. **Cash out**: sell a business at its valuation
+4. **Play-test difficulty** along the way, using `docs/BALANCE.md` targets
+5. **Desktop polish**: hover tooltips that explain numbers
+6. **Acquisitions**: NPC businesses (e.g. the competitor chain) that you can buy
+7. **Cash out**: sell a business at its valuation
 
 ## Backlog / ideas
 

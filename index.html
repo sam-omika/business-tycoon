@@ -85,13 +85,13 @@
   @media (hover: hover) { .icon-btn:hover { color: var(--ink); } }
 
   /* ---------- Start screen ---------- */
-  #start { min-height: 100vh; display: grid; align-content: center; padding: 48px max(24px, calc(50vw - 520px)); overflow: hidden; }
+  #start { min-height: 100vh; display: grid; align-content: center; padding: 28px max(24px, calc(50vw - 520px)); overflow: hidden; }
   .start-card { width: 100%; max-width: 1040px; }
   .start-card h1 { font-size: clamp(48px, 7vw, 96px); line-height: .92; margin: 0 0 24px -0.04em; white-space: nowrap; }
-  .start-card p.lead { color: var(--muted); margin: 0 0 40px; font-size: 24px; font-weight: 350; line-height: 1.4; max-width: 34ch; }
+  .start-card p.lead { color: var(--muted); margin: 0 0 24px; font-size: 24px; font-weight: 350; line-height: 1.4; max-width: 34ch; }
   .start-card p.lead b { color: var(--ink); font-weight: 400; }
-  .themes { display: grid; grid-template-columns: repeat(3, minmax(0, 200px)); gap: 8px; margin-bottom: 32px; }
-  .theme { min-height: 120px; background: var(--card); padding: 14px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .themes { display: grid; grid-template-columns: repeat(3, minmax(0, 200px)); gap: 8px; margin-bottom: 20px; }
+  .theme { min-height: 72px; background: var(--card); padding: 14px; display: flex; flex-direction: column; justify-content: flex-end; }
   .theme .nm { font-size: 24px; font-weight: 300; text-transform: lowercase; line-height: 1.1; }
   .theme .soon { font-size: 13px; color: var(--muted); margin-top: 4px; text-transform: lowercase; }
   .theme.active { background: var(--ink); color: var(--bg); }
@@ -357,6 +357,9 @@
   /* ---------- Sales insights ---------- */
   .goals { grid-template-columns: repeat(5, 1fr); }
   .goals button { min-height: 56px; }
+  .seg button b .nt { display: inline; font-size: inherit; color: inherit; margin: 0; opacity: 1; }
+  .diffs button { min-height: 64px; }
+  .diffs button span { line-height: 1.35; }
   .lines { margin: 0 0 12px; padding: 0; list-style: none; font-size: 15px; font-weight: 350; line-height: 1.45; }
   .lines li { padding: 3px 0; }
   .lines b { font-weight: 400; color: var(--ink); }
@@ -401,11 +404,15 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
   <button class="icon-btn theme-btn" id="themeBtnStart" style="position:fixed;top:16px;right:16px;z-index:5"></button>
   <div class="start-card">
     <h1>Business Tycoon</h1>
-    <p class="lead">Start with one small business and €5,000. Grow it into a company worth <b>the goal you pick</b> within 5 years.</p>
+    <p class="lead">Start with one small business and a little cash. Grow it into a company worth <b>the goal you pick</b> within 5 years.</p>
     <div class="themes">
       <div class="theme active"><div class="nm">Coffee shop</div><div class="soon">Available</div></div>
       <div class="theme locked"><div class="nm">Bike shop</div><div class="soon">Coming soon</div></div>
       <div class="theme locked"><div class="nm">Travel agency</div><div class="soon">Coming soon</div></div>
+    </div>
+    <div class="field">
+      <label>Difficulty</label>
+      <div class="seg diffs" id="diffPick"></div>
     </div>
     <div class="field">
       <label>Your goal: company value to reach within 5 years</label>
@@ -620,13 +627,20 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
   // ---------- screens ----------
   // Goal picker on the start screen
-  const GOAL_LABEL = { 250000: 'relaxed', 500000: 'easy', 1000000: 'classic', 2000000: 'hard', 5000000: 'tycoon' };
+  const GOAL_LABEL = { 1000000: 'classic' };
+  const DIFF_TEXT = { easy: 'gentle events', normal: 'a fair challenge', hard: 'tough market, harsh events' };
+  let chosenDiff = 'normal';
+  function renderDiffPick() {
+    $('diffPick').innerHTML = Object.entries(E.DIFFICULTY).map(([k, d]) => `<button data-diff="${k}" class="${k === chosenDiff ? 'on' : ''}"><b>${d.label}</b><span>${DIFF_TEXT[k] || ''} · start ${eur(d.startCash)}</span></button>`).join('');
+  }
+  $('diffPick').addEventListener('click', (ev) => { const d = ev.target.closest('[data-diff]'); if (d) { chosenDiff = d.dataset.diff; renderDiffPick(); } });
   let chosenGoal = 1000000;
   function renderGoalPick() {
-    $('goalPick').innerHTML = E.GOALS.map((g) => `<button data-goal="${g}" class="${g === chosenGoal ? 'on' : ''}"><b>${goalFmt(g)}</b><span>${GOAL_LABEL[g] || ''}</span></button>`).join('');
+    $('goalPick').innerHTML = E.GOALS.map((g) => `<button data-goal="${g}" class="${g === chosenGoal ? 'on' : ''}"><b>${goalFmt(g)}</b><span>${GOAL_LABEL[g] || '&nbsp;'}</span></button>`).join('');
   }
   $('goalPick').addEventListener('click', (ev) => { const g = ev.target.closest('[data-goal]'); if (g) { chosenGoal = +g.dataset.goal; renderGoalPick(); } });
   function showStart() {
+    renderDiffPick();
     renderGoalPick();
     $('start').classList.remove('hidden'); $('game').classList.add('hidden'); $('bottombar').classList.add('hidden');
     const saved = load();
@@ -639,7 +653,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
   $('startBtn').onclick = () => {
     const name = $('shopName').value.trim() || 'Bean There';
-    state = E.newGame(name, 'coffee', { goal: chosenGoal });
+    state = E.newGame(name, 'coffee', { goal: chosenGoal, difficulty: chosenDiff });
     state.log.unshift({ week: 0, text: `${name} opens its first coffee cart. Good luck!`, tone: 'good' });
     save(); showGame();
   };
@@ -770,6 +784,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     $('goalText').innerHTML = state.endless
       ? (state.goalReachedWeek ? `goal ${goalFmt(state.goal)} reached in week ${state.goalReachedWeek} · playing on` : 'playing on, no time limit')
       : `goal ${goalFmt(state.goal)} · ${state.maxWeeks - state.week} weeks left`;
+    $('goalText').innerHTML += ` · ${(E.DIFFICULTY[state.difficulty] || E.DIFFICULTY.normal).label.toLowerCase()}`;
     const pct = Math.max(0, Math.min(100, v / state.goal * 100));
     $('goalBar').firstElementChild.style.transform = `scaleX(${pct / 100})`;
     $('goalBar').classList.toggle('good', pct >= 100);
