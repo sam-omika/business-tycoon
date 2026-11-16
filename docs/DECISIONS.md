@@ -1,0 +1,17 @@
+# Decisions
+
+Short log of design and technical decisions. Newest at the bottom. Format: what — why.
+
+1. **Web game (HTML/JS), not a native iPad app**: runs in Safari, no Mac/Xcode/App Store needed, easy to share.
+2. **Turn-based (one week per turn), not real-time**: easier to build and balance, suits a tablet, no "while you were away" logic.
+3. **Vanilla JS, no framework or build step**: simple to host anywhere and easy to change. Revisit if the UI grows a lot.
+4. **Engine separate from UI** (`engine.js` vs `index.html`): rules can be tested headless and balanced with bots.
+5. **Multi-business data model from day one** (`player` + `businesses[]`): the big expansion shouldn't need a rewrite.
+6. **Themes as data**: new business types are mostly config.
+7. **Coffee shop as the first theme**: intuitive economics, and natural neighbours (roastery, bakery) for later synergy.
+8. **Goal = company value (not revenue)**: ties in with the later "cash out" and acquisition features.
+9. **Predictable events are announced a week ahead**: Sam's feedback that news came too late to react to. Surprises still exist.
+10. **Information is something you buy** (POS, marketing analytics): makes marketing a measurable decision instead of a guess.
+11. **Menu replaces the single price; staff split into roles**: more real decisions (bottleneck at bar vs. register, cleanliness).
+12. **Owner counts as 1 barista + 1 cashier + some cleaning**: a solo cart is playable without hiring.
+13. **Balance by simulation**: every economy change is checked with `npm run sim` against the targets in BALANCE.md.

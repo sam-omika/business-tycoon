@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Coffee Tycoon</title>
+<script>try { const m = localStorage.getItem('tycoon-theme'); if (m === 'light' || m === 'dark') document.documentElement.dataset.theme = m; } catch (e) {}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4ECE1; --card: #FFFCF7; --ink: #2B1D14; --muted: #7A6656; --line: #E6D8C6;
+    --accent: #B8692E; --accent-ink: #fff; --accent-soft: #F3E0CC;
+    --good: #2E7A4C; --good-soft: #E1F0E6; --bad: #B2432F; --bad-soft: #F7E1DB;
+    --radius: 16px; --on-ink: #fff; --bar-bg: rgba(255,252,247,.94); color-scheme: light;
+  }
+  /* Dark mode: follows the iPad setting, or forced with the 🌙 button */
+  :root[data-theme="dark"] {
+    --bg: #1A1511; --card: #241D17; --ink: #F2E8DC; --muted: #A99686; --line: #3A2F26;
+    --accent: #D98A4B; --accent-ink: #1A1511; --accent-soft: #3B2A1C;
+    --good: #5FBF87; --good-soft: #1D3226; --bad: #EC7A63; --bad-soft: #3E231D;
+    --on-ink: #1A1511; --bar-bg: rgba(36,29,23,.94); color-scheme: dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1A1511; --card: #241D17; --ink: #F2E8DC; --muted: #A99686; --line: #3A2F26;
+      --accent: #D98A4B; --accent-ink: #1A1511; --accent-soft: #3B2A1C;
+      --good: #5FBF87; --good-soft: #1D3226; --bad: #EC7A63; --bad-soft: #3E231D;
+      --on-ink: #1A1511; --bar-bg: rgba(36,29,23,.94); color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, system-ui, sans-serif; font-size: 16px;
+    touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+  input { -webkit-user-select: text; user-select: text; }
+  h1, h2, h3 { font-family: Fraunces, Georgia, serif; margin: 0; letter-spacing: -0.01em; }
+  button { font: inherit; color: inherit; border: 0; cursor: pointer; touch-action: manipulation; }
+  .hidden { display: none !important; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* ---------- Start screen ---------- */
+  #start { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+  .start-card { width: min(560px, 100%); text-align: center; }
+  .logo { font-size: 64px; line-height: 1; }
+  .start-card h1 { font-size: 44px; font-weight: 800; margin: 12px 0 6px; }
+  .start-card p.lead { color: var(--muted); margin: 0 0 28px; font-size: 17px; line-height: 1.5; }
+  .themes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+  .theme { background: var(--card); border: 2px solid var(--line); border-radius: var(--radius); padding: 14px 8px; }
+  .theme .ic { font-size: 30px; }
+  .theme .nm { font-weight: 600; margin-top: 4px; font-size: 14px; }
+  .theme .soon { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .theme.active { border-color: var(--accent); background: var(--accent-soft); }
+  .theme.locked { opacity: .5; }
+  .field { display: flex; flex-direction: column; gap: 6px; text-align: left; margin-bottom: 16px; }
+  .field label { font-weight: 600; font-size: 14px; color: var(--muted); }
+  .field input { font: inherit; font-size: 18px; padding: 14px 16px; border-radius: 12px; border: 2px solid var(--line); background: var(--card); color: var(--ink); outline: none; }
+  .field input:focus { border-color: var(--accent); }
+  .btn { background: var(--accent); color: var(--accent-ink); font-weight: 700; padding: 14px 20px; border-radius: 12px; font-size: 17px; min-height: 48px; }
+  .btn:active { transform: scale(.98); }
+  .btn.secondary { background: var(--card); color: var(--ink); border: 2px solid var(--line); }
+  .btn.block { width: 100%; }
+  .btn[disabled] { opacity: .4; cursor: default; }
+  .goal-note { margin-top: 18px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+
+  /* ---------- Game ---------- */
+  #game { padding: 16px 16px 110px; max-width: 1240px; margin: 0 auto; }
+  .topbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .topbar h1 { font-size: 26px; font-weight: 800; }
+  .topbar .when { color: var(--muted); font-weight: 500; }
+  .topbar .spacer { flex: 1; }
+  .icon-btn { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: 14px; font-weight: 600; color: var(--muted); }
+
+  .goal { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 14px; }
+  .goal-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 14px; color: var(--muted); }
+  .goal-row b { color: var(--ink); font-size: 18px; }
+  .bar { height: 10px; background: var(--line); border-radius: 99px; overflow: hidden; margin-top: 8px; }
+  .bar > i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .4s; }
+  .bar.good > i { background: var(--good); }
+
+  .cols { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 900px) { .cols { grid-template-columns: 1.05fr 1fr; align-items: start; } }
+  @media (max-width: 899px) {
+    .cols { display: flex; flex-direction: column; }
+    .cols > div { display: contents; }
+    .cols .card + .card { margin-top: 0; }
+    .o1 { order: 1; } .o2 { order: 2; } .o3 { order: 3; } .o4 { order: 4; } .o5 { order: 5; } .o6 { order: 6; } .o7 { order: 7; } .o8 { order: 8; } .o9 { order: 9; } .o10 { order: 10; }
+  }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+  .card + .card { margin-top: 14px; }
+  .card h2 { font-size: 19px; font-weight: 600; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: baseline; }
+  .card h2 small { font-family: Inter, sans-serif; font-size: 13px; color: var(--muted); font-weight: 500; }
+
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .tile { background: var(--bg); border-radius: 12px; padding: 10px 12px; }
+  .tile .lbl { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+  .tile .val { font-size: 22px; font-weight: 700; margin-top: 2px; }
+  .tile .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .pos { color: var(--good); } .neg { color: var(--bad); }
+  .meter { height: 6px; background: var(--line); border-radius: 99px; margin-top: 6px; overflow: hidden; }
+  .meter > i { display: block; height: 100%; background: var(--accent); }
+
+  .report { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .report td { padding: 6px 0; border-bottom: 1px dashed var(--line); }
+  .report td:last-child { text-align: right; }
+  .report tr.total td { border-bottom: 0; font-weight: 700; padding-top: 10px; font-size: 17px; }
+  .report tr.sec td { color: var(--muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; padding-top: 12px; border-bottom: 0; }
+
+  .events { display: flex; flex-direction: column; gap: 8px; }
+  .ev { padding: 10px 12px; border-radius: 10px; font-size: 14px; line-height: 1.4; background: var(--bg); }
+  .ev.good { background: var(--good-soft); } .ev.bad { background: var(--bad-soft); }
+  .ev .wk { font-size: 11px; font-weight: 700; color: var(--muted); margin-right: 6px; }
+  .tips .ev { background: var(--accent-soft); }
+
+  .chart svg { width: 100%; height: 120px; display: block; }
+
+  /* Decisions */
+  .ctl { padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .ctl:first-of-type { padding-top: 0; }
+  .ctl:last-child { border-bottom: 0; padding-bottom: 0; }
+  .ctl-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .ctl-head .t { font-weight: 600; }
+  .ctl-head .h { font-size: 13px; color: var(--muted); }
+  .stepper { display: flex; align-items: center; gap: 10px; }
+  .stepper button { width: 52px; height: 48px; border-radius: 12px; background: var(--bg); border: 1px solid var(--line); font-size: 24px; font-weight: 600; }
+  .stepper button:active { background: var(--accent-soft); }
+  .stepper .v { flex: 1; text-align: center; font-size: 24px; font-weight: 700; }
+  .stepper .v small { display: block; font-size: 12px; font-weight: 500; color: var(--muted); }
+  .seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .seg button { background: var(--bg); border: 2px solid var(--line); border-radius: 12px; padding: 10px 6px; text-align: center; min-height: 64px; }
+  .seg button b { display: block; font-size: 14px; }
+  .seg button span { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .seg button.on { border-color: var(--accent); background: var(--accent-soft); }
+  .pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+  .pill.good { background: var(--good-soft); color: var(--good); }
+  .pill.bad { background: var(--bad-soft); color: var(--bad); }
+  .pill.mid { background: var(--accent-soft); color: var(--accent); }
+
+  .upg { display: flex; align-items: center; gap: 12px; padding: 10px 0; }
+  .upg + .upg { border-top: 1px dashed var(--line); }
+  .upg .info { flex: 1; }
+  .upg .now { font-weight: 600; }
+  .upg .next { font-size: 13px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+  .upg .btn { padding: 10px 14px; font-size: 15px; min-height: 44px; white-space: nowrap; }
+
+  .mods { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+
+  /* Forecast + sources */
+  .forecast { border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-size: 15px; line-height: 1.4; display: flex; gap: 10px; align-items: flex-start; }
+  .forecast.good { background: var(--good-soft); } .forecast.bad { background: var(--bad-soft); } .forecast.none { background: var(--bg); color: var(--muted); }
+  .forecast b { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-bottom: 2px; }
+  .stack { display: flex; height: 22px; border-radius: 8px; overflow: hidden; background: var(--line); margin-bottom: 12px; }
+  .stack i { display: block; height: 100%; }
+  .src { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 15px; }
+  .src .dot { width: 12px; height: 12px; border-radius: 4px; flex: none; }
+  .src .nm { flex: 1; } .src .nm small { display: block; color: var(--muted); font-size: 12px; }
+  .src .ct { font-weight: 600; } .src .pc { width: 44px; text-align: right; color: var(--muted); font-size: 13px; }
+  .locked { color: var(--muted); font-size: 15px; line-height: 1.5; margin: 0; }
+  .roi { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: var(--bg); font-size: 14px; line-height: 1.45; }
+
+  /* Bottom bar */
+  .bottombar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bar-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid var(--line); padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); z-index: 10; }
+  .bottombar .inner { max-width: 1240px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+  .bottombar .cash { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .bottombar .cash b { display: block; font-size: 24px; color: var(--ink); }
+  .bottombar .btn { flex: 1; max-width: 420px; margin-left: auto; font-size: 18px; min-height: 56px; }
+
+  /* Modal + toast */
+  .overlay { position: fixed; inset: 0; background: rgba(43,29,20,.45); display: grid; place-items: center; padding: 20px; z-index: 50; }
+  .modal { background: var(--card); border-radius: 20px; padding: 24px; width: min(460px, 100%); text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+  .modal .big { font-size: 56px; }
+  .modal h2 { font-size: 28px; margin: 8px 0; }
+  .modal p { color: var(--muted); line-height: 1.5; }
+  .modal .row { display: flex; gap: 10px; margin-top: 18px; }
+  .modal .row .btn { flex: 1; }
+  .toast { position: fixed; left: 50%; bottom: 100px; transform: translateX(-50%); background: var(--ink); color: var(--on-ink); padding: 12px 18px; border-radius: 12px; font-size: 15px; z-index: 60; max-width: 90vw; text-align: center; transition: opacity .3s; }
+  .flash { animation: flash .6s; }
+  @keyframes flash { 0% { background: var(--accent-soft); } 100% { background: var(--card); } }
+
+  /* Menu */
+  .mi { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+  .mi:last-child { border-bottom: 0; }
+  .mi .info { flex: 1; min-width: 0; }
+  .mi .info b { display: block; font-size: 15px; }
+  .mi .info small { display: block; font-size: 12px; color: var(--muted); margin-top: 1px; }
+  .mi.off .info b { color: var(--muted); }
+  .mi.locked { opacity: .55; }
+  .mi.locked .ic { width: 36px; text-align: center; font-size: 18px; }
+  .tog { width: 36px; height: 36px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); font-weight: 800; color: var(--on-ink); flex: none; font-size: 16px; }
+  .tog.on { background: var(--good); border-color: var(--good); }
+  .mini { display: flex; align-items: center; gap: 6px; }
+  .mini button { width: 40px; height: 40px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); font-size: 20px; font-weight: 600; }
+  .mini button:active { background: var(--accent-soft); }
+  .mini span { min-width: 66px; text-align: center; font-weight: 700; font-size: 16px; position: relative; }
+  .mini span i { position: absolute; right: -2px; top: -4px; width: 8px; height: 8px; border-radius: 50%; }
+  .dot-good { background: var(--good); } .dot-bad { background: var(--bad); } .dot-mid { background: var(--accent); }
+  .note { font-size: 13px; color: var(--muted); line-height: 1.45; margin: 8px 0 0; }
+
+  /* Team */
+  .role { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+  .role:last-of-type { border-bottom: 0; }
+  .role .info { flex: 1; } .role .info b { display: block; font-size: 15px; } .role .info small { display: block; font-size: 12px; color: var(--muted); margin-top: 1px; }
+  .role .mini span { min-width: 36px; font-size: 20px; }
+
+  /* Progress */
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .chips button { padding: 8px 12px; border-radius: 99px; background: var(--bg); border: 1px solid var(--line); font-size: 13px; font-weight: 600; color: var(--muted); }
+  .chips button.on { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
+  .pchart { position: relative; touch-action: none; }
+  .pchart svg { width: 100%; height: 210px; display: block; }
+  .ptip { position: absolute; top: 0; padding: 4px 8px; background: var(--ink); color: var(--on-ink); font-size: 12px; font-weight: 600; border-radius: 6px; pointer-events: none; white-space: nowrap; transform: translateX(-50%); }
+  .ytable { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+  .ytable th { text-align: right; color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; padding: 6px 4px; border-bottom: 1px solid var(--line); }
+  .ytable td { text-align: right; padding: 7px 4px; border-bottom: 1px dashed var(--line); }
+  .ytable th:first-child, .ytable td:first-child { text-align: left; }
+  .ytable tr:last-child td { border-bottom: 0; }
+</style>
+</head>
+<body>
+
+<!-- ============ START SCREEN ============ -->
+<section id="start">
+  <button class="icon-btn theme-btn" id="themeBtnStart" style="position:fixed;top:16px;right:16px;z-index:5"></button>
+  <div class="start-card">
+    <div class="logo">☕</div>
+    <h1>Business Tycoon</h1>
+    <p class="lead">Start with a tiny coffee cart and €5,000. Build your menu, hire a team, pick your beans and grow it into a company worth <b>€1 million</b>, within 5 years.</p>
+    <div class="themes">
+      <div class="theme active"><div class="ic">☕</div><div class="nm">Coffee shop</div><div class="soon">Available</div></div>
+      <div class="theme locked"><div class="ic">🚲</div><div class="nm">Bike shop</div><div class="soon">Coming soon</div></div>
+      <div class="theme locked"><div class="ic">✈️</div><div class="nm">Travel agency</div><div class="soon">Coming soon</div></div>
+    </div>
+    <div class="field">
+      <label for="shopName">Name your coffee shop</label>
+      <input id="shopName" maxlength="28" placeholder="e.g. Bean There" autocomplete="off">
+    </div>
+    <button class="btn block" id="startBtn">Open for business</button>
+    <button class="btn secondary block hidden" id="continueBtn" style="margin-top:10px">Continue saved game</button>
+    <p class="goal-note">Each turn is one week. Make your decisions, then tap <b>Open next week</b> to see how it went. Run out of cash and it's game over.</p>
+  </div>
+</section>
+
+<!-- ============ GAME ============ -->
+<section id="game" class="hidden">
+  <div class="topbar">
+    <h1 id="shopTitle">☕</h1>
+    <span class="when" id="when"></span>
+    <span class="spacer"></span>
+    <button class="icon-btn theme-btn" id="themeBtn"></button>
+    <button class="icon-btn" id="newGameBtn">New game</button>
+  </div>
+
+  <div class="goal">
+    <div class="goal-row"><span>Company value <b class="num" id="valNow">€0</b></span><span>Goal €1,000,000 · <span id="weeksLeft"></span></span></div>
+    <div class="bar" id="goalBar"><i style="width:0%"></i></div>
+  </div>
+
+  <div class="cols">
+    <!-- LEFT: status -->
+    <div>
+      <div class="card o1">
+        <h2>Your business <small id="locName"></small></h2>
+        <div class="tiles">
+          <div class="tile"><div class="lbl">Cash</div><div class="val num" id="tCash"></div><div class="sub" id="tLoan"></div></div>
+          <div class="tile"><div class="lbl">Last week</div><div class="val num" id="tProfit"></div><div class="sub" id="tTicket">profit</div></div>
+          <div class="tile"><div class="lbl">Customers</div><div class="val num" id="tServed"></div><div class="sub" id="tLost"></div></div>
+          <div class="tile"><div class="lbl">Reputation</div><div class="val num" id="tRep"></div><div class="meter"><i id="mRep"></i></div></div>
+          <div class="tile"><div class="lbl">Awareness</div><div class="val num" id="tAw"></div><div class="meter"><i id="mAw"></i></div></div>
+          <div class="tile"><div class="lbl">Cleanliness</div><div class="val num" id="tClean"></div><div class="meter"><i id="mClean"></i></div></div>
+        </div>
+        <div class="mods" id="mods"></div>
+      </div>
+
+      <div class="card o2">
+        <h2>Week report <small id="repWeek"></small></h2>
+        <div id="report"></div>
+      </div>
+
+      <div class="card tips o3" id="tipsCard">
+        <h2>Advisor</h2>
+        <div class="events" id="tips"></div>
+      </div>
+
+      <div class="card o7">
+        <h2>Progress <small id="progSub"></small></h2>
+        <div class="chips" id="chips"></div>
+        <div class="pchart" id="pchart"></div>
+        <div id="years"></div>
+      </div>
+
+      <div class="card o8">
+        <h2>Where customers come from <small id="srcWeek"></small></h2>
+        <div id="sources"></div>
+      </div>
+
+      <div class="card o10">
+        <h2>News</h2>
+        <div class="events" id="log"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: decisions -->
+    <div>
+      <div class="card o4">
+        <h2>Menu <small>prices apply from next week</small></h2>
+        <div id="forecast"></div>
+        <div class="ctl">
+          <div class="ctl-head"><span class="t">Beans</span><span class="h">quality vs. cost per shot</span></div>
+          <div class="seg" id="beans"></div>
+        </div>
+        <div class="ctl">
+          <div class="ctl-head"><span class="t">What you sell</span><span class="h" id="menuHint"></span></div>
+          <div id="menu"></div>
+          <p class="note">More choice brings in more customers, but every drink beyond 3 slows the bar down by 4%. The dot shows your price: <span style="color:var(--good)">●</span> bargain <span style="color:var(--accent)">●</span> fair <span style="color:var(--bad)">●</span> pricey.</p>
+        </div>
+      </div>
+
+      <div class="card o5">
+        <h2>Team <small id="teamSub"></small></h2>
+        <div id="team"></div>
+        <p class="note" id="teamNote"></p>
+        <div class="ctl" style="border-top:1px solid var(--line);margin-top:12px;padding-top:12px">
+          <div class="ctl-head"><span class="t">Marketing per week</span><span class="h">flyers, socials, ads</span></div>
+          <div class="stepper">
+            <button data-act="mkt" data-d="-50" aria-label="Less marketing">−</button>
+            <div class="v num" id="mkt"></div>
+            <button data-act="mkt" data-d="50" aria-label="More marketing">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card o6">
+        <h2>Invest</h2>
+        <div class="upg">
+          <div class="info"><div class="now" id="locNow"></div><div class="next" id="locNext"></div></div>
+          <button class="btn" data-act="upLoc" id="upLocBtn">Move</button>
+        </div>
+        <div class="upg">
+          <div class="info"><div class="now" id="macNow"></div><div class="next" id="macNext"></div></div>
+          <button class="btn" data-act="upMac" id="upMacBtn">Buy</button>
+        </div>
+        <div id="equipList"></div>
+        <div id="systemsList"></div>
+      </div>
+
+      <div class="card o9">
+        <h2>Bank <small>0.5% interest per week</small></h2>
+        <div class="upg">
+          <div class="info"><div class="now num" id="loanNow"></div><div class="next" id="loanNext"></div></div>
+          <button class="btn secondary" data-act="repay">Repay €5k</button>
+          <button class="btn secondary" data-act="borrow">Borrow €5k</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="bottombar hidden" id="bottombar">
+  <div class="inner">
+    <div class="cash">Cash<b class="num" id="bbCash"></b></div>
+    <button class="btn" id="nextBtn">Open next week ▶</button>
+  </div>
+</div>
+
+<div class="overlay hidden" id="overlay"><div class="modal" id="modal"></div></div>
+<div class="toast hidden" id="toast"></div>
+
+<script src="engine.js"></script>
+<script>
+(function () {
+  const E = window.TycoonEngine;
+  const SAVE_KEY = 'business-tycoon-save-v1';
+  const $ = (id) => document.getElementById(id);
+  const eur = (v, dec = 0) => (v < 0 ? '−€' : '€') + Math.abs(v).toLocaleString('en', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+  const short = (v) => {
+    const a = Math.abs(v), sign = v < 0 ? '−' : '';
+    if (a >= 1e6) return sign + '€' + (a / 1e6).toFixed(2) + 'M';
+    if (a >= 1e4) return sign + '€' + (a / 1e3).toFixed(1) + 'k';
+    return eur(v);
+  };
+  const n0 = (v) => Math.round(v).toLocaleString('en');
+
+  let state = null;
+  let metric = 'value';
+
+  // ---------- theme: auto → light → dark ----------
+  const THEME_LABEL = { auto: '🌗 Auto', light: '☀️ Light', dark: '🌙 Dark' };
+  function getMode() { try { return localStorage.getItem('tycoon-theme') || 'auto'; } catch (e) { return 'auto'; } }
+  function setMode(m) {
+    try { localStorage.setItem('tycoon-theme', m); } catch (e) {}
+    if (m === 'auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = m;
+    document.querySelectorAll('.theme-btn').forEach((b) => (b.textContent = THEME_LABEL[m]));
+  }
+  setMode(getMode());
+  document.querySelectorAll('.theme-btn').forEach((b) => (b.onclick = () => {
+    const order = ['auto', 'light', 'dark'];
+    setMode(order[(order.indexOf(getMode()) + 1) % 3]);
+  }));
+
+  // ---------- persistence ----------
+  function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (e) {} }
+  function load() { try { const s = localStorage.getItem(SAVE_KEY); return s ? E.migrate(JSON.parse(s)) : null; } catch (e) { return null; } }
+  function clearSave() { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} }
+
+  // ---------- UI helpers ----------
+  let toastTimer;
+  function toast(msg) {
+    const t = $('toast'); t.textContent = msg; t.classList.remove('hidden'); t.style.opacity = 1;
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.style.opacity = 0; setTimeout(() => t.classList.add('hidden'), 300); }, 2600);
+  }
+  function modal(html, buttons) {
+    $('modal').innerHTML = html + '<div class="row">' + buttons.map((b, i) => `<button class="btn ${b.secondary ? 'secondary' : ''}" data-i="${i}">${b.label}</button>`).join('') + '</div>';
+    $('overlay').classList.remove('hidden');
+    $('modal').querySelectorAll('[data-i]').forEach((el) => el.onclick = () => { $('overlay').classList.add('hidden'); buttons[+el.dataset.i].onClick && buttons[+el.dataset.i].onClick(); });
+  }
+  function apply(result) {
+    if (result.error) { toast(result.error); return; }
+    state = result.state; save(); render();
+  }
+
+  // ---------- screens ----------
+  function showStart() {
+    $('start').classList.remove('hidden'); $('game').classList.add('hidden'); $('bottombar').classList.add('hidden');
+    const saved = load();
+    $('continueBtn').classList.toggle('hidden', !(saved && saved.status === 'playing'));
+  }
+  function showGame() {
+    $('start').classList.add('hidden'); $('game').classList.remove('hidden'); $('bottombar').classList.remove('hidden');
+    render(); window.scrollTo(0, 0);
+  }
+
+  $('startBtn').onclick = () => {
+    const name = $('shopName').value.trim() || 'Bean There';
+    state = E.newGame(name, 'coffee');
+    state.log.unshift({ week: 0, text: `${name} opens its first coffee cart. Good luck!`, tone: 'good' });
+    save(); showGame();
+  };
+  $('continueBtn').onclick = () => { state = load(); showGame(); };
+  $('newGameBtn').onclick = () => modal('<div class="big">🔄</div><h2>Start over?</h2><p>Your current game will be lost.</p>',
+    [{ label: 'Cancel', secondary: true }, { label: 'New game', onClick: () => { clearSave(); state = null; $('shopName').value = ''; showStart(); } }]);
+
+  // ---------- controls ----------
+  document.addEventListener('click', (ev) => {
+    const chip = ev.target.closest('[data-metric]');
+    if (chip) { metric = chip.dataset.metric; renderProgress(); return; }
+    const el = ev.target.closest('[data-act]'); if (!el || !state || state.status !== 'playing') return;
+    const b = state.businesses[0]; const d = parseFloat(el.dataset.d || 0); const id = el.dataset.id;
+    switch (el.dataset.act) {
+      case 'iprice': apply(E.Actions.setItemPrice(state, b.id, id, b.menu[id].price + d)); break;
+      case 'toggle': apply(E.Actions.toggleItem(state, b.id, id)); break;
+      case 'bean': apply(E.Actions.setSupply(state, b.id, +el.dataset.i)); break;
+      case 'mkt': apply(E.Actions.setMarketing(state, b.id, b.marketing + d)); break;
+      case 'hire': apply(E.Actions.hire(state, b.id, el.dataset.role)); break;
+      case 'fire': apply(E.Actions.fire(state, b.id, el.dataset.role)); break;
+      case 'upLoc': {
+        const t = E.getTheme(b), next = t.locations[b.locationLvl + 1]; if (!next) return;
+        modal(`<div class="big">🏪</div><h2>Move to a ${next.name}?</h2><p>Costs ${eur(next.cost)} now. Rent becomes ${eur(next.rent)}/week, but about ${(next.traffic / t.locations[b.locationLvl].traffic).toFixed(1)}× more people walk past, and there's room for ${next.maxStaff} staff.</p>`,
+          [{ label: 'Not yet', secondary: true }, { label: `Move · ${short(next.cost)}`, onClick: () => apply(E.Actions.upgradeLocation(state, b.id)) }]);
+        break;
+      }
+      case 'upMac': apply(E.Actions.upgradeMachine(state, b.id)); break;
+      case 'equip': apply(E.Actions.buyEquipment(state, b.id, id)); break;
+      case 'sys': apply(E.Actions.buySystem(state, b.id, id)); break;
+      case 'borrow': apply(E.Actions.takeLoan(state, 5000)); break;
+      case 'repay': apply(E.Actions.repayLoan(state, 5000)); break;
+    }
+  });
+
+  $('nextBtn').onclick = () => {
+    if (state.status !== 'playing') return;
+    state = E.tick(state); save(); render();
+    document.querySelectorAll('#game .o1, #game .o2').forEach((c) => { c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash'); });
+    const b = state.businesses[0], rep = b.lastReport;
+    if (state.status === 'playing' && b.forecast) toast('📅 ' + b.forecast.text);
+    else if (state.status === 'playing' && rep && rep.events.length) toast(rep.events[0].text);
+    if (state.status !== 'playing') setTimeout(endScreen, 400);
+  };
+
+  function endScreen() {
+    const v = E.valuation(state), y = Math.floor((state.week - 1) / 52) + 1;
+    const restart = () => { clearSave(); state = null; showStart(); };
+    const look = { label: 'Look around', secondary: true };
+    if (state.status === 'won') modal(`<div class="big">🏆</div><h2>You built a €1M company!</h2><p><b>${state.businesses[0].name}</b> hit a valuation of ${eur(v)} in week ${state.week} (year ${y}). Next up: run several businesses at once.</p>`, [look, { label: 'Play again', onClick: restart }]);
+    else if (state.status === 'bankrupt') modal(`<div class="big">📉</div><h2>Bankrupt</h2><p>You ran out of cash in week ${state.week}. Rent and wages are due whether customers show up or not, so keep a buffer before big moves.</p>`, [look, { label: 'Try again', onClick: restart }]);
+    else modal(`<div class="big">⏰</div><h2>Time's up</h2><p>Five years have passed. ${state.businesses[0].name} is worth ${eur(v)}, which is ${Math.round(v / state.goal * 100)}% of the goal.</p>`, [look, { label: 'Play again', onClick: restart }]);
+  }
+
+  // ---------- render ----------
+  function render() {
+    if (!state) return;
+    const b = state.businesses[0], t = E.getTheme(b), r = b.lastReport;
+    const loc = t.locations[b.locationLvl], mac = t.machines[b.machineLvl];
+    const year = Math.floor(state.week / 52) + 1, wk = (state.week % 52) + 1;
+
+    $('shopTitle').textContent = '☕ ' + b.name;
+    $('when').textContent = `Year ${year} · Week ${wk} · ${E.seasonName(state.week + 1)}`;
+    const v = E.valuation(state);
+    $('valNow').textContent = eur(v);
+    $('weeksLeft').textContent = `${state.maxWeeks - state.week} weeks left`;
+    const pct = Math.max(0, Math.min(100, v / state.goal * 100));
+    $('goalBar').firstElementChild.style.width = pct + '%';
+    $('goalBar').classList.toggle('good', pct >= 100);
+
+    // tiles
+    $('locName').textContent = loc.name + ' · ' + mac.name;
+    $('tCash').textContent = short(state.player.cash);
+    $('tCash').className = 'val num ' + (state.player.cash < 1000 ? 'neg' : '');
+    $('tLoan').textContent = state.player.loan ? `loan ${short(state.player.loan)}` : 'no debt';
+    $('tProfit').textContent = r ? short(r.profit - (state.lastInterest || 0)) : '—';
+    $('tProfit').className = 'val num ' + (r ? (r.profit >= 0 ? 'pos' : 'neg') : '');
+    $('tTicket').textContent = r && r.served ? `profit · ${eur(r.avgTicket, 2)} per customer` : 'profit';
+    $('tServed').textContent = r ? n0(r.served) : '—';
+    $('tLost').innerHTML = r ? (r.lost > 0 ? `<span class="neg">${n0(r.lost)} walked away</span>` : 'no queue') : 'served';
+    $('tRep').textContent = Math.round(b.reputation); $('mRep').style.width = b.reputation + '%';
+    $('tAw').textContent = Math.round(b.awareness); $('mAw').style.width = b.awareness + '%';
+    $('tClean').textContent = Math.round(b.cleanliness * 100) + '%';
+    $('tClean').className = 'val num ' + (b.cleanliness < 0.7 ? 'neg' : '');
+    $('mClean').style.width = b.cleanliness * 100 + '%';
+    $('mods').innerHTML = b.modifiers.map((m) => `<span class="pill bad">${m.label} · ${m.weeks}w</span>`).join('');
+
+    renderReport(b, t, r);
+    renderProgress();
+    renderSources(b, t, r);
+
+    // advisor
+    const tips = advisor(b, t, r);
+    $('tipsCard').classList.toggle('hidden', !tips.length);
+    $('tips').innerHTML = tips.map((x) => `<div class="ev">💡 ${x}</div>`).join('');
+
+    // log
+    $('log').innerHTML = state.log.slice(0, 8).map((l) => `<div class="ev ${l.tone}"><span class="wk">W${l.week}</span>${l.text}</div>`).join('') || '<p style="color:var(--muted);margin:0">Quiet so far.</p>';
+
+    // forecast
+    const fc = b.forecast;
+    $('forecast').innerHTML = fc
+      ? `<div class="forecast ${fc.tone}"><span>📅</span><div><b>Next week</b>${fc.text}</div></div>`
+      : (r ? `<div class="forecast none"><span>📅</span><div><b>Next week</b>Nothing special on the horizon.</div></div>` : '');
+
+    renderMenu(b, t, r);
+    renderTeam(b, t, r);
+    $('mkt').innerHTML = `${eur(b.marketing)}<small>${b.marketing === 0 ? 'word of mouth only' : 'builds awareness'}</small>`;
+    renderInvest(b, t);
+
+    $('loanNow').textContent = `Loan: ${eur(state.player.loan)}`;
+    $('loanNext').textContent = `You can borrow up to ${eur(state.player.maxLoan)}.`;
+    $('bbCash').textContent = eur(state.player.cash);
+    $('nextBtn').disabled = state.status !== 'playing';
+  }
+
+  function renderReport(b, t, r) {
+    if (!r) {
+      $('repWeek').textContent = '';
+      $('report').innerHTML = '<p style="color:var(--muted);margin:0">No sales yet. Check your menu and tap <b>Open next week</b>.</p>';
+      return;
+    }
+    $('repWeek').textContent = 'week ' + (((r.week - 1) % 52) + 1);
+    const c = r.costs, net = r.profit - (state.lastInterest || 0);
+    const lostRow = r.lost > 0
+      ? `<tr><td class="neg">Walked away (${r.bottleneck === 'bar' ? 'bar too slow' : 'queue at the register'})</td><td class="neg">${n0(r.lost)}</td></tr>` : '';
+    $('report').innerHTML = `<table class="report num">
+      <tr><td>Customers who wanted to buy</td><td>${n0(r.demand)}</td></tr>
+      <tr><td>Served</td><td>${n0(r.served)}</td></tr>
+      ${lostRow}
+      <tr><td style="color:var(--muted)">Bar capacity · register capacity</td><td style="color:var(--muted)">${n0(r.barCap)} · ${n0(r.registerCap)}</td></tr>
+      <tr class="sec"><td colspan="2">Money</td></tr>
+      ${r.sales.filter((s) => s.qty > 0).map((s) => `<tr><td>${s.icon} ${s.name} (${n0(s.qty)} × ${eur(s.price, 2)})</td><td class="pos">${eur(s.revenue)}</td></tr>`).join('')}
+      <tr><td>Ingredients, cups & bags</td><td>${eur(-c.supplies)}</td></tr>
+      <tr><td>Wages</td><td>${eur(-c.wages)}</td></tr>
+      <tr><td>Rent</td><td>${eur(-c.rent)}</td></tr>
+      <tr><td>Marketing</td><td>${eur(-c.marketing)}</td></tr>
+      ${c.systems ? `<tr><td>Systems (subscriptions)</td><td>${eur(-c.systems)}</td></tr>` : ''}
+      ${c.other ? `<tr><td>Other (repairs, fines)</td><td>${eur(-c.other)}</td></tr>` : ''}
+      ${state.lastInterest ? `<tr><td>Loan interest</td><td>${eur(-state.lastInterest)}</td></tr>` : ''}
+      <tr class="total"><td>Profit</td><td class="${net >= 0 ? 'pos' : 'neg'}">${eur(net)}</td></tr>
+    </table>`;
+  }
+
+  function priceDot(ratio) { return ratio < 0.92 ? 'dot-good' : ratio > 1.08 ? 'dot-bad' : 'dot-mid'; }
+
+  function renderMenu(b, t, r) {
+    const supply = t.supplies[b.supplyIdx];
+    $('beans').innerHTML = t.supplies.map((s, i) => `<button data-act="bean" data-i="${i}" class="${i === b.supplyIdx ? 'on' : ''}"><b>${s.name}</b><span>${eur(s.costPerUnit, 2)}/shot · quality ${s.quality}</span></button>`).join('');
+    const onCount = E.THEMES[b.themeId].products.filter((p) => E.isUnlocked(b, p) && b.menu[p.id].on).length;
+    $('menuHint').textContent = `${onCount} item${onCount === 1 ? '' : 's'} on the menu`;
+    $('menu').innerHTML = t.products.map((p) => {
+      if (!E.isUnlocked(b, p)) return `<div class="mi locked"><span class="ic">${p.icon}</span><div class="info"><b>${p.name}</b><small>🔒 ${p.lockText}</small></div></div>`;
+      const m = b.menu[p.id], fair = E.fairPriceOf(b, p);
+      const unitCost = p.cost + p.beans * supply.costPerUnit;
+      const sold = r ? (r.sales.find((s) => s.id === p.id) || { qty: 0 }).qty : null;
+      const what = p.kind === 'food' ? 'add-on' : 'drink';
+      const info = m.on
+        ? `${sold != null ? n0(sold) + ' sold · ' : ''}fair ${eur(fair, 2)} · costs you ${eur(unitCost, 2)}`
+        : `Not on the menu · ${what} · fair ${eur(fair, 2)}`;
+      return `<div class="mi ${m.on ? '' : 'off'}">
+        <button class="tog ${m.on ? 'on' : ''}" data-act="toggle" data-id="${p.id}" aria-label="Toggle ${p.name}">${m.on ? '✓' : ''}</button>
+        <div class="info"><b>${p.icon} ${p.name}${p.summer ? ' <span class="pill mid">summer hit</span>' : ''}</b><small>${info}</small></div>
+        ${m.on ? `<div class="mini"><button data-act="iprice" data-id="${p.id}" data-d="-0.1" aria-label="Lower price">−</button><span class="num">${eur(m.price, 2)}<i class="${priceDot(m.price / fair)}"></i></span><button data-act="iprice" data-id="${p.id}" data-d="0.1" aria-label="Raise price">+</button></div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  function renderTeam(b, t, r) {
+    const loc = t.locations[b.locationLvl];
+    const cap = E.capacities(b, state.week + 1);
+    const clean = E.cleaningCapacity(b);
+    const total = E.totalStaff(b);
+    $('teamSub').textContent = `${total} / ${loc.maxStaff} staff here · hiring costs ${eur(t.hireFee)}`;
+    const hint = {
+      barista: `Bar handles ~${n0(cap.bar)} customers/wk`,
+      cashier: `Register handles ~${n0(cap.register)} customers/wk`,
+      cleaner: `Keeps it clean for ~${n0(clean)} customers/wk`,
+    };
+    $('team').innerHTML = t.roles.map((role) => `<div class="role">
+      <div class="info"><b>${role.icon} ${role.plural}</b><small>${eur(role.wage)}/wk each · ${hint[role.id]}</small></div>
+      <div class="mini"><button data-act="fire" data-role="${role.id}" aria-label="Let one go">−</button><span class="num">${b.staff[role.id]}</span><button data-act="hire" data-role="${role.id}" aria-label="Hire one">+</button></div>
+    </div>`).join('');
+    const bn = r && r.bottleneck ? `Last week the <b>${r.bottleneck === 'bar' ? 'bar' : 'register'}</b> was your bottleneck.` : r ? 'Last week nobody had to walk away.' : '';
+    $('teamNote').innerHTML = `You help out yourself: you count as one barista and one cashier, and you do a bit of cleaning. ${bn}`;
+  }
+
+  function renderInvest(b, t) {
+    const loc = t.locations[b.locationLvl], mac = t.machines[b.machineLvl];
+    const nl = t.locations[b.locationLvl + 1];
+    $('locNow').textContent = '🏪 ' + loc.name;
+    $('locNext').innerHTML = nl ? `Next: <b>${nl.name}</b>, ${n0(nl.traffic)} passers-by/wk, rent ${eur(nl.rent)}/wk, room for ${nl.maxStaff} staff` : 'Best location in town.';
+    $('upLocBtn').textContent = nl ? 'Move · ' + short(nl.cost) : 'Maxed';
+    $('upLocBtn').disabled = !nl || state.player.cash < nl.cost;
+
+    const nm = t.machines[b.machineLvl + 1];
+    const unlocks = (lvl) => t.products.filter((p) => p.requires && p.requires.machineLvl === lvl).map((p) => p.name);
+    $('macNow').textContent = '⚙️ ' + mac.name;
+    $('macNext').innerHTML = nm ? `Next: <b>${nm.name}</b>, each barista ${Math.round((nm.perStaff / mac.perStaff - 1) * 100)}% faster${unlocks(b.machineLvl + 1).length ? '. Unlocks ' + unlocks(b.machineLvl + 1).join(', ') : ''}` : 'Top of the line.';
+    $('upMacBtn').textContent = nm ? 'Buy · ' + short(nm.cost) : 'Maxed';
+    $('upMacBtn').disabled = !nm || state.player.cash < nm.cost;
+
+    const row = (x, owned, locked, act) => `<div class="upg">
+      <div class="info"><div class="now">${x.icon} ${x.name}${owned ? ' <span class="pill good">Installed</span>' : ''}</div>
+      <div class="next">${locked ? '🔒 ' + x.lockText + '. ' : ''}${x.desc}${x.weekly ? ` ${eur(x.weekly)}/wk subscription.` : ''}</div></div>
+      ${owned ? '' : `<button class="btn" data-act="${act}" data-id="${x.id}" ${locked || state.player.cash < x.cost ? 'disabled' : ''}>Buy · ${short(x.cost)}</button>`}
+    </div>`;
+    $('equipList').innerHTML = t.equipment.map((e) => row(e, b.equipment[e.id], !E.meets(b, e.requires), 'equip')).join('');
+    $('systemsList').innerHTML = t.systems.map((x) => row(x, b.systems[x.id], false, 'sys')).join('');
+  }
+
+  function advisor(b, t, r) {
+    const tips = [];
+    if (!r) { tips.push('A coffee cart is cheap to run. Keep costs low, price close to the fair price, and save up for a kiosk.'); return tips; }
+    const loc = t.locations[b.locationLvl], full = E.totalStaff(b) >= loc.maxStaff;
+    if (r.lost > r.demand * 0.05) {
+      if (full) tips.push(`${n0(r.lost)} customers walked away and you're at max staff for this spot. Time for a faster machine or a bigger location, or raise your prices.`);
+      else if (r.bottleneck === 'bar') tips.push(`${n0(r.lost)} customers walked away because the bar couldn't keep up. Hire a barista, buy a faster machine, or trim slow drinks from the menu.`);
+      else tips.push(`${n0(r.lost)} customers walked away from the queue at the register. Hire a cashier or install a POS system.`);
+    }
+    if (b.cleanliness < 0.7) tips.push(`The shop is getting dirty (${Math.round(b.cleanliness * 100)}%). Customers notice, and inspectors hand out fines. Hire a cleaner.`);
+    if (!r.bottleneck && b.staff.barista > 0 && r.served < r.barCap * 0.6) tips.push('Your baristas have little to do. You may have more than you need.');
+    if (!r.bottleneck && b.staff.cashier > 0 && r.served < r.registerCap * 0.5) tips.push('Your cashiers are mostly waiting. One fewer might be enough.');
+    if (r.profit < 0) tips.push('You lost money last week. Check whether your prices cover ingredients, wages and rent.');
+    const pricey = t.products.filter((p) => E.isUnlocked(b, p) && b.menu[p.id].on && b.menu[p.id].price / E.fairPriceOf(b, p) > 1.15);
+    if (pricey.length) tips.push(`${pricey.map((p) => p.name).join(', ')} ${pricey.length > 1 ? 'are' : 'is'} priced well above fair. Fewer people will order.`);
+    const off = t.products.filter((p) => E.isUnlocked(b, p) && !b.menu[p.id].on);
+    if (off.length) tips.push(`${off.map((p) => p.name).join(', ')} ${off.length > 1 ? 'are' : 'is'} unlocked but not on your menu. More choice brings in more customers.`);
+    if (b.supplyIdx === 0 && b.reputation < 50) tips.push('Budget beans are hurting your reputation.');
+    if (state.player.cash < 1500 && state.player.loan < state.player.maxLoan) tips.push('Cash is getting low. A small loan can tide you over, but interest adds up.');
+    return tips.slice(0, 3);
+  }
+
+  // ---------- Progress ----------
+  const METRICS = {
+    value:     { label: 'Company value', fmt: short, src: 'val', key: 'value' },
+    cash:      { label: 'Cash', fmt: short, src: 'val', key: 'cash' },
+    revenue:   { label: 'Revenue', fmt: short, src: 'hist', key: 'revenue', smooth: true },
+    profit:    { label: 'Profit', fmt: short, src: 'hist', key: 'profit', smooth: true },
+    customers: { label: 'Customers', fmt: n0, src: 'hist', key: 'served', smooth: true },
+    rep:       { label: 'Reputation', fmt: n0, src: 'hist', key: 'rep' },
+  };
+  function seriesFor(m) {
+    const b = state.businesses[0];
+    const arr = m.src === 'val' ? state.valuationHistory : b.history;
+    return arr.filter((h) => h[m.key] !== undefined).map((h) => ({ w: h.week, v: h[m.key] }));
+  }
+  function renderProgress() {
+    if (!state) return;
+    $('chips').innerHTML = Object.entries(METRICS).map(([k, m]) => `<button data-metric="${k}" class="${k === metric ? 'on' : ''}">${m.label}</button>`).join('');
+    const m = METRICS[metric], pts = seriesFor(m);
+    $('progSub').textContent = m.smooth ? 'per week · bold line = 4-week average' : 'per week';
+    if (pts.length < 2) {
+      $('pchart').innerHTML = '<p style="color:var(--muted);margin:0">Play a couple of weeks to see your progress here.</p>';
+      $('years').innerHTML = ''; return;
+    }
+    const W = 640, H = 210, L = 58, R = 8, T = 22, B = 22;
+    let lo = Math.min(0, ...pts.map((p) => p.v)), hi = Math.max(...pts.map((p) => p.v));
+    if (metric === 'rep') { lo = 0; hi = 100; }
+    if (hi === lo) hi = lo + 1;
+    const w0 = pts[0].w, w1 = pts[pts.length - 1].w;
+    const x = (w) => L + ((w - w0) / Math.max(1, w1 - w0)) * (W - L - R);
+    const y = (v) => T + (1 - (v - lo) / (hi - lo)) * (H - T - B);
+    const path = (arr) => arr.map((p, i) => (i ? 'L' : 'M') + x(p.w).toFixed(1) + ',' + y(p.v).toFixed(1)).join('');
+    const avg = m.smooth ? pts.map((p, i) => { const s = pts.slice(Math.max(0, i - 3), i + 1); return { w: p.w, v: s.reduce((a, q) => a + q.v, 0) / s.length }; }) : pts;
+    const main = path(avg);
+    const area = main + `L${x(w1).toFixed(1)},${y(Math.max(lo, 0)).toFixed(1)}L${x(w0).toFixed(1)},${y(Math.max(lo, 0)).toFixed(1)}Z`;
+    let grid = '';
+    [lo, (lo + hi) / 2, hi].forEach((v) => {
+      grid += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/>
+        <text x="${L - 6}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="var(--muted)">${m.fmt(v)}</text>`;
+    });
+    if (lo < 0) grid += `<line x1="${L}" x2="${W - R}" y1="${y(0)}" y2="${y(0)}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3"/>`;
+    for (let yr = 1; yr * 52 <= w1; yr++) {
+      const wx = yr * 52 + 0.5; if (wx < w0) continue;
+      grid += `<line x1="${x(wx)}" x2="${x(wx)}" y1="${T}" y2="${H - B}" stroke="var(--line)" stroke-width="1"/>
+        <text x="${x(wx) + 4}" y="${H - 6}" font-size="11" fill="var(--muted)">Year ${yr + 1}</text>`;
+    }
+    grid += `<text x="${L}" y="${H - 6}" font-size="11" fill="var(--muted)">Year ${Math.floor((w0 - 1) / 52) + 1}</text>`;
+    const goalLine = metric === 'value' && hi >= state.goal * 0.5
+      ? `<line x1="${L}" x2="${W - R}" y1="${y(state.goal)}" y2="${y(state.goal)}" stroke="var(--good)" stroke-dasharray="5 4" stroke-width="1.5"/><text x="${W - R}" y="${y(state.goal) - 5}" text-anchor="end" font-size="11" fill="var(--good)">goal</text>` : '';
+    $('pchart').innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+        ${grid}
+        <path d="${area}" fill="var(--accent-soft)" opacity=".6"/>
+        ${m.smooth ? `<path d="${path(pts)}" fill="none" stroke="var(--accent)" stroke-opacity=".3" stroke-width="1"/>` : ''}
+        <path d="${main}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>
+        ${goalLine}
+        <line id="pcur" x1="0" x2="0" y1="${T}" y2="${H - B}" stroke="var(--ink)" stroke-width="1" visibility="hidden"/>
+        <circle id="pdot" r="4.5" fill="var(--ink)" visibility="hidden"/>
+      </svg><div class="ptip hidden" id="ptip"></div>`;
+
+    // touch / hover: show the value at a week
+    const box = $('pchart');
+    const show = (ev) => {
+      const svg = box.querySelector('svg'), rect = svg.getBoundingClientRect();
+      const sx = ((ev.clientX - rect.left) / rect.width) * W;
+      const wk = Math.round(w0 + ((sx - L) / (W - L - R)) * (w1 - w0));
+      const p = pts.find((q) => q.w === Math.max(w0, Math.min(w1, wk))); if (!p) return;
+      const cx = x(p.w), cy = y(p.v);
+      svg.querySelector('#pcur').setAttribute('x1', cx); svg.querySelector('#pcur').setAttribute('x2', cx);
+      svg.querySelector('#pcur').setAttribute('visibility', 'visible');
+      const dot = svg.querySelector('#pdot'); dot.setAttribute('cx', cx); dot.setAttribute('cy', cy); dot.setAttribute('visibility', 'visible');
+      const tip = $('ptip'); tip.classList.remove('hidden');
+      tip.textContent = `Y${Math.floor((p.w - 1) / 52) + 1} W${((p.w - 1) % 52) + 1} · ${m.fmt(p.v)}`;
+      tip.style.left = Math.max(50, Math.min(rect.width - 50, (cx / W) * rect.width)) + 'px';
+    };
+    const hide = () => { const svg = box.querySelector('svg'); if (!svg) return; svg.querySelector('#pcur').setAttribute('visibility', 'hidden'); svg.querySelector('#pdot').setAttribute('visibility', 'hidden'); $('ptip').classList.add('hidden'); };
+    box.onpointerdown = show; box.onpointermove = (e) => { if (e.pointerType === 'mouse' || e.buttons) show(e); }; box.onpointerleave = hide; box.onpointerup = (e) => { if (e.pointerType !== 'mouse') setTimeout(hide, 1500); };
+
+    renderYears();
+  }
+
+  function renderYears() {
+    const b = state.businesses[0];
+    const years = {};
+    for (const h of b.history) {
+      const yr = Math.floor((h.week - 1) / 52) + 1;
+      const Y = years[yr] || (years[yr] = { rev: 0, profit: 0, cust: 0, rep: 0, n: 0 });
+      Y.rev += h.revenue; Y.profit += h.profit; Y.cust += h.served; Y.rep += h.rep || 0; Y.n++;
+    }
+    for (const v of state.valuationHistory) { const yr = Math.floor((v.week - 1) / 52) + 1; if (years[yr]) years[yr].value = v.value; }
+    const rows = Object.entries(years).map(([yr, Y]) => `<tr><td>Year ${yr}${Y.n < 52 ? ` <span style="color:var(--muted)">(${Y.n} wk)</span>` : ''}</td>
+      <td>${short(Y.rev)}</td><td class="${Y.profit >= 0 ? 'pos' : 'neg'}">${short(Y.profit)}</td><td>${n0(Y.cust)}</td><td>${Math.round(Y.rep / Y.n)}</td><td>${short(Y.value || 0)}</td></tr>`).join('');
+    $('years').innerHTML = `<table class="ytable num"><tr><th>Year</th><th>Revenue</th><th>Profit</th><th>Customers</th><th>Avg rep.</th><th>Value at end</th></tr>${rows}</table>`;
+  }
+
+  // ---------- Customer sources ----------
+  const SRC = {
+    passersby: { name: 'Passers-by', sub: 'saw your shop and walked in', color: '#C9A27E' },
+    wordOfMouth: { name: 'Word of mouth', sub: 'regulars and friends of customers', color: '#2E7A4C' },
+    marketing: { name: 'Marketing', sub: 'flyers, ads, promotions', color: '#B8692E' },
+    social: { name: 'Social media', sub: 'read about you online', color: '#5B6CB8' },
+    walkins: { name: 'Walk-ins & regulars', sub: 'buy a POS system to split these', color: '#CFC3B5' },
+    promo: { name: 'Marketing & social media', sub: 'buy marketing analytics to split these', color: '#CFC3B5' },
+  };
+  function renderSources(b, t, r) {
+    const pos = b.systems.pos, an = b.systems.analytics;
+    $('srcWeek').textContent = r ? 'last week' : '';
+    if (!pos && !an) {
+      $('sources').innerHTML = `<p class="locked">🔒 You can see how many customers you get, but not why they came. Install a <b>POS cashier system</b> or <b>marketing analytics</b> (under Invest) to find out.</p>`;
+      return;
+    }
+    if (!r) { $('sources').innerHTML = '<p class="locked">Data appears after your next week of sales.</p>'; return; }
+    const sc = r.sources;
+    let rows;
+    if (pos && an) rows = [['passersby', sc.passersby], ['wordOfMouth', sc.wordOfMouth], ['marketing', sc.marketing], ['social', sc.social]];
+    else if (pos) rows = [['passersby', sc.passersby], ['wordOfMouth', sc.wordOfMouth], ['promo', sc.marketing + sc.social]];
+    else rows = [['walkins', sc.passersby + sc.wordOfMouth], ['marketing', sc.marketing], ['social', sc.social]];
+    const total = Math.max(1, rows.reduce((s, x) => s + x[1], 0));
+    let html = '<div class="stack">' + rows.map(([k, v]) => `<i style="width:${v / total * 100}%;background:${SRC[k].color}"></i>`).join('') + '</div>';
+    html += rows.map(([k, v]) => `<div class="src"><span class="dot" style="background:${SRC[k].color}"></span>
+      <span class="nm">${SRC[k].name}<small>${SRC[k].sub}</small></span><span class="ct num">${n0(v)}</span><span class="pc num">${Math.round(v / total * 100)}%</span></div>`).join('');
+    if (an) {
+      const m = r.costs.marketing;
+      html += m > 0
+        ? `<div class="roi">📊 Marketing brought <b>${sc.marketing}</b> customers last week for ${eur(m)} spent. After ingredient costs that's <b class="${r.marketingReturn >= 0 ? 'pos' : 'neg'}">${eur(r.marketingReturn)}</b> net. Marketing builds up over weeks, and it's wasted while customers are walking away from a full shop.</div>`
+        : `<div class="roi">📊 You spent nothing on marketing last week. ${sc.marketing > 0 ? `Earlier campaigns still brought ${sc.marketing} customers.` : ''}</div>`;
+    }
+    $('sources').innerHTML = html;
+  }
+
+  showStart();
+})();
+</script>
+</body>
+</html>
