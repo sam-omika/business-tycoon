@@ -52,6 +52,17 @@ typography:
     lineHeight: 1
     letterSpacing: "-0.02em"
     fontFeature: "tnum"
+  figure-mid:
+    fontFamily: "Selawik, 'Segoe UI', system-ui, sans-serif"
+    fontSize: "34px"
+    fontWeight: 300
+    lineHeight: 1
+    letterSpacing: "-0.02em"
+  action:
+    fontFamily: "Selawik, 'Segoe UI', system-ui, sans-serif"
+    fontSize: "24px"
+    fontWeight: 300
+    lineHeight: 1.2
   title:
     fontFamily: "Selawik, 'Segoe UI', system-ui, sans-serif"
     fontSize: "20px"
@@ -215,12 +226,14 @@ A strict monochrome scaffold (ground, tile, ink, muted, line) with one runtime b
 ### Hierarchy
 - **Display** (300, clamp(64px, 11vw, 148px), 0.92): the game title on the start screen, one line, hung slightly into the left margin (-0.04em).
 - **Headline** (300, clamp(56px, 7.4vw, 104px), 0.9): the business name top-left of the game screen, clipped rather than wrapped.
-- **Figure Hero** (300, clamp(40px, 4.6vw, 64px), 1): company value, right-aligned on the name row. The cash figure in the bottom bar uses the same treatment at 34px.
-- **Section** (300, 40px, 1): section headings, with a 14px muted lowercase aside right-aligned on the baseline. Pop-up headings use 44px.
-- **Figure Tile** (300, 48px, 1): the number in a stat tile; report total row uses 32px, stepper value 32px.
-- **Title** (300, 20-22px): item names in menu, team and invest rows; control headings; segment option names (19px).
+- **Figure Hero** (300, clamp(40px, 4.6vw, 64px), 1): company value, right-aligned on the name row.
+- **Section** (300, 40px, 1): section headings and pop-up headings, with a 13px muted lowercase aside right-aligned on the baseline.
+- **Figure Tile** (300, 48px, 1): the number in a stat tile (40px between 900 and 1200px wide).
+- **Figure Mid** (300, 34px, 1): bottom-bar cash, report total row, stepper value; section headings also step down to it between 900 and 1200px.
+- **Action** (300, 24px): big button labels (open next week, open for business), start-screen lead and business-type tiles, the name field, team counts.
+- **Title** (300, 20px): item names in menu, team and invest rows; control headings; segment option names; the week line.
 - **Body** (400, 16px, 1.4): report rows, sources, toasts. **Lead** (350, 17px, 1.5): advisor tips, forecast, pop-up text, kept to 60ch.
-- **Label** (400, 15px): tile labels, field labels, header tool buttons. **Caption** (400, 13-14px, muted): tile subs, item details, hints, table headers.
+- **Label** (400, 15px): tile labels, field labels, header tool buttons. **Caption** (400, 13px, muted): tile subs, item details, hints, table headers.
 
 ### Named Rules
 **The Lowercase Rule.** Every display and label string is lowercase (headings, tile labels, buttons, pills, captions, table headers), applied with `text-transform` so source strings stay sentence case. Body copy (tips, pop-up text, notes) stays sentence case.
