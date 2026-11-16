@@ -45,7 +45,8 @@ and cashing out. See `docs/ROADMAP.md`.
   Only the main action is filled with the business colour `--biz` (from `THEMES.<id>.color`). For UI design work use the `/impeccable` skill.
 - Touch targets ≥ 40px (the iPad must keep working). Hover tooltips and keyboard shortcuts are welcome as extras,
   but nothing important may be hover-only or keyboard-only. No `alert/confirm/prompt`; use the in-page `modal()` and `toast()`.
-- Layout: two columns ≥ 900px wide, single column below (card order via `.o1`…`.o10` classes).
+- Layout: one-screen cockpit (top bar, three panes with tabs, bottom bar). On desktop and iPad landscape the page must never
+  scroll; only a pane may. Two columns 760–1099px, one column below. Keep headings small; numbers are the biggest things.
 
 ## Workflow rules
 

@@ -19,12 +19,12 @@
 - Keyboard shortcuts: Space = next week, M/T/I/B/P jump to cards, ? = list, Esc closes pop-ups
 - New look "Live Tiles": flat tiles, giant lowercase type, tiles flip each week, business colour per theme
 - Equal-width digits ("Tycoon Figures", built from Selawik) so numbers line up
+- One-screen cockpit: three panes with tabs, no page scrolling on desktop / iPad landscape
 
 ## Next
 
 1. **Play-test v2 difficulty**: is it too hard for a human? Adjust using `docs/BALANCE.md` targets
-2. **Desktop polish** (keyboard shortcuts done): hover tooltips that explain numbers,
-   a wider layout on big screens (e.g. three columns) so there's less scrolling
+2. **Desktop polish** (shortcuts and one-screen layout done): hover tooltips that explain numbers
 3. **Multiple businesses** (the big one):
    - Open a second coffee shop from the shared cash pool
    - Business switcher in the UI; a portfolio overview (all businesses, total value)

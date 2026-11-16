@@ -86,7 +86,7 @@
   /* ---------- Start screen ---------- */
   #start { min-height: 100vh; display: grid; align-content: center; padding: 48px max(24px, calc(50vw - 520px)); overflow: hidden; }
   .start-card { width: 100%; max-width: 1040px; }
-  .start-card h1 { font-size: clamp(64px, 11vw, 148px); line-height: .92; margin: 0 0 24px -0.04em; white-space: nowrap; }
+  .start-card h1 { font-size: clamp(48px, 7vw, 96px); line-height: .92; margin: 0 0 24px -0.04em; white-space: nowrap; }
   .start-card p.lead { color: var(--muted); margin: 0 0 40px; font-size: 24px; font-weight: 350; line-height: 1.4; max-width: 34ch; }
   .start-card p.lead b { color: var(--ink); font-weight: 400; }
   .themes { display: grid; grid-template-columns: repeat(3, minmax(0, 200px)); gap: 8px; margin-bottom: 32px; }
@@ -104,89 +104,106 @@
   #startBtn, #continueBtn { max-width: 616px; min-height: 60px; font-size: 24px; font-weight: 300; }
   .goal-note { margin-top: 24px; color: var(--muted); font-size: 15px; line-height: 1.5; max-width: 60ch; }
 
-  /* ---------- Game header: name left, company value right, goal bar under both ---------- */
-  #game { padding: 16px 32px 140px; max-width: 1360px; margin: 0 auto; }
-  .topbar { display: grid; grid-template-columns: 1fr auto; column-gap: 24px; align-items: end; }
-  .topbar .tools { grid-column: 1 / -1; grid-row: 1; display: flex; justify-content: flex-end; gap: 4px; margin-right: -10px; }
-  .topbar h1 { grid-column: 1; grid-row: 2; font-size: clamp(56px, 7.4vw, 104px); line-height: .9; margin-left: -0.05em; white-space: nowrap; overflow: hidden; text-overflow: clip; }
-  .topbar .when { grid-column: 1; grid-row: 3; color: var(--muted); font-size: 20px; font-weight: 300; text-transform: lowercase; margin-top: 6px; }
-  .topbar .value { grid-column: 2; grid-row: 2 / 4; text-align: right; align-self: end; }
-  .topbar .value b { display: block; font-size: clamp(40px, 4.6vw, 64px); font-weight: 300; line-height: 1; letter-spacing: -0.02em; }
-  .topbar .value span { display: block; color: var(--muted); font-size: 13px; margin-top: 6px; text-transform: lowercase; white-space: nowrap; }
-  .topbar .value span span { display: inline; margin: 0; }
-  @media (max-width: 640px) { .topbar { grid-template-columns: 1fr; } .topbar .value { grid-column: 1; grid-row: 4; text-align: left; margin-top: 16px; } }
-  @media (max-width: 899px) { .topbar .when { font-size: 17px; } .topbar .when .loc { display: block; } .topbar .when .sep { display: none; } }
-  .bar { height: 6px; background: var(--line); overflow: hidden; margin: 14px 0 28px; }
-  @media (max-width: 1200px) and (min-width: 900px) { .bar { margin-bottom: 20px; } .tile { min-height: 100px; } .tile .val { font-size: 40px; } .card h2 { font-size: 34px; margin-bottom: 14px; } }
+  /* ---------- Game: one-screen cockpit. Slim top bar, three panes, bottom bar. ---------- */
+  #game { max-width: 1600px; margin: 0 auto; padding: 0 24px; }
+  .topbar { display: flex; align-items: center; gap: 24px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .topbar .ident { min-width: 0; flex: 0 1 auto; }
+  .topbar h1 { font-size: 24px; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: clip; letter-spacing: -0.01em; }
+  .topbar .when { display: block; color: var(--muted); font-size: 13px; text-transform: lowercase; }
+  .topbar .value { flex: 1; min-width: 220px; }
+  .topbar .vrow { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .topbar .vrow b { font-size: 24px; font-weight: 300; line-height: 1.1; letter-spacing: -0.01em; }
+  .topbar .vrow span { color: var(--muted); font-size: 13px; text-transform: lowercase; }
+  .topbar .tools { display: flex; gap: 2px; flex: none; margin-right: -10px; }
+  .bar { height: 4px; background: var(--line); overflow: hidden; margin-top: 6px; }
   .bar > i { display: block; height: 100%; width: 100%; background: var(--biz); transform-origin: left; transform: scaleX(0); transition: transform .6s var(--ease); }
   .bar.good > i { background: var(--good-fill); }
 
-  /* ---------- Layout: two panes on desktop, one column below 900px ---------- */
-  .cols { display: grid; grid-template-columns: 1fr; gap: 48px; }
-  @media (min-width: 900px) { .cols { grid-template-columns: 1.05fr 1fr; align-items: start; } }
-  @media (max-width: 899px) {
-    #game { padding: 16px 20px 140px; }
-    .cols { display: flex; flex-direction: column; gap: 48px; }
-    .cols > div { display: contents; }
-    .o1 { order: 1; } .o2 { order: 2; } .o3 { order: 3; } .o4 { order: 4; } .o5 { order: 5; } .o6 { order: 6; } .o7 { order: 7; } .o8 { order: 8; } .o9 { order: 9; } .o10 { order: 10; }
+  .cockpit { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 16px 0 104px; }
+  .pane { min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+  /* Wide screens: three panes fill the viewport between top bar and bottom bar; only a pane scrolls, never the page. */
+  @media (min-width: 1100px) and (min-height: 640px) {
+    #game { height: 100vh; display: flex; flex-direction: column; }
+    .cockpit { flex: 1; min-height: 0; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1fr); padding-bottom: 92px; }
+    .pane { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding-right: 4px; }
+  }
+  @media (min-width: 760px) and (max-width: 1099px) {
+    .cockpit { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .pane.insight { grid-column: 1 / -1; }
+  }
+  @media (max-width: 640px) {
+    #game { padding: 0 16px; }
+    .topbar { flex-wrap: wrap; gap: 8px 16px; }
+    .topbar .ident { flex: 1 1 60%; } .topbar .value { order: 3; flex-basis: 100%; }
   }
 
-  /* Sections: no boxes; the giant lowercase heading is the container. */
-  .card { scroll-margin-top: 16px; }
-  .card + .card { margin-top: 44px; }
-  @media (max-width: 899px) { .card + .card { margin-top: 0; } }
-  .card h2 { font-size: 40px; line-height: 1; margin-bottom: 18px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 16px; }
-  .card h2 small { font-size: 13px; font-weight: 400; color: var(--muted); letter-spacing: 0; text-transform: lowercase; }
-  .flash h2 { animation: flash .9s var(--ease); }
-  @keyframes flash { 0% { color: var(--accent); } 100% { color: var(--ink); } }
+  /* Sections: small lowercase labels, not giant headings. */
+  .card { scroll-margin-top: 8px; }
+  .card h2 { font-size: 15px; font-weight: 400; line-height: 1.2; color: var(--muted); margin-bottom: 8px; letter-spacing: 0;
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .card h2 small { font-size: 13px; color: var(--muted); text-transform: lowercase; }
+  .aside { font-size: 13px; color: var(--muted); margin: 0 0 10px; }
+  .flash { animation: flashp .8s var(--ease); }
+  @keyframes flashp { 0% { box-shadow: inset 0 2px 0 var(--accent); } 100% { box-shadow: inset 0 2px 0 transparent; } }
 
-  /* ---------- Live tiles ---------- */
-  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; perspective: 900px; }
-  @media (max-width: 520px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
-  .tile { background: var(--card); min-height: 116px; padding: 12px 14px 10px; display: flex; flex-direction: column; justify-content: flex-end; position: relative; transform-origin: 50% 50%; }
-  .tile .val { order: 1; font-size: 48px; font-weight: 300; line-height: 1; letter-spacing: -0.02em; }
+  /* Tabs: pivot-style words; the active one is ink with an accent rule. */
+  .tabs { display: flex; gap: 20px; border-bottom: 1px solid var(--line); flex: none; }
+  .tabs button { min-height: 40px; font-size: 20px; font-weight: 300; color: var(--muted); text-transform: lowercase;
+    display: inline-flex; align-items: center; gap: 6px; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+  @media (hover: hover) { .tabs button:hover { color: var(--ink); } }
+  .panel[hidden] { display: none; }
+
+  /* ---------- Live tiles (compact) ---------- */
+  .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; perspective: 900px; }
+  .tile { background: var(--card); min-width: 0; overflow: hidden; min-height: 84px; padding: 8px 10px; display: flex; flex-direction: column; justify-content: flex-end; position: relative; transform-origin: 50% 50%; }
+  .tile .val { order: 1; font-size: 34px; font-weight: 300; line-height: 1; letter-spacing: -0.02em; white-space: nowrap; }
+  @media (max-width: 1279px) { .tile .val { font-size: 24px; } }
   .tile .meter { order: 2; }
-  .tile .lbl { order: 3; font-size: 15px; text-transform: lowercase; color: var(--ink); margin-top: 8px; }
-  .tile .sub { order: 4; font-size: 13px; color: var(--muted); text-transform: lowercase; min-height: 1.3em; }
+  .tile .lbl { order: 3; font-size: 13px; text-transform: lowercase; color: var(--ink); margin-top: 4px; }
+  .tile .sub { order: 4; font-size: 13px; line-height: 1.3; color: var(--muted); text-transform: lowercase; }
   .tile.fill-good, .tile.fill-bad { color: #fff; }
   .tile.fill-good { background: var(--good-fill); } .tile.fill-bad { background: var(--bad-fill); }
   .tile.fill-good .lbl, .tile.fill-bad .lbl { color: #fff; }
   .tile.fill-good .sub, .tile.fill-bad .sub { color: rgba(255,255,255,.86); }
   .tile.fill-good .val, .tile.fill-bad .val, .tile.fill-bad .neg, .tile.fill-good .pos, .tile.fill-bad .sub .neg { color: #fff; }
-  .meter { height: 4px; background: var(--line); margin-top: 10px; }
+  .meter { height: 3px; background: var(--line); margin-top: 6px; }
   .meter > i { display: block; height: 100%; background: var(--ink); }
   .tile.flip { animation: flip .62s var(--ease) both; }
   @keyframes flip { 0% { transform: rotateX(0); } 45% { transform: rotateX(90deg); } 55% { transform: rotateX(-90deg); } 100% { transform: rotateX(0); } }
+  .mods:empty { display: none; }
 
   /* ---------- Report ---------- */
-  .report { width: 100%; border-collapse: collapse; font-size: 16px; }
-  .report td { padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .report { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .report td { padding: 4px 0; border-bottom: 1px solid var(--line); }
   .report td:last-child { text-align: right; }
-  .report tr.total td { border-bottom: 0; padding-top: 14px; font-size: 34px; font-weight: 300; letter-spacing: -0.02em; }
-  .report tr.sec td { padding: 10px 0 0; border-bottom: 2px solid var(--ink); }
+  .report tr.total td { border-bottom: 0; padding-top: 8px; font-size: 24px; font-weight: 300; letter-spacing: -0.01em; }
+  .report tr.sec td { padding: 4px 0 0; border-bottom: 2px solid var(--ink); }
 
   .events { display: flex; flex-direction: column; gap: 4px; }
-  .ev { padding: 12px 14px; font-size: 15px; line-height: 1.45; background: var(--card); }
+  .ev { padding: 8px 10px; font-size: 13px; line-height: 1.45; background: var(--card); }
   .ev .wk { font-size: 13px; color: var(--muted); margin-right: 8px; font-variant-numeric: tabular-nums; }
   .ev.good .wk { color: var(--good); } .ev.bad .wk { color: var(--bad); }
   .ev.good .wk::before { content: '+ '; } .ev.bad .wk::before { content: '− '; }
-  .tips .ev { background: transparent; padding: 0 0 12px; border-bottom: 1px solid var(--line); font-size: 17px; font-weight: 350; }
+  .tips { margin-top: 10px; }
+  .tips .ev { background: transparent; padding: 0 0 8px; border-bottom: 1px solid var(--line); font-size: 15px; font-weight: 350; }
   .tips .ev:last-child { border-bottom: 0; padding-bottom: 0; }
 
   /* ---------- Decisions ---------- */
-  .ctl { padding: 18px 0; border-top: 1px solid var(--line); }
+  .ctl { padding: 12px 0; border-top: 1px solid var(--line); }
   .ctl:first-of-type { border-top: 0; padding-top: 0; }
+  .mkt-ctl { margin-top: 8px; border-top: 1px solid var(--line) !important; padding-top: 12px !important; }
   .ctl:last-child { padding-bottom: 0; }
-  .ctl-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 10px; }
-  .ctl-head .t { font-size: 20px; font-weight: 300; text-transform: lowercase; }
+  .ctl-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+  .ctl-head .t { font-size: 15px; font-weight: 400; color: var(--muted); text-transform: lowercase; }
   .ctl-head .h { font-size: 13px; color: var(--muted); text-transform: lowercase; }
   .stepper { display: flex; align-items: stretch; gap: 8px; }
-  .stepper button { width: 56px; min-height: 56px; background: var(--card); font-size: 24px; display: grid; place-items: center; transition: transform .14s var(--ease); }
-  .stepper .v { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 4px; font-size: 34px; font-weight: 300; line-height: 1; }
+  .stepper button { width: 44px; min-height: 44px; background: var(--card); font-size: 24px; display: grid; place-items: center; transition: transform .14s var(--ease); }
+  .stepper .v { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 4px; font-size: 24px; font-weight: 300; line-height: 1; }
   .stepper .v small { font-size: 13px; color: var(--muted); margin-top: 4px; text-transform: lowercase; }
   .seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .seg button { background: var(--card); padding: 12px; text-align: left; min-height: 92px; display: flex; flex-direction: column; justify-content: flex-end; transition: transform .14s var(--ease); }
-  .seg button b { font-size: 20px; font-weight: 300; text-transform: lowercase; }
+  .seg button { background: var(--card); padding: 8px 10px; text-align: left; min-height: 60px; display: flex; flex-direction: column; justify-content: flex-end; transition: transform .14s var(--ease); }
+  .seg button b { font-size: 16px; font-weight: 400; text-transform: lowercase; }
   .seg button span { font-size: 13px; color: var(--muted); margin-top: 4px; }
   .seg button.on { background: var(--ink); color: var(--bg); }
   .seg button.on span { color: inherit; opacity: .72; }
@@ -196,40 +213,40 @@
   .pill.bad { background: var(--bad-fill); color: #fff; }
   .pill.mid { background: var(--card); color: var(--ink); }
 
-  .upg { display: flex; align-items: center; gap: 16px; padding: 14px 0; }
+  .upg { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
   .upg + .upg { border-top: 1px solid var(--line); }
   .upg .info { flex: 1; min-width: 0; }
-  .upg .now { font-size: 20px; font-weight: 300; text-transform: lowercase; }
-  .upg .next { font-size: 13px; color: var(--muted); margin-top: 2px; line-height: 1.45; }
+  .upg .now { font-size: 16px; font-weight: 400; text-transform: lowercase; }
+  .upg .next { font-size: 13px; color: var(--muted); margin-top: 1px; line-height: 1.4; }
   .upg .next b { color: var(--ink); font-weight: 400; }
-  .upg .btn { white-space: nowrap; flex: none; }
+  .upg .btn { white-space: nowrap; flex: none; min-height: 40px; padding: 6px 12px; font-size: 15px; }
   .upg.is-locked .now { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--muted); }
 
   .mods { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 
   /* Forecast + sources */
-  .forecast { padding: 14px 16px; margin-bottom: 20px; font-size: 17px; font-weight: 350; line-height: 1.4; background: var(--card); }
+  .forecast { padding: 10px 12px; font-size: 15px; font-weight: 350; line-height: 1.4; background: var(--card); }
   .forecast b { font-weight: 400; text-transform: lowercase; color: var(--muted); }
   .forecast.good b { color: var(--good); } .forecast.bad b { color: var(--bad); }
   .forecast.none { color: var(--muted); }
   .stack { display: flex; height: 12px; background: var(--line); margin-bottom: 14px; gap: 2px; }
   .stack i { display: block; height: 100%; }
-  .src { display: flex; align-items: center; gap: 12px; padding: 8px 0; font-size: 16px; border-bottom: 1px solid var(--line); }
+  .src { display: flex; align-items: center; gap: 12px; padding: 6px 0; font-size: 15px; border-bottom: 1px solid var(--line); }
   .src:last-of-type { border-bottom: 0; }
   .src .dot { width: 12px; height: 12px; flex: none; }
   .src .nm { flex: 1; } .src .nm small { display: block; color: var(--muted); font-size: 13px; }
-  .src .ct { font-size: 20px; font-weight: 300; } .src .pc { width: 48px; text-align: right; color: var(--muted); font-size: 13px; }
-  .locked { color: var(--muted); font-size: 16px; line-height: 1.5; margin: 0; }
+  .src .ct { font-size: 17px; font-weight: 300; } .src .pc { width: 48px; text-align: right; color: var(--muted); font-size: 13px; }
+  .locked { color: var(--muted); font-size: 15px; line-height: 1.5; margin: 0; }
   .locked b { color: var(--ink); font-weight: 400; }
-  .roi { margin-top: 14px; padding: 14px 16px; background: var(--card); font-size: 15px; line-height: 1.5; }
+  .roi { margin-top: 10px; padding: 10px 12px; background: var(--card); font-size: 13px; line-height: 1.5; }
 
   /* ---------- Bottom bar: cash + the one flooded tile ---------- */
   .bottombar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bar-bg); border-top: 1px solid var(--line);
-    padding: 12px 32px calc(12px + env(safe-area-inset-bottom)); z-index: 10; }
-  .bottombar .inner { max-width: 1296px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
+    padding: 10px 24px calc(10px + env(safe-area-inset-bottom)); z-index: 10; }
+  .bottombar .inner { max-width: 1552px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
   .bottombar .cash { font-size: 13px; color: var(--muted); text-transform: lowercase; }
-  .bottombar .cash b { display: block; font-size: 34px; font-weight: 300; line-height: 1; color: var(--ink); letter-spacing: -0.02em; margin-bottom: 2px; }
-  #nextBtn { margin-left: auto; width: min(400px, 60vw); min-height: 64px; font-size: 24px; font-weight: 300; padding: 8px 18px; }
+  .bottombar .cash b { display: block; font-size: 24px; font-weight: 300; line-height: 1; color: var(--ink); letter-spacing: -0.02em; margin-bottom: 2px; }
+  #nextBtn { margin-left: auto; width: min(360px, 60vw); min-height: 52px; font-size: 20px; font-weight: 300; padding: 6px 16px; }
   #nextBtn .go { display: inline-flex; align-items: center; gap: 12px; }
   #nextBtn svg.ico { width: 22px; height: 22px; stroke-width: 1.4; }
   #nextBtn > span:first-child { white-space: nowrap; }
@@ -239,7 +256,7 @@
   .overlay { position: fixed; inset: 0; background: var(--veil); display: grid; align-items: center; z-index: 50; }
   .modal { width: 100%; background: var(--card); padding: 36px max(24px, calc(50vw - 340px)) 32px; box-shadow: 0 24px 64px rgba(0,0,0,.35); animation: band .36s var(--ease); }
   @keyframes band { from { transform: translateY(16px); opacity: 0; } to { transform: none; opacity: 1; } }
-  .modal h2 { font-size: 40px; line-height: 1.05; margin: 0 0 12px; }
+  .modal h2 { font-size: 34px; line-height: 1.05; margin: 0 0 12px; }
   .modal p { color: var(--muted); line-height: 1.5; font-size: 17px; margin: 0; max-width: 60ch; }
   .modal p b { color: var(--ink); font-weight: 400; }
   .modal .row { display: flex; gap: 8px; margin-top: 28px; }
@@ -255,46 +272,46 @@
   .btn kbd { color: inherit; opacity: .75; margin-left: 4px; }
   .keys { width: 100%; border-collapse: collapse; margin-top: 8px; text-align: left; max-width: 520px; }
   .keys td { padding: 9px 4px; border-top: 1px solid var(--line); color: var(--ink); font-size: 16px; }
-  .keys td:first-child { width: 96px; }
+  .keys td:first-child { width: 150px; }
 
   /* ---------- Menu ---------- */
-  .mi { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .mi { display: flex; align-items: center; gap: 10px; padding: 4px 0; border-bottom: 1px solid var(--line); }
   .mi:last-child { border-bottom: 0; }
   .mi .info { flex: 1; min-width: 0; }
-  .mi .info b { display: block; font-size: 20px; font-weight: 300; text-transform: lowercase; }
+  .mi .info b { display: block; font-size: 16px; font-weight: 400; text-transform: lowercase; }
   .mi .info small { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
   .mi.off .info b { color: var(--muted); }
   .mi.locked .info b { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 1px; }
-  .mi.locked { padding-left: 52px; }
+  .mi.locked { padding-left: 50px; padding-top: 2px; padding-bottom: 2px; }
   .tog { width: 40px; height: 40px; border: 2px solid var(--line); flex: none; display: grid; place-items: center; color: #fff; }
   .tog svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; }
   .tog.on { background: var(--good-fill); border-color: var(--good-fill); }
   .mini { display: flex; align-items: center; gap: 4px; }
-  .mini button { width: 44px; height: 44px; background: var(--card); font-size: 20px; display: grid; place-items: center; transition: transform .14s var(--ease); }
-  .mini span { min-width: 76px; text-align: center; font-size: 20px; font-weight: 300; position: relative; }
+  .mini button { width: 40px; height: 40px; background: var(--card); font-size: 20px; display: grid; place-items: center; transition: transform .14s var(--ease); }
+  .mini span { min-width: 64px; text-align: center; font-size: 17px; font-weight: 300; position: relative; }
   .mini span i { position: absolute; right: 2px; top: -2px; width: 8px; height: 8px; }
   .dot-good { background: var(--good); } .dot-bad { background: var(--bad); } .dot-mid { background: var(--muted); }
   .key { display: inline-block; width: 9px; height: 9px; margin: 0 3px 0 6px; vertical-align: 0; }
-  .note { font-size: 13px; color: var(--muted); line-height: 1.5; margin: 12px 0 0; }
+  .note { font-size: 13px; color: var(--muted); line-height: 1.5; margin: 8px 0 0; }
 
   /* ---------- Team ---------- */
-  .role { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .role { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--line); }
   .role:last-of-type { border-bottom: 0; }
-  .role .info { flex: 1; } .role .info b { display: block; font-size: 20px; font-weight: 300; text-transform: lowercase; }
+  .role .info { flex: 1; } .role .info b { display: block; font-size: 16px; font-weight: 400; text-transform: lowercase; }
   .role .info small { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
-  .role .mini span { min-width: 44px; font-size: 24px; }
+  .role .mini span { min-width: 40px; font-size: 20px; }
 
   /* ---------- Progress: pivot-style metric headers ---------- */
-  .chips { display: flex; flex-wrap: wrap; gap: 0 18px; margin-bottom: 8px; }
-  .chips button { min-height: 40px; font-size: 20px; font-weight: 300; color: var(--muted); text-transform: lowercase; }
+  .chips { display: flex; flex-wrap: wrap; gap: 0 12px; margin: 4px 0 2px; }
+  .chips button { min-height: 40px; font-size: 15px; font-weight: 400; color: var(--muted); text-transform: lowercase; }
   .chips button.on { color: var(--accent); }
   @media (hover: hover) { .chips button:hover { color: var(--ink); } }
   .pchart { position: relative; touch-action: none; }
-  .pchart svg { width: 100%; height: 220px; display: block; font-family: 'Tycoon Figures', Selawik, 'Segoe UI', system-ui, sans-serif; }
+  .pchart svg { width: 100%; height: 180px; display: block; font-family: 'Tycoon Figures', Selawik, 'Segoe UI', system-ui, sans-serif; }
   .ptip { position: absolute; top: 0; padding: 5px 8px; background: var(--ink); color: var(--on-ink); font-size: 13px; pointer-events: none; white-space: nowrap; transform: translateX(-50%); }
-  .ytable { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 16px; }
+  .ytable { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
   .ytable th { text-align: right; color: var(--muted); font-weight: 400; font-size: 13px; text-transform: lowercase; padding: 6px 4px; border-bottom: 1px solid var(--line); }
-  .ytable td { text-align: right; padding: 8px 4px; border-bottom: 1px solid var(--line); }
+  .ytable td { text-align: right; padding: 5px 4px; border-bottom: 1px solid var(--line); }
   .ytable th:first-child, .ytable td:first-child { text-align: left; }
   .ytable tr:last-child td { border-bottom: 0; }
 
@@ -336,24 +353,26 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
 <!-- ============ GAME ============ -->
 <section id="game" class="hidden">
-  <div class="topbar">
-    <h1 id="shopTitle"></h1>
-    <span class="when"><span id="when"></span><span class="loc"><span class="sep"> · </span><span id="locName"></span></span></span>
-    <div class="value"><b class="num" id="valNow">€0</b><span>company value · goal €1,000,000 · <span id="weeksLeft"></span></span></div>
+  <header class="topbar">
+    <div class="ident">
+      <h1 id="shopTitle"></h1>
+      <span class="when"><span id="when"></span><span class="loc"><span class="sep"> · </span><span id="locName"></span></span></span>
+    </div>
+    <div class="value">
+      <div class="vrow"><b class="num" id="valNow">€0</b><span>company value · goal €1,000,000 · <span id="weeksLeft"></span></span></div>
+      <div class="bar" id="goalBar"><i></i></div>
+    </div>
     <div class="tools">
       <button class="icon-btn kbd-only" id="keysBtn" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">shortcuts</button>
       <button class="icon-btn theme-btn" id="themeBtn"></button>
       <button class="icon-btn" id="newGameBtn">New game</button>
     </div>
-  </div>
+  </header>
 
-  <div class="bar" id="goalBar"><i></i></div>
-
-  <div class="cols">
-    <!-- LEFT: status -->
-    <div>
-      <div class="card o1">
-        <div class="tiles">
+  <main class="cockpit">
+    <!-- LEFT: how did last week go -->
+    <div class="pane status">
+      <div class="tiles">
           <div class="tile"><div class="lbl">Cash</div><div class="val num" id="tCash"></div><div class="sub" id="tLoan"></div></div>
           <div class="tile" id="tileProfit"><div class="lbl">Last week</div><div class="val num" id="tProfit"></div><div class="sub" id="tTicket">profit</div></div>
           <div class="tile"><div class="lbl">Customers</div><div class="val num" id="tServed"></div><div class="sub" id="tLost"></div></div>
@@ -362,41 +381,22 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
           <div class="tile" id="tileClean"><div class="lbl">Cleanliness</div><div class="val num" id="tClean"></div><div class="meter"><i id="mClean"></i></div></div>
         </div>
         <div class="mods" id="mods"></div>
-      </div>
-
-      <div class="card o2">
+      <div class="card" id="cardReport">
         <h2>Week report <small id="repWeek"></small></h2>
         <div id="report"></div>
       </div>
-
-      <div class="card tips o3" id="tipsCard">
-        <h2>Advisor</h2>
-        <div class="events" id="tips"></div>
-      </div>
-
-      <div class="card o7" id="cardProgress">
-        <h2>Progress <small id="progSub"></small></h2>
-        <div class="chips" id="chips"></div>
-        <div class="pchart" id="pchart"></div>
-        <div id="years"></div>
-      </div>
-
-      <div class="card o8">
-        <h2>Where customers come from <small id="srcWeek"></small></h2>
-        <div id="sources"></div>
-      </div>
-
-      <div class="card o10">
-        <h2>News</h2>
-        <div class="events" id="log"></div>
-      </div>
     </div>
 
-    <!-- RIGHT: decisions -->
-    <div>
-      <div class="card o4" id="cardMenu">
-        <h2>Menu <small>prices apply from next week</small></h2>
-        <div id="forecast"></div>
+    <!-- MIDDLE: decisions, one tab at a time -->
+    <div class="pane decide">
+      <nav class="tabs" role="tablist" aria-label="Decisions">
+        <button role="tab" data-tab="cardMenu" title="Menu (M)">Menu</button>
+        <button role="tab" data-tab="cardTeam" title="Team (T)">Team</button>
+        <button role="tab" data-tab="cardInvest" title="Invest (I)">Invest</button>
+        <button role="tab" data-tab="cardBank" title="Bank (B)">Bank</button>
+      </nav>
+      <div class="panel card" id="cardMenu" role="tabpanel">
+        <p class="aside">Prices apply from next week.</p>
         <div class="ctl">
           <div class="ctl-head"><span class="t">Beans</span><span class="h">quality vs. cost per shot</span></div>
           <div class="seg" id="beans"></div>
@@ -407,12 +407,11 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
           <p class="note">More choice brings in more customers, but every drink beyond 3 slows the bar down by 4%. The square shows your price:<span class="key dot-good"></span>bargain<span class="key dot-mid"></span>fair<span class="key dot-bad"></span>pricey.</p>
         </div>
       </div>
-
-      <div class="card o5" id="cardTeam">
-        <h2>Team <small id="teamSub"></small></h2>
+      <div class="panel card" id="cardTeam" role="tabpanel">
+        <p class="aside" id="teamSub"></p>
         <div id="team"></div>
         <p class="note" id="teamNote"></p>
-        <div class="ctl" style="border-top:1px solid var(--line);margin-top:12px;padding-top:12px">
+        <div class="ctl mkt-ctl">
           <div class="ctl-head"><span class="t">Marketing per week</span><span class="h">flyers, socials, ads</span></div>
           <div class="stepper">
             <button data-act="mkt" data-d="-50" aria-label="Less marketing"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg></button>
@@ -421,9 +420,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
           </div>
         </div>
       </div>
-
-      <div class="card o6" id="cardInvest">
-        <h2>Invest</h2>
+      <div class="panel card" id="cardInvest" role="tabpanel">
         <div class="upg">
           <div class="info"><div class="now" id="locNow"></div><div class="next" id="locNext"></div></div>
           <button class="btn" data-act="upLoc" id="upLocBtn">Move</button>
@@ -435,9 +432,8 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
         <div id="equipList"></div>
         <div id="systemsList"></div>
       </div>
-
-      <div class="card o9" id="cardBank">
-        <h2>Bank <small>0.5% interest per week</small></h2>
+      <div class="panel card" id="cardBank" role="tabpanel">
+        <p class="aside">0.5% interest per week.</p>
         <div class="upg">
           <div class="info"><div class="now num" id="loanNow"></div><div class="next" id="loanNext"></div></div>
           <button class="btn" data-act="repay">Repay €5k</button>
@@ -445,7 +441,34 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
         </div>
       </div>
     </div>
-  </div>
+
+    <!-- RIGHT: what's coming and how it's going -->
+    <div class="pane insight">
+      <div class="card" id="cardAhead">
+        <h2>Next week</h2>
+        <div id="forecast"></div>
+        <div class="tips" id="tipsCard"><div class="events" id="tips"></div></div>
+      </div>
+      <nav class="tabs" role="tablist" aria-label="Insight">
+        <button role="tab" data-tab="cardProgress" title="Progress (P)">Progress</button>
+        <button role="tab" data-tab="cardSources" title="Customers (C)">Customers</button>
+        <button role="tab" data-tab="cardNews" title="News (N)">News</button>
+      </nav>
+      <div class="panel card" id="cardProgress" role="tabpanel">
+        <div class="chips" id="chips"></div>
+        <p class="aside" id="progSub"></p>
+        <div class="pchart" id="pchart"></div>
+        <div id="years"></div>
+      </div>
+      <div class="panel card" id="cardSources" role="tabpanel">
+        <p class="aside">Where customers came from <span id="srcWeek"></span></p>
+        <div id="sources"></div>
+      </div>
+      <div class="panel card" id="cardNews" role="tabpanel">
+        <div class="events" id="log"></div>
+      </div>
+    </div>
+  </main>
 </section>
 
 <div class="bottombar hidden" id="bottombar">
@@ -539,18 +562,30 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
   $('shopName').addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); $('startBtn').click(); } });
 
   // ---------- keyboard shortcuts (desktop extra; everything is also reachable by touch) ----------
-  const JUMP = { m: 'cardMenu', t: 'cardTeam', i: 'cardInvest', b: 'cardBank', p: 'cardProgress' };
+  // Tabs: each pane shows one panel at a time. Letters switch tabs (and scroll there on narrow screens).
+  const JUMP = { m: 'cardMenu', t: 'cardTeam', i: 'cardInvest', b: 'cardBank', p: 'cardProgress', c: 'cardSources', n: 'cardNews' };
+  const cockpitMode = () => window.matchMedia('(min-width: 1100px) and (min-height: 640px)').matches;
+  function showTab(id) {
+    const panel = $(id), pane = panel.closest('.pane');
+    pane.querySelectorAll('.panel').forEach((x) => { x.hidden = x !== panel; });
+    pane.querySelectorAll('[data-tab]').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.tab === id)));
+    if (id === 'cardProgress') renderProgress();
+  }
   function jumpTo(id) {
+    showTab(id);
     const c = $(id);
-    const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    c.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+    if (!cockpitMode()) {
+      const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      c.closest('.pane').querySelector('.tabs').scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+    }
     c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash');
   }
+  showTab('cardMenu'); showTab('cardProgress');
   function showShortcuts() {
     const row = (k, what) => `<tr><td><kbd>${k}</kbd></td><td>${what}</td></tr>`;
     modal('<h2>Keyboard shortcuts</h2><table class="keys">' +
-      row('Space', 'Open next week') + row('M', 'Menu') + row('T', 'Team') + row('I', 'Invest') + row('B', 'Bank') +
-      row('P', 'Progress') + row('?', 'This list') + row('Esc', 'Close a pop-up') + '</table>', [{ label: 'Got it' }]);
+      row('Space', 'Open next week') + row('M / T / I / B', 'Menu, Team, Invest, Bank tab') +
+      row('P / C / N', 'Progress, Customers, News tab') + row('?', 'This list') + row('Esc', 'Close a pop-up') + '</table>', [{ label: 'Got it' }]);
   }
   $('keysBtn').onclick = showShortcuts;
   const inGame = () => state && !$('game').classList.contains('hidden');
@@ -581,6 +616,8 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
   // ---------- controls ----------
   document.addEventListener('click', (ev) => {
+    const tab = ev.target.closest('[data-tab]');
+    if (tab) { showTab(tab.dataset.tab); return; }
     const chip = ev.target.closest('[data-metric]');
     if (chip) { metric = chip.dataset.metric; renderProgress(); return; }
     const el = ev.target.closest('[data-act]'); if (!el || !state || state.status !== 'playing') return;
@@ -678,8 +715,8 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     // forecast
     const fc = b.forecast;
     $('forecast').innerHTML = fc
-      ? `<div class="forecast ${fc.tone}"><b>next week:</b> ${fc.text}</div>`
-      : (r ? `<div class="forecast none"><b>next week:</b> nothing special on the horizon.</div>` : '');
+      ? `<div class="forecast ${fc.tone}">${plain(fc.text)}</div>`
+      : `<div class="forecast none">Nothing special on the horizon.</div>`;
 
     renderMenu(b, t, r);
     renderTeam(b, t, r);

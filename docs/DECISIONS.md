@@ -33,3 +33,6 @@ Short log of design and technical decisions. Newest at the bottom. Format: what 
 19. **Own digit font "Tycoon Figures"** (Nov 2026): Selawik's digits differ in width, so number columns wobbled. Instead of
     borrowing digits from a system font (mixes two typefaces inside one number), we made equal-width copies of Selawik's own
     digits (`tools/make-figures.py`, allowed by the font licence under a new name). Sam chose polish over the quick fix.
+20. **One-screen cockpit layout** (Nov 2026): Sam's feedback on the first Live Tiles version: titles far too big, too much
+    scrolling, no overview. A game needs everything at a glance. Now: slim top bar, three panes (status / decisions /
+    insight) with tabs, small section labels; the page never scrolls on desktop and iPad landscape. The tile look stays.

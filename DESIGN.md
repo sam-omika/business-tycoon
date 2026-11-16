@@ -1,6 +1,6 @@
 ---
 name: Business Tycoon
-description: A turn-based business game drawn as live tiles - flat colour, giant lowercase type, numbers that flip when a week opens.
+description: A turn-based business game drawn as live tiles in a one-screen cockpit - flat colour, lowercase type, numbers that flip when a week opens.
 colors:
   business: "#C2410C"
   ground-light: "#FFFFFF"
@@ -22,42 +22,35 @@ colors:
 typography:
   display:
     fontFamily: "Selawik, 'Segoe UI', system-ui, sans-serif"
-    fontSize: "clamp(64px, 11vw, 148px)"
+    fontSize: "clamp(48px, 7vw, 96px)"
     fontWeight: 300
     lineHeight: 0.92
     letterSpacing: "-0.02em"
   headline:
     fontFamily: "Selawik, 'Segoe UI', system-ui, sans-serif"
-    fontSize: "clamp(56px, 7.4vw, 104px)"
+    fontSize: "24px"
     fontWeight: 300
-    lineHeight: 0.9
+    lineHeight: 1.1
     letterSpacing: "-0.02em"
   figure-hero:
     fontFamily: "'Tycoon Figures', Selawik, 'Segoe UI', system-ui, sans-serif"
-    fontSize: "clamp(40px, 4.6vw, 64px)"
+    fontSize: "24px"
     fontWeight: 300
     lineHeight: 1
     letterSpacing: "-0.02em"
     fontFeature: "tnum"
   section:
     fontFamily: "Selawik, 'Segoe UI', system-ui, sans-serif"
-    fontSize: "40px"
-    fontWeight: 300
-    lineHeight: 1
-    letterSpacing: "-0.02em"
+    fontSize: "15px"
+    fontWeight: 400
+    lineHeight: 1.2
   figure-tile:
-    fontFamily: "Selawik, 'Segoe UI', system-ui, sans-serif"
-    fontSize: "48px"
-    fontWeight: 300
-    lineHeight: 1
-    letterSpacing: "-0.02em"
-    fontFeature: "tnum"
-  figure-mid:
     fontFamily: "Selawik, 'Segoe UI', system-ui, sans-serif"
     fontSize: "34px"
     fontWeight: 300
     lineHeight: 1
     letterSpacing: "-0.02em"
+    fontFeature: "tnum"
   action:
     fontFamily: "Selawik, 'Segoe UI', system-ui, sans-serif"
     fontSize: "24px"
@@ -224,16 +217,15 @@ A strict monochrome scaffold (ground, tile, ink, muted, line) with one runtime b
 **Character:** One humanist sans at light weight doing everything, Metro-style: size and case carry hierarchy, weight barely moves. Weight 300 for all display and figures, 350 for lead copy and buttons, 400 for body, 600 only inside `<b>`.
 
 ### Hierarchy
-- **Display** (300, clamp(64px, 11vw, 148px), 0.92): the game title on the start screen, one line, hung slightly into the left margin (-0.04em).
-- **Headline** (300, clamp(56px, 7.4vw, 104px), 0.9): the business name top-left of the game screen, clipped rather than wrapped.
-- **Figure Hero** (300, clamp(40px, 4.6vw, 64px), 1): company value, right-aligned on the name row.
-- **Section** (300, 40px, 1): section headings and pop-up headings, with a 13px muted lowercase aside right-aligned on the baseline.
-- **Figure Tile** (300, 48px, 1): the number in a stat tile (40px between 900 and 1200px wide).
-- **Figure Mid** (300, 34px, 1): bottom-bar cash, report total row, stepper value; section headings also step down to it between 900 and 1200px.
-- **Action** (300, 24px): big button labels (open next week, open for business), start-screen lead and business-type tiles, the name field, team counts.
-- **Title** (300, 20px): item names in menu, team and invest rows; control headings; segment option names; the week line.
-- **Body** (400, 16px, 1.4): report rows, sources, toasts. **Lead** (350, 17px, 1.5): advisor tips, forecast, pop-up text, kept to 60ch.
-- **Label** (400, 15px): tile labels, field labels, header tool buttons. **Caption** (400, 13px, muted): tile subs, item details, hints, table headers.
+The game screen is a cockpit: numbers are the biggest things on screen, headings are small labels.
+- **Display** (300, clamp(48px, 7vw, 96px), 0.92): the game title on the start screen only.
+- **Headline / Figure Hero** (300, 24px): the business name and the company value in the slim top bar; also bottom-bar cash, the report total and big button labels (Action, 24px).
+- **Figure Tile** (300, 34px, 1): the number in a stat tile (24px below 1280px wide).
+- **Tab** (300, 20px): pane tabs (menu / team / invest / bank, progress / customers / news); also the "open next week" label.
+- **Title** (400, 16px): item names in menu, team and invest rows, segment option names.
+- **Section** (400, 15px, muted): section labels such as "week report" and "next week", control headings.
+- **Body** (400, 15-16px, 1.4): report rows, sources, tips (350 weight). **Lead** (350, 17px): pop-up text.
+- **Caption** (400, 13px, muted): tile labels and subs, item details, hints, asides, table headers, top-bar meta.
 
 ### Named Rules
 **The Lowercase Rule.** Every display and label string is lowercase (headings, tile labels, buttons, pills, captions, table headers), applied with `text-transform` so source strings stay sentence case. Body copy (tips, pop-up text, notes) stays sentence case.
@@ -247,14 +239,18 @@ Selawik has no tabular figures, so the game ships **Tycoon Figures**: Selawik's 
 
 ## Layout
 
-Desktop first, iPad must keep working. The game screen is centred at max 1360px with 32px side padding (20px below 900px) and 140px bottom padding to clear the fixed bar.
+Desktop first, iPad must keep working. **The game fits one screen:** at 1100px wide and 640px tall or more, the page never scrolls; if a pane's content is too long, only that pane scrolls.
 
-- **Header:** a two-column grid: business name left, company value right-aligned and bottom-aligned on the same row, with week / season / location under the name and the value's caption under the value. Tool buttons (shortcuts, theme, new game) sit in a row above, right-aligned. A 6px goal bar spans both columns underneath. Below 640px the value drops under the name, left-aligned.
-- **Two panes:** at 900px and wider, a 1.05fr / 1fr grid with a 48px gap: status on the left (tiles, report, advisor, progress, sources, news), decisions on the right (menu, team, invest). Below 900px a single column re-ordered by the `.o1`-`.o10` order classes. Sections stack 44px apart.
-- **Tiles:** three columns with an 8px gutter (two below 520px). 8px is the gutter for every tile grid: stat tiles, theme picker, segment options, stepper.
-- **Rows:** lists (report, menu, team, invest, sources) are full-width rows separated by 1px line dividers, no boxes.
-- **Bottom bar:** fixed, full width, ground-coloured with a 1px top line; cash at left, the "open next week" tile at right (min(400px, 60vw), 64px tall), respecting the safe-area inset.
-- **Spacing rhythm:** 4 / 8 / 12 / 16 / 32 / 48px, with 44px between sections.
+- **Top bar** (one slim row): business name with week / season / location under it; company value with its caption and a 4px goal bar; tool buttons (shortcuts, theme, new game) at the right.
+- **Three panes** (1fr / 1.15fr / 1fr, 24px gap), filling the height between top bar and bottom bar:
+  - **Status:** the six stat tiles (3 columns, 6px gutter) and the compact week report.
+  - **Decide:** tabs Menu, Team, Invest, Bank; one panel at a time.
+  - **Insight:** "next week" forecast and advisor tips always visible, then tabs Progress, Customers, News.
+- **Tabs** are the navigation: keys M/T/I/B/P/C/N switch them (and scroll to them when the page does scroll). The active tab is ink with a 2px accent rule.
+- **Smaller screens:** 760-1099px wide gives two columns with Insight full-width below; under 760px one column. Here the page scrolls.
+- **Rows:** lists are full-width rows separated by 1px line dividers, compact (4-8px vertical padding), touch targets stay at least 40px.
+- **Bottom bar:** fixed, ground-coloured with a 1px top line; cash at left, the "open next week" tile at right (min(360px, 60vw), 52px tall).
+- **Spacing rhythm:** 4 / 6 / 8 / 12 / 16 / 24px.
 
 ## Elevation & Depth
 
