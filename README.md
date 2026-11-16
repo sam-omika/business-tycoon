@@ -19,21 +19,34 @@ npm run sim
 
 Plays ~150 games per bot strategy and prints win rates. Targets are in `docs/BALANCE.md`.
 
-## Put it online
+## Play online
 
-It's a static site (`index.html` + `engine.js`), so any static host works:
+**https://sam-omika.github.io/business-tycoon/**
 
-- **Netlify**: drag the project folder onto https://app.netlify.com/drop
-- **GitHub Pages**: push to GitHub, then Settings → Pages → deploy from the `main` branch
+Hosted on GitHub Pages from the `main` branch: every push to `main` goes live within a minute or two.
+It's a static site, so any static host would work too.
 
-On the iPad, open the link in Safari → Share → **Add to Home Screen**.
+Install it as an app (own window and icon):
+
+- **Chrome / Edge**: install icon at the right of the address bar
+- **Safari on Mac**: File → **Add to Dock**
+- **iPad**: Safari → Share → **Add to Home Screen**
+
+Saves live in the browser (`localStorage`), per device and per web address.
+
+## App icon
+
+Edit `icons/icon.svg`, then run `node tools/make-icons.js` to regenerate the PNG sizes (needs Google Chrome).
 
 ## Project layout
 
 ```
 index.html        UI (markup, styles, rendering)
 engine.js         game rules, themes, simulation (no UI)
+manifest.webmanifest  app name, colours and icons (for installing)
+icons/            app icon (SVG source + generated PNGs)
 tools/sim.js      headless balance simulation
+tools/make-icons.js  renders icons/icon.svg into PNGs
 docs/             design, balance, roadmap, decisions, history
 CLAUDE.md         instructions for Claude Code
 .claude/skills/   project slash commands (/balance, /wrapup)

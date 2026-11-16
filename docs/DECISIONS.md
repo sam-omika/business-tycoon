@@ -18,3 +18,5 @@ Short log of design and technical decisions. Newest at the bottom. Format: what 
 14. **Desktop first, iPad still works** (Nov 2026): Sam mainly plays on a laptop now. Optimise for mouse/keyboard and big
     screens (shortcuts, tooltips, wider layout), but keep touch targets and no hover-only features so the iPad keeps working.
     Still a website, not a native desktop app: no extra tooling needed.
+15. **Hosting on GitHub Pages, public repo** (Nov 2026): free, no extra account (already on GitHub), push = deploy.
+    Public is fine for a test project. Installable via a web manifest; no service worker/offline yet (not needed on desktop).

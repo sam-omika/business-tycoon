@@ -53,6 +53,8 @@ and cashing out. See `docs/ROADMAP.md`.
 - Record important design decisions in `docs/DECISIONS.md` (one short entry: what, why).
 - Keep `docs/ROADMAP.md` current: move items to "Done", add new ideas I mention to the backlog.
 - Commit in small steps with clear messages. Don't push or deploy unless I ask.
+  **Pushing to `main` deploys the live game** (GitHub Pages: https://sam-omika.github.io/business-tycoon/).
+- Use relative paths for all assets (`icons/…`, not `/icons/…`): the site lives under `/business-tycoon/`.
 
 ## Project docs (read when relevant)
 
