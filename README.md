@@ -1,6 +1,6 @@
-# Business Tycoon ☕
+# Business Tycoon
 
-Build a coffee cart into a €1M company in 5 years. Turn-based, plays in the browser. Desktop first, also works on an iPad.
+Grow a small business into a €1M company in 5 years (starting with a coffee cart; more business types to come). Turn-based, plays in the browser. Desktop first, also works on an iPad.
 
 ## Play locally
 

@@ -20,3 +20,5 @@ Short log of design and technical decisions. Newest at the bottom. Format: what 
     Still a website, not a native desktop app: no extra tooling needed.
 15. **Hosting on GitHub Pages, public repo** (Nov 2026): free, no extra account (already on GitHub), push = deploy.
     Public is fine for a test project. Installable via a web manifest; no service worker/offline yet (not needed on desktop).
+16. **Name and icon are "Business Tycoon", not coffee-specific** (Nov 2026): coffee is only the first theme. Icon is a
+    generic shop (awning + rising chart). Coffee visuals stay inside the coffee theme only.

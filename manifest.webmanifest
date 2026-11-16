@@ -1,7 +1,7 @@
 {
-  "name": "Coffee Tycoon",
+  "name": "Business Tycoon",
   "short_name": "Tycoon",
-  "description": "Build a coffee cart into a €1M company in 5 years.",
+  "description": "Grow a small business into a €1M company in 5 years.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
