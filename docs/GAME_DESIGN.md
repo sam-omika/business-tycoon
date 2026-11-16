@@ -109,12 +109,15 @@ review (decision: accept / negotiate 50-50 / sign a 3-year lease).
 
 Start screen (theme pick, shop name, continue) → game screen, a one-screen cockpit:
 top bar (name, week, company value + goal bar) · **status** pane (stat tiles, week report) ·
-**decide** pane with tabs Menu | Team | Invest | Bank · **insight** pane (next-week forecast, advisor tips) with tabs
+**decide** pane with tabs Menu | Team | Invest | Bank · **insight** pane (open **decision card** on top, next-week forecast,
+advisor tips) with tabs
 Progress (charts + year table) | Sales (per-product popularity, cost, margin, share of profit; where the money goes) |
-Customers (where they come from) | News.
+Customers (where they come from) | **Courier** (the weekly paper: headline, weather and market boxes, this week's
+stories, coming up with "in N weeks", around town, earlier news).
+While a decision is open, the week button reads "Decide first" and Space shows a reminder instead of opening the week.
 Sticky bottom bar with cash and **Open next week**. Light/dark/auto theme toggle.
 Look: "Live Tiles" (see `DESIGN.md` and decision 18). Stat tiles flip when a week opens.
 
 **Keyboard shortcuts** (desktop extra; hints hidden on touch devices): Space = open next week (one press = one week,
-ignored while a pop-up is open), M/T/I/B = Menu/Team/Invest/Bank tab, P/S/C/N = Progress/Sales/Customers/News tab, ? = shortcut list, Esc = close pop-up.
+ignored while a pop-up is open), M/T/I/B = Menu/Team/Invest/Bank tab, P/S/C/N = Progress/Sales/Customers/Courier tab, ? = shortcut list, Esc = close pop-up.
 Pop-ups start on the safe button (Cancel / Not yet), so Enter never confirms by accident.

@@ -50,3 +50,8 @@ Short log of design and technical decisions. Newest at the bottom. Format: what 
     like a real business. Sam asked for real-world pressure as you grow.
 25. **Difficulty = event pressure + economy + market size** (Nov 2026): events alone could not make "hard" hard for
     high-margin play, so hard also has a smaller market (82%). Targets per level are in BALANCE.md.
+26. **Decisions block the week; The Courier is the information source** (Nov 2026): Sam: "you need information about
+    what's going on and predictions for the following weeks to make a decision and a strategy". The paper shows weather
+    odds, what is coming up and how likely, and the market; a decision must be answered before the week can start.
+27. **UI checks live in the repo** (`tools/ui-check.mjs`): scratch test scripts got lost when a session restarted;
+    the browser check is part of the project now.

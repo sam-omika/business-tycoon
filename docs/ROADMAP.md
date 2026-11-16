@@ -22,16 +22,14 @@
 - One-screen cockpit: three panes with tabs, no page scrolling on desktop / iPad landscape
 - Phase 1: Sales insights tab (per-product popularity, cost, margin, share of profit; where the money goes)
 - Phase 1: pick your goal (€250k to €5M) and keep playing after winning or when time is up
+- Phase 2A: event director with ~25 event cards, weather forecasts, yearly economy, decisions, difficulty table (balanced)
+- Phase 2B: The Courier (weekly paper) and decision cards that must be answered before the next week
 
 ## Next
 
 Agreed plan (16 Nov 2026) to fix "the mid-game has too little challenge":
 
-1. **Phase 2: real challenge** (the main fix)
-   - The newspaper: a weekly paper with many more kinds of events (roadworks, weather, local events, strikes, price rises,
-     a competitor's sale, a viral review…), some lasting several weeks
-   - Events that ask for a decision (e.g. roadworks for 3 weeks: run a discount, put up signs, or do nothing?)
-   - Difficulty levels easy / normal / hard: event frequency and severity, starting cash, competition; own balance targets
+1. **Phase 2C: pick the difficulty** (easy / normal / hard) on the start screen; the engine and balance are ready
 2. **Phase 3: your own time and opening hours**: limited owner hours per week (serving, cleaning, admin, buying), set
    opening hours (more customers vs. wages and your time). Foundation for hiring people to free your time
 3. **Phase 4: managers, CEO, second business** (merges with "multiple businesses"):

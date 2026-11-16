@@ -80,13 +80,14 @@
   //   decision: { options: [{ id, label, desc, cost?(b), default?, apply(b, ctx, data) }], bot(b, data) }
   // ------------------------------------------------------------------
   const hasMod = (b, kind) => b.modifiers.some((m) => m.kind === kind);
+  const inWk = (k) => (k.at - k.week <= 1 ? 'next week' : `in ${k.at - k.week} weeks`);
   const COFFEE_EVENTS = [
     // ---------- city
     {
       id: 'roadworks', cat: 'city', kind: 'major', bad: true, weight: 3, cooldown: 30, lead: 2,
       when: (b) => !hasMod(b, 'traffic'),
       announce: (b, k) => ({ title: 'Roadworks on your street', tone: 'bad',
-        text: `The council digs up the street outside from week ${k.at} for 4 weeks. Expect about ${Math.round(35 * k.sev)}% fewer passers-by.` }),
+        text: `The council digs up the street outside ${inWk(k)} for 4 weeks. Expect about ${Math.round(35 * k.sev)}% fewer passers-by.` }),
       apply(b, ctx) {
         ctx.addMod('traffic', 1 - 0.35 * ctx.sev, 4, 'Roadworks', { bad: true });
         return { title: 'Roadworks begin', text: 'Barriers and noise outside: fewer people walk past for 4 weeks.', tone: 'bad' };
@@ -105,7 +106,7 @@
     },
     {
       id: 'festival', cat: 'city', kind: 'major', weight: (b, k) => (k.season === 'Winter' ? 0.5 : 2.5), cooldown: 10, lead: 2,
-      announce: (b, k) => ({ title: 'Street festival announced', tone: 'good', text: `A street festival takes over the neighbourhood in week ${k.at}. Expect about 50% more customers that week.` }),
+      announce: (b, k) => ({ title: 'Street festival announced', tone: 'good', text: `A street festival takes over the neighbourhood ${inWk(k)}. Expect about 50% more customers that week.` }),
       apply(b, ctx) { ctx.demandMult *= 1.5; return { title: 'Festival crowds', text: 'The street festival brought crowds: demand +50%.', tone: 'good' }; },
     },
     {
@@ -130,7 +131,7 @@
     {
       id: 'beanspike', cat: 'suppliers', kind: 'major', bad: true, weight: 2, cooldown: 26, lead: 2, chance: 0.75,
       when: (b) => !hasMod(b, 'supplyCost'),
-      announce: (b, k) => ({ title: 'Coffee harvest in trouble', tone: 'bad', text: `Traders warn bean prices may rise about 50% from week ${k.at}, for 4 weeks (likely, not certain).` }),
+      announce: (b, k) => ({ title: 'Coffee harvest in trouble', tone: 'bad', text: `Traders warn bean prices may rise about 50% ${inWk(k)}, for 4 weeks (likely, not certain).` }),
       apply(b, ctx) { ctx.addMod('supplyCost', 1.5, 4, 'Bean prices +50%', { bad: true }); return { title: 'Bean prices jump', text: 'Bean prices are up 50% for 4 weeks.', tone: 'bad' }; },
       miss: { title: 'Bean scare blows over', text: 'The feared bean price rise did not happen after all.', tone: 'good' },
       decision: {
@@ -160,7 +161,7 @@
       id: 'competitor', cat: 'competition', kind: 'major', bad: true, cooldown: 40, lead: 4,
       weight: (b) => 0.6 + 0.5 * b.locationLvl + (avgProfit(b) > 1500 ? 1 : 0),
       when: (b) => !hasMod(b, 'traffic') && b.locationLvl >= 1,
-      announce: (b, k) => ({ title: 'Coffee chain plans to open nearby', tone: 'bad', text: `A chain coffee bar opens down the street in week ${k.at}. Expect about ${Math.round(25 * k.sev)}% fewer passers-by for 16 weeks.` }),
+      announce: (b, k) => ({ title: 'Coffee chain plans to open nearby', tone: 'bad', text: `A chain coffee bar opens down the street ${inWk(k)}. Expect about ${Math.round(25 * k.sev)}% fewer passers-by for 16 weeks.` }),
       apply(b, ctx) { ctx.addMod('traffic', 1 - 0.25 * ctx.sev, 16, 'Competitor nearby', { bad: true }); return { title: 'The chain has opened', text: 'A competitor opened down the street: fewer passers-by for 16 weeks.', tone: 'bad' }; },
       decision: {
         title: 'A competitor is coming: how do you respond?',
@@ -732,11 +733,11 @@
     const d = diffOf(state);
     if (week % 52 === 48 && d.rentRise > 0 && b.leaseUntil <= week + 4) {
       const at = week + 4, pct = Math.round(d.rentRise * 100);
-      paper.announced.push({ title: 'Landlord announces rent review', text: `Your rent goes up ${pct}% in week ${at} unless you negotiate.`, tone: 'bad', cat: 'city', at });
+      paper.announced.push({ title: 'Landlord announces rent review', text: `Your rent goes up ${pct}% in 4 weeks unless you negotiate.`, tone: 'bad', cat: 'city', at });
       if (!b.decision) {
         b.decision = {
           card: 'rentreview', title: 'Rent review: your landlord wants more', data: { at, pct },
-          text: `Your landlord raises the rent by ${pct}% from week ${at}.`,
+          text: `Your landlord raises the rent by ${pct}% in 4 weeks, at the start of the new year.`,
           options: [
             { id: 'accept', label: `Accept +${pct}%`, desc: 'No fuss; rent rises as announced.', cost: 0, default: true },
             { id: 'negotiate', label: 'Negotiate', desc: 'A coin flip: half the rise, or the full rise plus €300 legal costs.', cost: 0 },

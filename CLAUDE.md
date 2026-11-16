@@ -53,7 +53,8 @@ and cashing out. See `docs/ROADMAP.md`.
 - **After any change to the economy** (numbers, formulas, events): run `npm run sim` and compare with the targets in
   `docs/BALANCE.md`. Report the before/after table. Update `docs/BALANCE.md` with the new results.
 - After a feature: check it in the browser at desktop sizes (1440×900, 1920×1080) plus one iPad size
-  (1180×820 landscape), light and dark.
+  (1180×820 landscape), light and dark. `node tools/ui-check.mjs` (with the dev server running) automates this:
+  keyboard, decisions, no page scrolling, screenshots. Extend it when you add UI.
 - Record important design decisions in `docs/DECISIONS.md` (one short entry: what, why).
 - Keep `docs/ROADMAP.md` current: move items to "Done", add new ideas I mention to the backlog.
 - Commit in small steps with clear messages. Don't push or deploy unless I ask.

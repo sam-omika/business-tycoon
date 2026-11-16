@@ -36,7 +36,12 @@ Saves live in the browser (`localStorage`), per device and per web address.
 
 ## Keyboard shortcuts
 
-**Space** next week · **M / T / I / B** Menu, Team, Invest, Bank tab · **P / S / C / N** Progress, Sales, Customers, News tab · **?** list · **Esc** close pop-up
+**Space** next week · **M / T / I / B** Menu, Team, Invest, Bank tab · **P / S / C / N** Progress, Sales, Customers, Courier tab · **?** list · **Esc** close pop-up
+
+## Check the UI
+
+With `npm run dev` running: `node tools/ui-check.mjs`. It drives headless Chrome (presses keys, plays weeks, answers
+decisions), checks that the page never scrolls on desktop, and saves screenshots at desktop and iPad sizes.
 
 ## App icon
 

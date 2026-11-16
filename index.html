@@ -224,6 +224,7 @@
   .upg.is-locked .now { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--muted); }
 
   .mods { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .pill.soon { background: transparent; color: var(--muted); border: 1px solid var(--line); }
 
   /* Forecast + sources */
   .forecast { padding: 10px 12px; font-size: 15px; font-weight: 350; line-height: 1.4; background: var(--card); }
@@ -315,6 +316,43 @@
   .ytable td { text-align: right; padding: 5px 4px; border-bottom: 1px solid var(--line); }
   .ytable th:first-child, .ytable td:first-child { text-align: left; }
   .ytable tr:last-child td { border-bottom: 0; }
+
+  /* ---------- Decision card: must be answered before the next week ---------- */
+  .decision { background: var(--card); padding: 12px 14px 10px; box-shadow: inset 0 3px 0 var(--accent); flex: none; }
+  .decision h3 { font-size: 20px; font-weight: 400; line-height: 1.2; margin: 2px 0 4px; }
+  .decision > p { font-size: 15px; font-weight: 350; line-height: 1.45; margin: 0 0 10px; }
+  .decision .opts { display: flex; flex-direction: column; gap: 6px; }
+  .decision .opt { text-align: left; background: var(--bg); border: 1px solid var(--line); padding: 8px 10px; min-height: 44px;
+    display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; transition: transform .14s var(--ease), border-color .14s; }
+  .decision .opt b { font-size: 16px; font-weight: 400; text-transform: lowercase; }
+  .decision .opt span { grid-column: 1; font-size: 13px; color: var(--muted); line-height: 1.4; }
+  .decision .opt em { grid-row: 1; grid-column: 2; font-style: normal; font-size: 15px; }
+  .decision .opt:active:not([disabled]) { transform: scale(.98); }
+  .decision .opt[disabled] { opacity: .45; cursor: default; }
+  .decision .opt[disabled] em { text-decoration: line-through; }
+  @media (hover: hover) { .decision .opt:hover:not([disabled]) { border-color: var(--ink); } }
+  .decision .aside { margin: 8px 0 0; }
+  #nextBtn.waiting { background: transparent; color: var(--ink); border-color: var(--ink); }
+
+  /* ---------- The Courier ---------- */
+  .paper .mast { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-bottom: 2px solid var(--ink); padding-bottom: 4px; margin-bottom: 10px; }
+  .paper .mast b { font-size: 24px; font-weight: 300; letter-spacing: -0.01em; }
+  .paper .mast span { font-size: 13px; color: var(--muted); text-transform: lowercase; }
+  .paper .lead h3 { font-size: 20px; font-weight: 400; line-height: 1.2; margin-bottom: 4px; }
+  .paper .lead p { font-size: 15px; font-weight: 350; line-height: 1.45; margin: 0 0 10px; }
+  .paper .lead.bad h3 { color: var(--bad); } .paper .lead.good h3 { color: var(--good); }
+  .paper h4 { font-size: 13px; font-weight: 400; color: var(--muted); text-transform: lowercase; margin: 14px 0 4px; }
+  .paper .boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .paper .box { background: var(--card); padding: 8px 10px; font-size: 13px; line-height: 1.45; }
+  .paper .box b { display: block; font-size: 13px; font-weight: 400; color: var(--muted); text-transform: lowercase; margin-bottom: 2px; }
+  .paper .box .big { display: block; font-size: 17px; font-weight: 350; color: var(--ink); }
+  .paper .story { border-top: 1px solid var(--line); padding: 6px 0; font-size: 13px; line-height: 1.45; color: var(--muted); }
+  .paper .story b { display: block; font-size: 15px; font-weight: 400; color: var(--ink); text-transform: lowercase; }
+  .paper .story.good b::before { content: '+ '; color: var(--good); } .paper .story.bad b::before { content: '− '; color: var(--bad); }
+  .paper ul { list-style: none; margin: 0; padding: 0; }
+  .paper li { border-top: 1px solid var(--line); padding: 5px 0; font-size: 13px; line-height: 1.45; }
+  .paper li .wk { color: var(--muted); margin-right: 8px; }
+  .paper .town li { color: var(--muted); }
 
   /* ---------- Sales insights ---------- */
   .goals { grid-template-columns: repeat(5, 1fr); }
@@ -476,6 +514,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
     <!-- RIGHT: what's coming and how it's going -->
     <div class="pane insight">
+      <div class="decision hidden" id="decisionCard" role="region" aria-label="Decision"></div>
       <div class="card" id="cardAhead">
         <h2>Next week</h2>
         <div id="forecast"></div>
@@ -485,7 +524,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
         <button role="tab" data-tab="cardProgress" title="Progress (P)">Progress</button>
         <button role="tab" data-tab="cardSales" title="Sales (S)">Sales</button>
         <button role="tab" data-tab="cardSources" title="Customers (C)">Customers</button>
-        <button role="tab" data-tab="cardNews" title="News (N)">News</button>
+        <button role="tab" data-tab="cardNews" title="The Courier (N)">Courier</button>
       </nav>
       <div class="panel card" id="cardProgress" role="tabpanel">
         <div class="chips" id="chips"></div>
@@ -501,7 +540,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
         <div id="sources"></div>
       </div>
       <div class="panel card" id="cardNews" role="tabpanel">
-        <div class="events" id="log"></div>
+        <div id="paper"></div>
       </div>
     </div>
   </main>
@@ -691,11 +730,18 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
   $('nextBtn').onclick = () => {
     if (state.status !== 'playing') return;
+    if (state.businesses[0].decision) {
+      toast('Answer the decision first: ' + state.businesses[0].decision.title.toLowerCase());
+      const c = $('decisionCard'); c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash');
+      if (!cockpitMode()) c.scrollIntoView({ block: 'start' });
+      return;
+    }
     state = E.tick(state); save(); render();
     document.querySelectorAll('#game .tile').forEach((c, i) => { c.classList.remove('flip'); void c.offsetWidth; c.style.animationDelay = (i * 45) + 'ms'; c.classList.add('flip'); });
     const b = state.businesses[0], rep = b.lastReport;
-    if (state.status === 'playing' && b.forecast) toast('Next week: ' + b.forecast.text);
-    else if (state.status === 'playing' && rep && rep.events.length) toast(rep.events[0].text);
+    if (state.status === 'playing' && b.decision) toast('Decision needed: ' + b.decision.title.toLowerCase());
+    else if (state.status === 'playing' && rep && rep.events.length) toast(rep.events[0].title + ': ' + rep.events[0].text);
+    else if (state.status === 'playing' && b.forecast) toast('Next week: ' + b.forecast.text);
     if (state.status !== 'playing') setTimeout(endScreen, 400);
   };
 
@@ -747,7 +793,10 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     $('tClean').className = 'val num';
     $('tileClean').className = 'tile' + (b.cleanliness < 0.7 ? ' fill-bad' : '');
     $('mClean').style.width = b.cleanliness * 100 + '%';
-    $('mods').innerHTML = b.modifiers.map((m) => `<span class="pill bad">${m.label} · ${m.weeks}w</span>`).join('');
+    $('mods').innerHTML = b.modifiers.map((m) => {
+      const later = (m.from || 0) > state.week + 1, inW = (m.from || 0) - state.week;
+      return `<span class="pill ${later ? 'soon' : m.bad ? 'bad' : 'good'}" title="${later ? 'starts in ' + inW + ' weeks' : m.weeks + ' weeks left'}">${m.label} · ${later ? 'in ' + inW + ' wk' : m.weeks + ' wk'}</span>`;
+    }).join('');
 
     renderReport(b, t, r);
     renderProgress();
@@ -759,8 +808,8 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     $('tipsCard').classList.toggle('hidden', !tips.length);
     $('tips').innerHTML = tips.map((x) => `<div class="ev">${x}</div>`).join('');
 
-    // log
-    $('log').innerHTML = state.log.slice(0, 8).map((l) => `<div class="ev ${l.tone}"><span class="wk">W${l.week}</span>${plain(l.text)}</div>`).join('') || '<p style="color:var(--muted);margin:0">Quiet so far.</p>';
+    renderPaper(b, t);
+    renderDecision(b);
 
     // forecast
     const fc = b.forecast;
@@ -777,6 +826,55 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     $('loanNext').textContent = `You can borrow up to ${eur(state.player.maxLoan)}.`;
     $('bbCash').textContent = eur(state.player.cash);
     $('nextBtn').disabled = state.status !== 'playing';
+    const waiting = !!b.decision && state.status === 'playing';
+    $('nextBtn').classList.toggle('waiting', waiting);
+    $('nextBtn').firstElementChild.textContent = waiting ? 'Decide first' : 'Open next week';
+  }
+
+  // ---------- Decision card ----------
+  function renderDecision(b) {
+    const d = b.decision, card = $('decisionCard');
+    card.classList.toggle('hidden', !d);
+    if (!d) { card.innerHTML = ''; return; }
+    card.innerHTML = `<h3>${d.title}</h3><p>${d.text}</p><div class="opts">${d.options.map((o) => {
+      const tooDear = o.cost > state.player.cash;
+      return `<button class="opt" data-opt="${o.id}" ${tooDear ? 'disabled' : ''}><b>${o.label}</b><em class="num">${o.cost ? eur(o.cost) : 'free'}</em><span>${o.desc}</span></button>`;
+    }).join('')}</div><p class="aside">Choose before you open the next week.</p>`;
+  }
+  $('decisionCard').addEventListener('click', (ev) => {
+    const o = ev.target.closest('[data-opt]'); if (!o || !state) return;
+    const res = E.Actions.decide(state, state.businesses[0].id, o.dataset.opt);
+    if (res.error) { toast(res.error); return; }
+    state = res.state; save(); render();
+    toast(plain(state.log[0].text));
+  });
+
+  // ---------- The Courier ----------
+  const relWeek = (w) => (w - state.week <= 1 ? 'next week' : `in ${w - state.week} weeks`);
+  function renderPaper(b, t) {
+    const p = b.paper;
+    const year = Math.floor((state.week - 1) / 52) + 1, wk = ((Math.max(1, state.week) - 1) % 52) + 1;
+    const mast = `<div class="mast"><b>The Courier</b><span>year ${year} · week ${wk} · ${E.seasonName(state.week)}</span></div>`;
+    if (!p) { $('paper').innerHTML = `<div class="paper">${mast}<p class="locked">The first issue comes out after your first week.</p></div>`; return; }
+    const stories = [...p.items, ...p.announced];
+    const lead = stories[0];
+    const leadHtml = lead
+      ? `<article class="lead ${lead.tone}"><h3>${lead.title}</h3><p>${plain(lead.text)}</p></article>`
+      : `<article class="lead"><h3>A quiet week in town</h3><p>${p.flavor[0] || 'Nothing much happened.'}</p></article>`;
+    const W = E.WEATHER, econ = b.econ || { wage: 1, supply: 1, rent: 1 };
+    const pct = (x) => { const v = Math.round((x - 1) * 100); return v === 0 ? 'as at the start' : (v > 0 ? '+' : '−') + Math.abs(v) + '% since the start'; };
+    const beanMod = b.modifiers.find((m) => m.kind === 'supplyCost' && (m.from || 0) <= state.week + 1);
+    const weather = `<div class="box"><b>weather</b>${W[p.weather.now] ? W[p.weather.now].text : ''}<span class="big">next week: ${p.weather.chance}% chance of ${p.weather.nextName}</span></div>`;
+    const market = `<div class="box"><b>market</b>Wages ${pct(econ.wage)}. Suppliers ${pct(econ.supply)}. Rent ${pct(econ.rent)}.${beanMod ? `<span class="big">${beanMod.label} · ${beanMod.weeks} wk</span>` : ''}</div>`;
+    const rest = stories.slice(lead ? 1 : 0).map((x) => `<div class="story ${x.tone}"><b>${x.title}</b>${plain(x.text)}</div>`).join('');
+    const coming = (p.upcoming || []).filter((u) => u.at > state.week).map((u) => `<li><span class="wk">${relWeek(u.at)}</span>${u.title}${u.likely ? ' (likely, not certain)' : ''}</li>`).join('');
+    const town = p.flavor.slice(lead ? 0 : 1).map((f) => `<li>${f}</li>`).join('');
+    const earlier = state.log.filter((l) => l.week < state.week).slice(0, 12).map((l) => `<li><span class="wk">wk ${((l.week - 1) % 52) + 1}</span>${plain(l.text)}</li>`).join('');
+    $('paper').innerHTML = `<div class="paper">${mast}${leadHtml}<div class="boxes">${weather}${market}</div>
+      ${rest ? `<h4>this week</h4>${rest}` : ''}
+      ${coming ? `<h4>coming up</h4><ul>${coming}</ul>` : ''}
+      ${town ? `<h4>around town</h4><ul class="town">${town}</ul>` : ''}
+      ${earlier ? `<h4>earlier</h4><ul>${earlier}</ul>` : ''}</div>`;
   }
 
   function renderReport(b, t, r) {
@@ -793,9 +891,11 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
       <tr><td>Customers who wanted to buy</td><td>${n0(r.demand)}</td></tr>
       <tr><td>Served</td><td>${n0(r.served)}</td></tr>
       ${lostRow}
+      ${r.weather ? `<tr><td style="color:var(--muted)">Weather</td><td style="color:var(--muted)">${E.WEATHER[r.weather].name}</td></tr>` : ''}
       <tr><td style="color:var(--muted)">Bar capacity · register capacity</td><td style="color:var(--muted)">${n0(r.barCap)} · ${n0(r.registerCap)}</td></tr>
       <tr class="sec"><td colspan="2"></td></tr>
       ${r.sales.filter((s) => s.qty > 0).map((s) => `<tr><td>${s.name} (${n0(s.qty)} × ${eur(s.price, 2)})</td><td class="pos">${eur(s.revenue)}</td></tr>`).join('')}
+      ${r.contract ? `<tr><td>Contracts & catering (${n0(r.contract.cups)} cups)</td><td class="pos">${eur(r.contract.pay)}</td></tr>` : ''}
       <tr><td>Ingredients, cups & bags</td><td>${eur(-c.supplies)}</td></tr>
       <tr><td>Wages</td><td>${eur(-c.wages)}</td></tr>
       <tr><td>Rent</td><td>${eur(-c.rent)}</td></tr>
